@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  manager_postgres:
+    container_name: manager_postgres
+    image: postgres:14 # google supports 14x
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+      - ./dockerConfig/postgres-dev-init.sql:/docker-entrypoint-initdb.d/init.sql # will setup dev database manager
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+
+  manager_api:
+    container_name: manager_api
+    restart: always
+    depends_on:
+      - manager_postgres
+    build:
+      context: .
+      target: dependencies
+    ports:
+      - ${PORT}:${PORT}
+      - 9239:9239
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=manager_postgres
+    volumes:
+      - ./:/home/node/app
+      - excludeNodeModulesFromHost:/home/node/app/node_modules
+    command: dumb-init npm run serve
+
+volumes:
+  postgres_volume:
+  excludeNodeModulesFromHost:
