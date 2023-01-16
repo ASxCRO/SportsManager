@@ -26,13 +26,9 @@ services:
       - 9239:9239
     env_file:
       - .env
-    environment:
-      - DB_HOST=manager_postgres
     volumes:
       - ./:/home/node/app
-      - excludeNodeModulesFromHost:/home/node/app/node_modules
     command: dumb-init npm run serve
 
 volumes:
   postgres_volume:
-  excludeNodeModulesFromHost:
