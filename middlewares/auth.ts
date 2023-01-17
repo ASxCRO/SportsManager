@@ -1,7 +1,7 @@
-import { User } from '@prisma/client';
-
 import jwt from '../utils/jwt';
 import createError from 'http-errors';
+import { User } from '../data/entity/User';
+
 export default async function auth(req: any, res: any, next: any) {
   if (!req.headers.authorization) {
     return next(createError.Unauthorized('Access token is required'));
@@ -12,7 +12,7 @@ export default async function auth(req: any, res: any, next: any) {
   }
   await jwt
     .verifyAccessToken(token)
-    .then((user: any) => {
+    .then((user: User) => {
       req.user = user;
       next();
     })

@@ -35,32 +35,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var dotenv_1 = __importDefault(require("dotenv"));
-var body_parser_1 = __importDefault(require("body-parser"));
-require("reflect-metadata");
-var AuthRoutes_1 = __importDefault(require("./routers/AuthRoutes"));
-require("reflect-metadata");
-var data_source_1 = require("./data/data-source");
-dotenv_1.default.config();
-var port = process.env.PORT;
-var app = (0, express_1.default)();
-data_source_1.AppDataSource.initialize()
-    .then(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        console.log('db connected ');
-        return [2 /*return*/];
-    });
-}); })
-    .catch(function (error) { return console.log(error); });
-app.use(body_parser_1.default.urlencoded({ extended: true }));
-app.use(body_parser_1.default.json());
-app.use('/api/auth', AuthRoutes_1.default);
-app.listen(port, function () {
-    console.log("now listening on port ".concat(port));
-});
-//# sourceMappingURL=index.js.map
+var verifiedUser = /** @class */ (function () {
+    function verifiedUser() {
+        this.name = 'verifiedUser';
+    }
+    verifiedUser.prototype.up = function (queryRunner) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, queryRunner.query("ALTER TABLE \"user\" ADD \"verified\" boolean NULL")];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    verifiedUser.prototype.down = function (queryRunner) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, queryRunner.query("ALTER TABLE \"user\" DROP COLUMN \"verified\"")];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return verifiedUser;
+}());
+exports.default = verifiedUser;
+//# sourceMappingURL=1673993063306-newVerifiedPropOnUser.js.map

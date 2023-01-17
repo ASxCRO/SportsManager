@@ -39,28 +39,40 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
 var dotenv_1 = __importDefault(require("dotenv"));
-var body_parser_1 = __importDefault(require("body-parser"));
-require("reflect-metadata");
-var AuthRoutes_1 = __importDefault(require("./routers/AuthRoutes"));
-require("reflect-metadata");
-var data_source_1 = require("./data/data-source");
 dotenv_1.default.config();
-var port = process.env.PORT;
-var app = (0, express_1.default)();
-data_source_1.AppDataSource.initialize()
-    .then(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        console.log('db connected ');
-        return [2 /*return*/];
-    });
-}); })
-    .catch(function (error) { return console.log(error); });
-app.use(body_parser_1.default.urlencoded({ extended: true }));
-app.use(body_parser_1.default.json());
-app.use('/api/auth', AuthRoutes_1.default);
-app.listen(port, function () {
-    console.log("now listening on port ".concat(port));
-});
-//# sourceMappingURL=index.js.map
+var UserService = /** @class */ (function () {
+    function UserService() {
+    }
+    UserService.all = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    UserService.findById = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    UserService.update = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    UserService.delete = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    return UserService;
+}());
+exports.default = UserService;
+//# sourceMappingURL=UserService.js.map

@@ -40,27 +40,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var dotenv_1 = __importDefault(require("dotenv"));
-var body_parser_1 = __importDefault(require("body-parser"));
-require("reflect-metadata");
-var AuthRoutes_1 = __importDefault(require("./routers/AuthRoutes"));
-require("reflect-metadata");
-var data_source_1 = require("./data/data-source");
-dotenv_1.default.config();
-var port = process.env.PORT;
-var app = (0, express_1.default)();
-data_source_1.AppDataSource.initialize()
-    .then(function () { return __awaiter(void 0, void 0, void 0, function () {
+var router = express_1.default.Router();
+var auth_1 = __importDefault(require("../middlewares/auth"));
+var UserService_1 = __importDefault(require("../services/UserService"));
+router.get('/all', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var users, e_1;
     return __generator(this, function (_a) {
-        console.log('db connected ');
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, UserService_1.default.all()];
+            case 1:
+                users = _a.sent();
+                res.status(200).json({
+                    status: true,
+                    message: 'All users',
+                    data: users,
+                });
+                return [3 /*break*/, 3];
+            case 2:
+                e_1 = _a.sent();
+                console.log(e_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
     });
-}); })
-    .catch(function (error) { return console.log(error); });
-app.use(body_parser_1.default.urlencoded({ extended: true }));
-app.use(body_parser_1.default.json());
-app.use('/api/auth', AuthRoutes_1.default);
-app.listen(port, function () {
-    console.log("now listening on port ".concat(port));
-});
-//# sourceMappingURL=index.js.map
+}); });
+exports.default = router;
+//# sourceMappingURL=UserController.js.map

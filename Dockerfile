@@ -14,7 +14,7 @@ RUN npm ci
 COPY --chown=node:node . .
 
 FROM dependencies AS build
-RUN node ace build --production
+RUN npm run build --production
 
 FROM base AS production
 ENV NODE_ENV=production

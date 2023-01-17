@@ -40,27 +40,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var dotenv_1 = __importDefault(require("dotenv"));
-var body_parser_1 = __importDefault(require("body-parser"));
-require("reflect-metadata");
-var AuthRoutes_1 = __importDefault(require("./routers/AuthRoutes"));
-require("reflect-metadata");
-var data_source_1 = require("./data/data-source");
-dotenv_1.default.config();
-var port = process.env.PORT;
-var app = (0, express_1.default)();
-data_source_1.AppDataSource.initialize()
-    .then(function () { return __awaiter(void 0, void 0, void 0, function () {
+var router = express_1.default.Router();
+var AuthController_1 = __importDefault(require("../controllers/AuthController"));
+var auth_1 = __importDefault(require("../middlewares/auth"));
+var authController = new AuthController_1.default();
+router.post('/register', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        console.log('db connected ');
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, authController.register(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
     });
-}); })
-    .catch(function (error) { return console.log(error); });
-app.use(body_parser_1.default.urlencoded({ extended: true }));
-app.use(body_parser_1.default.json());
-app.use('/api/auth', AuthRoutes_1.default);
-app.listen(port, function () {
-    console.log("now listening on port ".concat(port));
-});
-//# sourceMappingURL=index.js.map
+}); });
+router.post('/login', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, authController.login(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.get('/verify', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, authController.verify(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+exports.default = router;
+//# sourceMappingURL=AuthRoutes.js.map

@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - 5432:5432
+      - 5444:5432
 
   manager_api:
     container_name: manager_api
@@ -28,7 +28,7 @@ services:
       - .env
     volumes:
       - ./:/home/node/app
-    command: dumb-init npm run serve
+    command: npm run serve
 
 volumes:
   postgres_volume:
