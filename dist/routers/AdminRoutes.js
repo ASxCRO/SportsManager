@@ -42,31 +42,71 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var AdminController_1 = __importDefault(require("../controllers/AdminController"));
 var router = express_1.default.Router();
-var authController = new AdminController_1.default();
-router.post('/register', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+var adminController = new AdminController_1.default();
+router.post('/createclass', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, authController.register(req, res)];
+            case 0: return [4 /*yield*/, adminController.createClass(req, res)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
         }
     });
 }); });
-router.post('/login', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.patch('/updateclass', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, authController.login(req, res)];
+            case 0: return [4 /*yield*/, adminController.updateClass(req, res)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
         }
     });
 }); });
-router.get('/verify', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete('/deleteclass', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, authController.verify(req, res)];
+            case 0: return [4 /*yield*/, adminController.deleteClass(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.get('/getallusers', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, adminController.getAllUsers(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.post('/createuser', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, adminController.createUser(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.patch('/updateuser', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, adminController.updateUser(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.delete('/deleteuser', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, adminController.deleteUser(req, res)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];

@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 var typeorm_1 = require("typeorm");
 var Roles_1 = require("../../Enums/Roles");
+var Class_1 = require("./Class");
+var ClassAppointment_1 = require("./ClassAppointment");
 var User = /** @class */ (function () {
     function User() {
     }
@@ -45,6 +47,20 @@ var User = /** @class */ (function () {
         }),
         __metadata("design:type", String)
     ], User.prototype, "role", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToMany)(function () { return Class_1.Class; }, {
+            cascade: true,
+        }),
+        (0, typeorm_1.JoinTable)(),
+        __metadata("design:type", Array)
+    ], User.prototype, "classes", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToMany)(function () { return ClassAppointment_1.ClassAppointment; }, {
+            cascade: true,
+        }),
+        (0, typeorm_1.JoinTable)(),
+        __metadata("design:type", Array)
+    ], User.prototype, "classAppointments", void 0);
     User = __decorate([
         (0, typeorm_1.Entity)()
     ], User);

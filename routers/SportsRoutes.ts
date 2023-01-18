@@ -17,11 +17,19 @@ router.get('/classes/details/:id', async (req, res, next) => {
   await sportsController.getDetailsOfClass(req, res);
 });
 
-router.get('/classes/enroll', async (req, res, next) => {
-  // await sportsController.getDetailsOfClass(req, res);
+router.post('/classes/enroll', async (req, res, next) => {
+  await sportsController.enrollToClass(req, res);
 });
 
 router.get('/classes/unroll', async (req, res, next) => {
+  // await sportsController.getDetailsOfClass(req, res);
+});
+
+router.post('/classes/appointments/enroll', async (req, res, next) => {
+  await sportsController.enrollToClassAppointment(req, res);
+});
+
+router.get('/classes/appointments/unroll', async (req, res, next) => {
   // await sportsController.getDetailsOfClass(req, res);
 });
 

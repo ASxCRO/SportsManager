@@ -54,6 +54,26 @@ var AdminController = /** @class */ (function () {
             return [2 /*return*/];
         }); });
     };
+    AdminController.prototype.getAllUsers = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    AdminController.prototype.deleteUser = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    AdminController.prototype.createUser = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    AdminController.prototype.updateUser = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
     return AdminController;
 }());
 exports.default = AdminController;

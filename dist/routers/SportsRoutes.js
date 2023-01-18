@@ -73,12 +73,37 @@ router.get('/classes/details/:id', function (req, res, next) { return __awaiter(
         }
     });
 }); });
-router.get('/classes/enroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/classes/enroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, sportsController.enrollToClass(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.get('/classes/unroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/];
     });
 }); });
-router.get('/classes/unroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/classes/appointments/enroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, sportsController.enrollToClassAppointment(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.get('/classes/appointments/unroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/];
+    });
+}); });
+router.get('/classes/review', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/];
     });

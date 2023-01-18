@@ -38,14 +38,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var data_source_1 = require("../data/data-source");
 var Class_1 = require("../data/entity/Class");
+var ClassAppointment_1 = require("../data/entity/ClassAppointment");
 var Sport_1 = require("../data/entity/Sport");
+var User_1 = require("../data/entity/User");
 var SportsService = /** @class */ (function () {
     function SportsService() {
     }
     SportsService.getAll = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.sportRepository.find];
+                return [2 /*return*/, this.sportRepository.find()];
             });
         });
     };
@@ -55,7 +57,9 @@ var SportsService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        classes = data_source_1.AppDataSource.createQueryBuilder(Class_1.Class, 'class').leftJoinAndSelect('class.sport', 'sport');
+                        classes = data_source_1.AppDataSource.createQueryBuilder(Class_1.Class, 'class')
+                            .leftJoinAndSelect('class.sport', 'sport')
+                            .leftJoinAndSelect('class.classAppointments', 'classAppointments');
                         if (data.sports) {
                             sportsFromParams = data.sports.split(',');
                             classes.where('sport.name IN (:...sports)', {
@@ -82,7 +86,9 @@ var SportsService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        classes = data_source_1.AppDataSource.createQueryBuilder(Class_1.Class, 'class').leftJoinAndSelect('class.sport', 'sport');
+                        classes = data_source_1.AppDataSource.createQueryBuilder(Class_1.Class, 'class')
+                            .leftJoinAndSelect('class.sport', 'sport')
+                            .leftJoinAndSelect('class.classAppointments', 'classAppointments');
                         if (data.id) {
                             classes.where('class.id = :id', {
                                 id: data.id,
@@ -96,8 +102,93 @@ var SportsService = /** @class */ (function () {
             });
         });
     };
+    SportsService.enrollToClass = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userWithClasses, users, user, classs, newUser, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 6, , 7]);
+                        return [4 /*yield*/, data_source_1.AppDataSource.getRepository(User_1.User)
+                                .createQueryBuilder('user')
+                                .leftJoinAndSelect('user.classes', 'classes')
+                                .andWhere('user.id = :id', {
+                                id: data.userId,
+                            })
+                                .getOne()];
+                    case 1:
+                        userWithClasses = _a.sent();
+                        if (!(userWithClasses.classes.length < 2)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.userRepository.find({
+                                relations: {
+                                    classes: true,
+                                },
+                            })];
+                    case 2:
+                        users = _a.sent();
+                        user = users.filter(function (e) { return e.id === data.userId; })[0];
+                        return [4 /*yield*/, this.classRepository.findOneBy({
+                                id: data.classId,
+                            })];
+                    case 3:
+                        classs = _a.sent();
+                        user.classes.push(classs);
+                        return [4 /*yield*/, data_source_1.AppDataSource.manager.save(user)];
+                    case 4:
+                        newUser = _a.sent();
+                        return [2 /*return*/, {
+                                message: 'User enrolled to class!',
+                                status: 404,
+                                data: newUser,
+                            }];
+                    case 5: return [3 /*break*/, 7];
+                    case 6:
+                        error_1 = _a.sent();
+                        console.log(error_1);
+                        return [3 /*break*/, 7];
+                    case 7: return [2 /*return*/, {
+                            message: 'User cant apply to more than 2 classes',
+                            status: 404,
+                            data: {},
+                        }];
+                }
+            });
+        });
+    };
+    SportsService.enrollToClassAppointment = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var users, user, usersCountOnAppointment, classAppointment, newUser;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.userRepository.find({
+                            relations: {
+                                classAppointments: true,
+                            },
+                        })];
+                    case 1:
+                        users = _a.sent();
+                        user = users.filter(function (e) { return e.id === data.userId; })[0];
+                        usersCountOnAppointment = user.classAppointments.length;
+                        if (!(usersCountOnAppointment < 10)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, this.classAppointmentRepository.findOneBy({
+                                id: data.classAppointmentId,
+                            })];
+                    case 2:
+                        classAppointment = _a.sent();
+                        user.classAppointments.push(classAppointment);
+                        return [4 /*yield*/, data_source_1.AppDataSource.manager.save(user)];
+                    case 3:
+                        newUser = _a.sent();
+                        return [2 /*return*/, newUser];
+                    case 4: return [2 /*return*/, 'User cant apply to more than 10 class appointments'];
+                }
+            });
+        });
+    };
     SportsService.sportRepository = data_source_1.AppDataSource.getRepository(Sport_1.Sport);
     SportsService.classRepository = data_source_1.AppDataSource.getRepository(Class_1.Class);
+    SportsService.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
+    SportsService.classAppointmentRepository = data_source_1.AppDataSource.getRepository(ClassAppointment_1.ClassAppointment);
     return SportsService;
 }());
 exports.default = SportsService;

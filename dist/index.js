@@ -50,6 +50,10 @@ var data_source_1 = require("./data/data-source");
 dotenv_1.default.config();
 var port = process.env.PORT;
 var app = (0, express_1.default)();
+function addWeeks(date, weeks) {
+    date.setDate(date.getDate() + 7 * weeks);
+    return date;
+}
 data_source_1.AppDataSource.initialize()
     .then(function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {

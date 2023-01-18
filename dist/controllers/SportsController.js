@@ -130,6 +130,65 @@ var SportsController = /** @class */ (function () {
             });
         });
     };
+    SportsController.prototype.enrollToClass = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, e_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, SportsService_1.default.enrollToClass(req.body)];
+                    case 1:
+                        data = _a.sent();
+                        res.status(data.status).json({
+                            status: true,
+                            message: data.message,
+                            data: data.data,
+                        });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_4 = _a.sent();
+                        res.status(404).json({
+                            status: true,
+                            message: 'Problem with enrolling',
+                            data: {},
+                        });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SportsController.prototype.enrollToClassAppointment = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var classes, e_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, SportsService_1.default.enrollToClassAppointment(req.body)];
+                    case 1:
+                        classes = _a.sent();
+                        res.status(200).json({
+                            status: true,
+                            message: 'enrolled successfully',
+                            data: classes,
+                        });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_5 = _a.sent();
+                        console.log(e_5);
+                        res.status(404).json({
+                            status: true,
+                            message: 'Problem with enrolling',
+                            data: {},
+                        });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return SportsController;
 }());
 exports.default = SportsController;

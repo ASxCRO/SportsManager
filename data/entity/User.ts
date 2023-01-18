@@ -1,5 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { UserRole } from '../../Enums/Roles';
+import { Class } from './Class';
+import { ClassAppointment } from './ClassAppointment';
 
 @Entity()
 export class User {
@@ -26,4 +36,16 @@ export class User {
     default: UserRole.USER,
   })
   role: UserRole;
+
+  @ManyToMany(() => Class, {
+    cascade: true,
+  })
+  @JoinTable()
+  classes: Class[];
+
+  @ManyToMany(() => ClassAppointment, {
+    cascade: true,
+  })
+  @JoinTable()
+  classAppointments: ClassAppointment[];
 }

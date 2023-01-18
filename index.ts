@@ -9,30 +9,36 @@ import { AppDataSource } from './data/data-source';
 import { Sport } from './data/entity/Sport';
 import { Class } from './data/entity/Class';
 import { AgeGroup } from './Enums/AgeGroup';
+import { ClassAppointment } from './data/entity/ClassAppointment';
 
 dotenv.config();
 const port = process.env.PORT;
 const app: Express = express();
 
+function addWeeks(date, weeks): Date {
+  date.setDate(date.getDate() + 7 * weeks);
+
+  return date;
+}
+
 AppDataSource.initialize()
   .then(async () => {
     console.log('db connected ');
-    // let classRepo = AppDataSource.getRepository(Class);
-    // const sports = await AppDataSource.manager.find(Sport);
-
-    // sports.forEach((sport) => {
-    //   Object.values(AgeGroup).forEach((ageGroup) => {
-    //     const sportsClass = new Class();
-    //     sportsClass.sport = sport;
-    //     sportsClass.ageGroup = ageGroup;
-    //     sportsClass.description =
+    // let classRepo = AppDataSource.getRepository(ClassAppointment);
+    // const classes = await AppDataSource.manager.find(Class);
+    // let now = new Date();
+    // classes.forEach((classs, index) => {
+    //   for (let index = 0; index < 5; index++) {
+    //     now.setDate(now.getDate() + 7 * index);
+    //     const classAppointment = new ClassAppointment();
+    //     classAppointment.classs = classs;
+    //     classAppointment.dateStarting = now;
+    //     classAppointment.description =
     //       "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged";
-    //     sportsClass.duration = '01:15h';
 
-    //     classRepo.save(sportsClass);
-    //   });
+    //     classRepo.save(classAppointment);
+    //   }
     // });
-    // console.log('insert finished');
   })
   .catch((error) => console.log(error));
 

@@ -12,7 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Class = void 0;
 var typeorm_1 = require("typeorm");
 var AgeGroup_1 = require("../../Enums/AgeGroup");
+var ClassAppointment_1 = require("./ClassAppointment");
 var Sport_1 = require("./Sport");
+var User_1 = require("./User");
 var Class = /** @class */ (function () {
     function Class() {
     }
@@ -32,6 +34,14 @@ var Class = /** @class */ (function () {
         (0, typeorm_1.ManyToOne)(function () { return Sport_1.Sport; }, function (sport) { return sport.classes; }),
         __metadata("design:type", Sport_1.Sport)
     ], Class.prototype, "sport", void 0);
+    __decorate([
+        (0, typeorm_1.OneToMany)(function () { return ClassAppointment_1.ClassAppointment; }, function (classApointments) { return classApointments.classs; }),
+        __metadata("design:type", Array)
+    ], Class.prototype, "classAppointments", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToMany)(function () { return User_1.User; }, function (user) { return user.classes; }),
+        __metadata("design:type", Array)
+    ], Class.prototype, "users", void 0);
     __decorate([
         (0, typeorm_1.Column)(),
         __metadata("design:type", String)
