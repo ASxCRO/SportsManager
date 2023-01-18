@@ -51,14 +51,11 @@ var SportsService = /** @class */ (function () {
     };
     SportsService.getClasses = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var classes, sports, sportsFromParams, ageGroup, filteredClasses;
+            var classes, sportsFromParams, ageGroup, filteredClasses;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         classes = data_source_1.AppDataSource.createQueryBuilder(Class_1.Class, 'class').leftJoinAndSelect('class.sport', 'sport');
-                        return [4 /*yield*/, this.sportRepository.find()];
-                    case 1:
-                        sports = _a.sent();
                         if (data.sports) {
                             sportsFromParams = data.sports.split(',');
                             classes.where('sport.name IN (:...sports)', {
@@ -72,7 +69,27 @@ var SportsService = /** @class */ (function () {
                             });
                         }
                         return [4 /*yield*/, classes.getMany()];
-                    case 2:
+                    case 1:
+                        filteredClasses = _a.sent();
+                        return [2 /*return*/, filteredClasses];
+                }
+            });
+        });
+    };
+    SportsService.getDetailsOfClass = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var classes, filteredClasses;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        classes = data_source_1.AppDataSource.createQueryBuilder(Class_1.Class, 'class').leftJoinAndSelect('class.sport', 'sport');
+                        if (data.id) {
+                            classes.where('class.id = :id', {
+                                id: data.id,
+                            });
+                        }
+                        return [4 /*yield*/, classes.getMany()];
+                    case 1:
                         filteredClasses = _a.sent();
                         return [2 /*return*/, filteredClasses];
                 }

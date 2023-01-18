@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { QueryFailedError } from 'typeorm';
 import AuthService from '../services/AuthService';
 
 export default class AuthController {

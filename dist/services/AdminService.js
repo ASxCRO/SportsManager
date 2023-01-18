@@ -39,49 +39,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var router = express_1.default.Router();
-var SportsController_1 = __importDefault(require("../controllers/SportsController"));
-var sportsController = new SportsController_1.default();
-router.get('/all', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, sportsController.getAll(req, res)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); });
-router.get('/classes', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, sportsController.getClasses(req, res)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); });
-router.get('/classes/details/:id', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, sportsController.getDetailsOfClass(req, res)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); });
-router.get('/classes/enroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/];
-    });
-}); });
-router.get('/classes/unroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        return [2 /*return*/];
-    });
-}); });
-exports.default = router;
-//# sourceMappingURL=SportsRoutes.js.map
+var dotenv_1 = __importDefault(require("dotenv"));
+var data_source_1 = require("../data/data-source");
+var User_1 = require("../data/entity/User");
+dotenv_1.default.config();
+var AdminService = /** @class */ (function () {
+    function AdminService() {
+    }
+    AdminService.register = function (data) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    AdminService.login = function (data) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    AdminService.verify = function (token) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    AdminService.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
+    return AdminService;
+}());
+exports.default = AdminService;
+//# sourceMappingURL=AdminService.js.map

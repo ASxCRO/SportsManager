@@ -13,4 +13,16 @@ router.get('/classes', async (req, res, next) => {
   await sportsController.getClasses(req, res);
 });
 
+router.get('/classes/details/:id', async (req, res, next) => {
+  await sportsController.getDetailsOfClass(req, res);
+});
+
+router.get('/classes/enroll', async (req, res, next) => {
+  // await sportsController.getDetailsOfClass(req, res);
+});
+
+router.get('/classes/unroll', async (req, res, next) => {
+  // await sportsController.getDetailsOfClass(req, res);
+});
+
 export default router;

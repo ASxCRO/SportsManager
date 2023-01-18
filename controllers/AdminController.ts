@@ -1,8 +1,18 @@
-import express from 'express';
-const router = express.Router();
+import express, { Request, Response } from 'express';
+import AdminService from '../services/AdminService';
+import UserService from '../services/UserService';
 
-router.get('/admin', (req, res) => {
-  res.send('User list');
-});
+export default class AdminController {
+  public async createClass(req: Request, res: Response) {}
 
-export default router;
+  public async updateClass(req: Request, res: Response) {}
+  public async deleteClass(req: Request, res: Response) {}
+
+  public async getAllUsers(req: Request, res: Response) {}
+
+  public async deleteUser(req: Request, res: Response) {}
+
+  public async createUser(req: Request, res: Response) {}
+
+  public async updateUser(req: Request, res: Response) {}
+}

@@ -1,35 +1,21 @@
 import dotenv from 'dotenv';
+import { AppDataSource } from '../data/data-source';
+import { User } from '../data/entity/User';
 
 dotenv.config();
 
 export default class UserService {
+  public static userRepository = AppDataSource.getRepository(User);
+
   public static async all() {
-    // const allUsers = await this.prisma.user.findMany();
-    // return allUsers;
+    return await this.userRepository.find();
   }
 
-  public static async findById(id: number) {
-    // const user = await this.prisma.user.findFirst({
-    //   where: { id },
-    // });
-    // return user;
+  public static async findById(data: any) {
+    return await this.userRepository.findBy({ id: data.id });
   }
 
-  public static async update(data: any) {
-    // const { name, email } = data;
-    // const user = await this.prisma.user.update({
-    //   where: { email },
-    //   data: { name: name },
-    // });
-    // return user;
-  }
+  public static async update(data: any) {}
 
-  public static async delete(id: number) {
-    // const user = await this.prisma.user.delete({
-    //   where: {
-    //     id,
-    //   },
-    // });
-    // return user;
-  }
+  public static async delete(id: number) {}
 }

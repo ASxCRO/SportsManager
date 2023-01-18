@@ -40,6 +40,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var dotenv_1 = __importDefault(require("dotenv"));
+var data_source_1 = require("../data/data-source");
+var User_1 = require("../data/entity/User");
 dotenv_1.default.config();
 var UserService = /** @class */ (function () {
     function UserService() {
@@ -47,31 +49,34 @@ var UserService = /** @class */ (function () {
     UserService.all = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.userRepository.find()];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };
-    UserService.findById = function (id) {
+    UserService.findById = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.userRepository.findBy({ id: data.id })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
             });
         });
     };
     UserService.update = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
-            });
-        });
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
     };
     UserService.delete = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
-            });
-        });
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
     };
+    UserService.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
     return UserService;
 }());
 exports.default = UserService;

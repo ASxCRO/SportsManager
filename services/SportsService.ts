@@ -17,8 +17,6 @@ export default class SportsService {
       'class'
     ).leftJoinAndSelect('class.sport', 'sport');
 
-    let sports = await this.sportRepository.find();
-
     if (data.sports) {
       const sportsFromParams: string[] = data.sports.split(',');
 
@@ -31,6 +29,23 @@ export default class SportsService {
       const ageGroup: AgeGroup = data.ageGroup;
       classes.andWhere('class.ageGroup = :ageGroup', {
         ageGroup: ageGroup,
+      });
+    }
+
+    const filteredClasses = await classes.getMany();
+
+    return filteredClasses;
+  }
+
+  public static async getDetailsOfClass(data: any) {
+    let classes = AppDataSource.createQueryBuilder(
+      Class,
+      'class'
+    ).leftJoinAndSelect('class.sport', 'sport');
+
+    if (data.id) {
+      classes.where('class.id = :id', {
+        id: data.id,
       });
     }
 
