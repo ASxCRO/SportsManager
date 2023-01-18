@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from '../utils/jwt';
 import { AppDataSource } from '../data/data-source';
 import { User } from '../data/entity/User';
-import sgMail from '@sendgrid/mail';
+import MailService from './MailService';
 
 dotenv.config();
 
@@ -24,25 +24,7 @@ export default class AuthService {
     data.password = null;
     data.accessToken = await jwt.signAccessToken(user);
 
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-    const msg = {
-      to: email,
-      from: 'antonio.suups@gmail.com',
-      subject: 'Verification mail',
-      text: 'Click below to confirm your mail',
-      html: `<strong>Confirm your account by following this link<a href="localhost:3322/api/auth/verify?token=${data.accessToken}">Confirm/a></strong>`,
-    };
-
-    sgMail
-      .send(msg)
-      .then((response) => {
-        console.log(response[0].statusCode);
-        console.log(response[0].headers);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    MailService.sendVerificationMail(user.email, user.name, data.accessToken);
 
     return data;
   }
@@ -52,13 +34,36 @@ export default class AuthService {
     const user = await this.userRepository.findOneBy({
       email: email,
     });
+
     if (!user) {
-      return 'User not registered';
+      return {
+        message: 'user not registered',
+        status: 401,
+        data: {},
+      };
     }
+
+    if (!user.verified) {
+      return {
+        message: 'account not verified',
+        status: 401,
+        data: {},
+      };
+    }
+
     const checkPassword = bcrypt.compareSync(password, user.password);
-    if (!checkPassword) return 'Email address or password not valid';
+    if (!checkPassword)
+      return {
+        message: 'email or password not valid',
+        status: 401,
+        data: {},
+      };
     const accessToken = await jwt.signAccessToken(user);
-    return { ...user, accessToken };
+    return {
+      message: 'login succesfull',
+      status: 200,
+      data: { ...user, accessToken },
+    };
   }
 
   public static async verify(token: string) {
@@ -77,5 +82,7 @@ export default class AuthService {
     });
     userToVerifyDb.verified = true;
     await this.userRepository.save(userToVerifyDb);
+
+    return 'Account verifed';
   }
 }

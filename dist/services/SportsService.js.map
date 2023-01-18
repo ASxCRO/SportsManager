@@ -1,1 +1,1 @@
-{"version":3,"file":"SportsService.js","sourceRoot":"","sources":["../../services/SportsService.ts"],"names":[],"mappings":""}
+{"version":3,"file":"SportsService.js","sourceRoot":"","sources":["../../services/SportsService.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA,mDAAoD;AACpD,8CAA6C;AAE7C;IAAA;IAKA,CAAC;IAHqB,oBAAM,GAA1B,UAA2B,IAAS;;;gBAClC,sBAAO,2BAAa,CAAC,OAAO,CAAC,IAAI,CAAC,aAAK,CAAC,EAAC;;;KAC1C;IAHa,4BAAc,GAAG,2BAAa,CAAC,aAAa,CAAC,aAAK,CAAC,CAAC;IAIpE,oBAAC;CAAA,AALD,IAKC;kBALoB,aAAa"}

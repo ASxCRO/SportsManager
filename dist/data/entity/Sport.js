@@ -9,46 +9,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Sport = void 0;
 var typeorm_1 = require("typeorm");
-var Roles_1 = require("../../Enums/Roles");
-var User = /** @class */ (function () {
-    function User() {
+var Sport = /** @class */ (function () {
+    function Sport() {
     }
     __decorate([
         (0, typeorm_1.PrimaryGeneratedColumn)(),
         __metadata("design:type", Number)
-    ], User.prototype, "id", void 0);
+    ], Sport.prototype, "id", void 0);
     __decorate([
         (0, typeorm_1.Column)(),
         __metadata("design:type", String)
-    ], User.prototype, "name", void 0);
-    __decorate([
-        (0, typeorm_1.Column)({
-            unique: true,
-        }),
-        __metadata("design:type", String)
-    ], User.prototype, "email", void 0);
-    __decorate([
-        (0, typeorm_1.Column)(),
-        __metadata("design:type", String)
-    ], User.prototype, "password", void 0);
-    __decorate([
-        (0, typeorm_1.Column)(),
-        __metadata("design:type", Boolean)
-    ], User.prototype, "verified", void 0);
-    __decorate([
-        (0, typeorm_1.Column)({
-            type: 'enum',
-            enum: Roles_1.UserRole,
-            default: Roles_1.UserRole.USER,
-        }),
-        __metadata("design:type", String)
-    ], User.prototype, "role", void 0);
-    User = __decorate([
+    ], Sport.prototype, "name", void 0);
+    Sport = __decorate([
         (0, typeorm_1.Entity)()
-    ], User);
-    return User;
+    ], Sport);
+    return Sport;
 }());
-exports.User = User;
-//# sourceMappingURL=User.js.map
+exports.Sport = Sport;
+//# sourceMappingURL=Sport.js.map

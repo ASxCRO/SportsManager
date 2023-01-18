@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import 'reflect-metadata';
 import authRouter from './routers/AuthRoutes';
+import sportsRouter from './routers/SportsRoutes';
 import 'reflect-metadata';
 import { AppDataSource } from './data/data-source';
-import { User } from './data/entity/User';
 
 dotenv.config();
 const port = process.env.PORT;
@@ -20,6 +20,7 @@ AppDataSource.initialize()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/api/auth', authRouter);
+app.use('/api/sports', sportsRouter);
 
 app.listen(port, () => {
   console.log(`now listening on port ${port}`);

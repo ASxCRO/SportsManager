@@ -42,7 +42,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
 var AuthController_1 = __importDefault(require("../controllers/AuthController"));
-var auth_1 = __importDefault(require("../middlewares/auth"));
 var authController = new AuthController_1.default();
 router.post('/register', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
@@ -64,7 +63,7 @@ router.post('/login', function (req, res, next) { return __awaiter(void 0, void 
         }
     });
 }); });
-router.get('/verify', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get('/verify', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, authController.verify(req, res)];

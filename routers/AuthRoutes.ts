@@ -13,7 +13,7 @@ router.post('/login', async (req, res, next) => {
   await authController.login(req, res);
 });
 
-router.get('/verify', auth, async (req, res, next) => {
+router.get('/verify', async (req, res, next) => {
   await authController.verify(req, res);
 });
 

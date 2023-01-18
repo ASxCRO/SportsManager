@@ -55,14 +55,14 @@ var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var jwt_1 = __importDefault(require("../utils/jwt"));
 var data_source_1 = require("../data/data-source");
 var User_1 = require("../data/entity/User");
-var mail_1 = __importDefault(require("@sendgrid/mail"));
+var MailService_1 = __importDefault(require("./MailService"));
 dotenv_1.default.config();
 var AuthService = /** @class */ (function () {
     function AuthService() {
     }
     AuthService.register = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var name, email, password, encryptedPassword, user, _a, msg;
+            var name, email, password, encryptedPassword, user, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -81,23 +81,7 @@ var AuthService = /** @class */ (function () {
                         return [4 /*yield*/, jwt_1.default.signAccessToken(user)];
                     case 2:
                         _a.accessToken = _b.sent();
-                        mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
-                        msg = {
-                            to: email,
-                            from: 'antonio.suups@gmail.com',
-                            subject: 'Verification mail',
-                            text: 'Click below to confirm your mail',
-                            html: "<strong>Confirm your account by following this link<a href=\"localhost:3322/api/auth/verify?token=".concat(data.accessToken, "\">Confirm/a></strong>"),
-                        };
-                        mail_1.default
-                            .send(msg)
-                            .then(function (response) {
-                            console.log(response[0].statusCode);
-                            console.log(response[0].headers);
-                        })
-                            .catch(function (error) {
-                            console.error(error);
-                        });
+                        MailService_1.default.sendVerificationMail(user.email, user.name, data.accessToken);
                         return [2 /*return*/, data];
                 }
             });
@@ -116,15 +100,34 @@ var AuthService = /** @class */ (function () {
                     case 1:
                         user = _a.sent();
                         if (!user) {
-                            return [2 /*return*/, 'User not registered'];
+                            return [2 /*return*/, {
+                                    message: 'user not registered',
+                                    status: 401,
+                                    data: {},
+                                }];
+                        }
+                        if (!user.verified) {
+                            return [2 /*return*/, {
+                                    message: 'account not verified',
+                                    status: 401,
+                                    data: {},
+                                }];
                         }
                         checkPassword = bcryptjs_1.default.compareSync(password, user.password);
                         if (!checkPassword)
-                            return [2 /*return*/, 'Email address or password not valid'];
+                            return [2 /*return*/, {
+                                    message: 'email or password not valid',
+                                    status: 401,
+                                    data: {},
+                                }];
                         return [4 /*yield*/, jwt_1.default.signAccessToken(user)];
                     case 2:
                         accessToken = _a.sent();
-                        return [2 /*return*/, __assign(__assign({}, user), { accessToken: accessToken })];
+                        return [2 /*return*/, {
+                                message: 'login succesfull',
+                                status: 200,
+                                data: __assign(__assign({}, user), { accessToken: accessToken }),
+                            }];
                 }
             });
         });
@@ -153,7 +156,7 @@ var AuthService = /** @class */ (function () {
                         return [4 /*yield*/, this.userRepository.save(userToVerifyDb)];
                     case 3:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2 /*return*/, 'Account verifed'];
                 }
             });
         });

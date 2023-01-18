@@ -61,7 +61,11 @@ var AuthController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_1 = _a.sent();
-                        console.log(e_1);
+                        res.status(404).json({
+                            status: true,
+                            message: 'User with this email already exists',
+                            data: {},
+                        });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -78,10 +82,10 @@ var AuthController = /** @class */ (function () {
                         return [4 /*yield*/, AuthService_1.default.login(req.body)];
                     case 1:
                         data = _a.sent();
-                        res.status(200).json({
+                        res.status(data.status).json({
                             status: true,
-                            message: 'Account login successful',
-                            data: data,
+                            message: data.message,
+                            data: data.data,
                         });
                         return [3 /*break*/, 3];
                     case 2:

@@ -1,8 +1,22 @@
-import express from 'express';
-const router = express.Router();
+import { Request, Response } from 'express';
+import SportsService from '../services/SportsService';
 
-router.get('/sports', (req, res) => {
-  res.send('User list');
-});
+export default class SportsController {
+  public async getAll(req: Request, res: Response) {
+    try {
+      const sports = await SportsService.getAll(req.body);
 
-export default router;
+      res.status(200).json({
+        status: true,
+        message: 'sports fetched successfully',
+        data: sports,
+      });
+    } catch (e: any) {
+      res.status(404).json({
+        status: true,
+        message: 'Problem with fetching sports',
+        data: {},
+      });
+    }
+  }
+}
