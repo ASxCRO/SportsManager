@@ -25,4 +25,8 @@ router.get('/classes/unroll', async (req, res, next) => {
   // await sportsController.getDetailsOfClass(req, res);
 });
 
+router.get('/classes/review', async (req, res, next) => {
+  // await sportsController.getDetailsOfClass(req, res);
+});
+
 export default router;
