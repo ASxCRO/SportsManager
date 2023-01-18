@@ -53,5 +53,15 @@ router.get('/all', function (req, res, next) { return __awaiter(void 0, void 0, 
         }
     });
 }); });
+router.get('/classes', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, sportsController.getClasses(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
 exports.default = router;
 //# sourceMappingURL=SportsRoutes.js.map

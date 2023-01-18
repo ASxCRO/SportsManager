@@ -9,28 +9,41 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Sport = void 0;
+exports.Class = void 0;
 var typeorm_1 = require("typeorm");
-var Class_1 = require("./Class");
-var Sport = /** @class */ (function () {
-    function Sport() {
+var AgeGroup_1 = require("../../Enums/AgeGroup");
+var Sport_1 = require("./Sport");
+var Class = /** @class */ (function () {
+    function Class() {
     }
     __decorate([
         (0, typeorm_1.PrimaryGeneratedColumn)(),
         __metadata("design:type", Number)
-    ], Sport.prototype, "id", void 0);
+    ], Class.prototype, "id", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({
+            type: 'enum',
+            enum: AgeGroup_1.AgeGroup,
+            default: AgeGroup_1.AgeGroup.CHILDREN,
+        }),
+        __metadata("design:type", String)
+    ], Class.prototype, "ageGroup", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return Sport_1.Sport; }, function (sport) { return sport.classes; }),
+        __metadata("design:type", Sport_1.Sport)
+    ], Class.prototype, "sport", void 0);
     __decorate([
         (0, typeorm_1.Column)(),
         __metadata("design:type", String)
-    ], Sport.prototype, "name", void 0);
+    ], Class.prototype, "duration", void 0);
     __decorate([
-        (0, typeorm_1.OneToMany)(function () { return Class_1.Class; }, function (classs) { return classs.sport; }),
-        __metadata("design:type", Array)
-    ], Sport.prototype, "classes", void 0);
-    Sport = __decorate([
+        (0, typeorm_1.Column)(),
+        __metadata("design:type", String)
+    ], Class.prototype, "description", void 0);
+    Class = __decorate([
         (0, typeorm_1.Entity)()
-    ], Sport);
-    return Sport;
+    ], Class);
+    return Class;
 }());
-exports.Sport = Sport;
-//# sourceMappingURL=Sport.js.map
+exports.Class = Class;
+//# sourceMappingURL=Class.js.map

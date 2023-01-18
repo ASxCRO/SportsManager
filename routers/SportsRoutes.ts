@@ -9,4 +9,8 @@ router.get('/all', async (req, res, next) => {
   await sportsController.getAll(req, res);
 });
 
+router.get('/classes', async (req, res, next) => {
+  await sportsController.getClasses(req, res);
+});
+
 export default router;

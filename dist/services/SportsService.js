@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var data_source_1 = require("../data/data-source");
+var Class_1 = require("../data/entity/Class");
 var Sport_1 = require("../data/entity/Sport");
 var SportsService = /** @class */ (function () {
     function SportsService() {
@@ -44,11 +45,42 @@ var SportsService = /** @class */ (function () {
     SportsService.getAll = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, data_source_1.AppDataSource.manager.find(Sport_1.Sport)];
+                return [2 /*return*/, this.sportRepository.find];
             });
         });
     };
-    SportsService.userRepository = data_source_1.AppDataSource.getRepository(Sport_1.Sport);
+    SportsService.getClasses = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var classes, sports, sportsFromParams, ageGroup, filteredClasses;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        classes = data_source_1.AppDataSource.createQueryBuilder(Class_1.Class, 'class').leftJoinAndSelect('class.sport', 'sport');
+                        return [4 /*yield*/, this.sportRepository.find()];
+                    case 1:
+                        sports = _a.sent();
+                        if (data.sports) {
+                            sportsFromParams = data.sports.split(',');
+                            classes.where('sport.name IN (:...sports)', {
+                                sports: sportsFromParams,
+                            });
+                        }
+                        if (data.ageGroup) {
+                            ageGroup = data.ageGroup;
+                            classes.andWhere('class.ageGroup = :ageGroup', {
+                                ageGroup: ageGroup,
+                            });
+                        }
+                        return [4 /*yield*/, classes.getMany()];
+                    case 2:
+                        filteredClasses = _a.sent();
+                        return [2 /*return*/, filteredClasses];
+                }
+            });
+        });
+    };
+    SportsService.sportRepository = data_source_1.AppDataSource.getRepository(Sport_1.Sport);
+    SportsService.classRepository = data_source_1.AppDataSource.getRepository(Class_1.Class);
     return SportsService;
 }());
 exports.default = SportsService;
