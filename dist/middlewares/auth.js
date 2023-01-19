@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var jwt_1 = __importDefault(require("../utils/jwt"));
 var http_errors_1 = __importDefault(require("http-errors"));
+var Roles_1 = require("../Enums/Roles");
 function auth(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var token;
@@ -52,12 +53,19 @@ function auth(req, res, next) {
                     }
                     token = req.headers.authorization.split(' ')[1];
                     if (!token) {
-                        return [2 /*return*/, next(http_errors_1.default.Unauthorized())];
+                        return [2 /*return*/, next(http_errors_1.default.Unauthorized('Token not valid'))];
                     }
                     return [4 /*yield*/, jwt_1.default
                             .verifyAccessToken(token)
                             .then(function (user) {
-                            req.user = user;
+                            if (req.originalUrl.includes('admin') ||
+                                req.originalUrl.includes('users')) {
+                                var userRole = user.payload.role;
+                                if (userRole !== Roles_1.UserRole.ADMIN) {
+                                    next(http_errors_1.default.Unauthorized('User attempt to perform action blocked by authorization rules'));
+                                }
+                            }
+                            req.body = { bodyData: req.body, user: user };
                             next();
                         })
                             .catch(function (e) {

@@ -1,13 +1,14 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
-dotenv.config();
 export default class MailService {
   public static async sendVerificationMail(
     toEmail: string,
     name: string,
     token: string
   ) {
+    dotenv.config();
+
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

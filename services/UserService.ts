@@ -1,21 +1,40 @@
 import dotenv from 'dotenv';
+import { Repository } from 'typeorm';
 import { AppDataSource } from '../data/data-source';
 import { User } from '../data/entity/User';
 
 dotenv.config();
 
 export default class UserService {
-  public static userRepository = AppDataSource.getRepository(User);
+  /**
+   *
+   */
+  constructor(private userRepository: Repository<User>) {}
 
-  public static async all() {
-    return await this.userRepository.find();
+  public async all() {
+    return await this.userRepository.find({
+      relations: {
+        classAppointments: true,
+        classes: true,
+      },
+    });
   }
 
-  public static async findById(data: any) {
-    return await this.userRepository.findBy({ id: data.id });
+  public async findById(data: any) {
+    return await this.userRepository.findOne({ where: { id: data.id } });
   }
 
-  public static async update(data: any) {}
+  public async update(data: any) {
+    const { name, id } = data;
 
-  public static async delete(id: number) {}
+    const user = await this.userRepository.findOneBy({ id: id });
+    user.name = name;
+
+    const newUser = await this.userRepository.save(user);
+    return newUser;
+  }
+
+  public async delete(id: number) {
+    return await this.userRepository.delete({ id: id });
+  }
 }

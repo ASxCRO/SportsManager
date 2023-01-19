@@ -42,8 +42,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var AdminController_1 = __importDefault(require("../controllers/AdminController"));
 var router = express_1.default.Router();
+var auth_1 = __importDefault(require("../middlewares/auth"));
 var adminController = new AdminController_1.default();
-router.post('/createclass', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/createclass', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, adminController.createClass(req, res)];
@@ -53,7 +54,7 @@ router.post('/createclass', function (req, res, next) { return __awaiter(void 0,
         }
     });
 }); });
-router.patch('/updateclass', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.patch('/updateclass', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, adminController.updateClass(req, res)];
@@ -63,7 +64,7 @@ router.patch('/updateclass', function (req, res, next) { return __awaiter(void 0
         }
     });
 }); });
-router.delete('/deleteclass', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete('/deleteclass', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, adminController.deleteClass(req, res)];
@@ -73,40 +74,30 @@ router.delete('/deleteclass', function (req, res, next) { return __awaiter(void 
         }
     });
 }); });
-router.get('/getallusers', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/createclassappointment', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, adminController.getAllUsers(req, res)];
+            case 0: return [4 /*yield*/, adminController.createClassAppointment(req, res)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
         }
     });
 }); });
-router.post('/createuser', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.patch('/updateclassappointment', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, adminController.createUser(req, res)];
+            case 0: return [4 /*yield*/, adminController.updateClassAppointment(req, res)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
         }
     });
 }); });
-router.patch('/updateuser', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete('/deleteclassappointment', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, adminController.updateUser(req, res)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); });
-router.delete('/deleteuser', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, adminController.deleteUser(req, res)];
+            case 0: return [4 /*yield*/, adminController.deleteClassAppointment(req, res)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];

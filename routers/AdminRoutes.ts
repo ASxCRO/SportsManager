@@ -6,32 +6,28 @@ import auth from '../middlewares/auth';
 
 const adminController = new AdminController();
 
-router.post('/createclass', async (req, res, next) => {
+router.post('/createclass', auth, async (req, res, next) => {
   await adminController.createClass(req, res);
 });
 
-router.patch('/updateclass', async (req, res, next) => {
+router.patch('/updateclass', auth, async (req, res, next) => {
   await adminController.updateClass(req, res);
 });
 
-router.delete('/deleteclass', async (req, res, next) => {
+router.delete('/deleteclass', auth, async (req, res, next) => {
   await adminController.deleteClass(req, res);
 });
 
-router.get('/getallusers', async (req, res, next) => {
-  await adminController.getAllUsers(req, res);
+router.post('/createclassappointment', auth, async (req, res, next) => {
+  await adminController.createClassAppointment(req, res);
 });
 
-router.post('/createuser', async (req, res, next) => {
-  await adminController.createUser(req, res);
+router.patch('/updateclassappointment', auth, async (req, res, next) => {
+  await adminController.updateClassAppointment(req, res);
 });
 
-router.patch('/updateuser', async (req, res, next) => {
-  await adminController.updateUser(req, res);
-});
-
-router.delete('/deleteuser', async (req, res, next) => {
-  await adminController.deleteUser(req, res);
+router.delete('/deleteclassappointment', auth, async (req, res, next) => {
+  await adminController.deleteClassAppointment(req, res);
 });
 
 export default router;

@@ -40,43 +40,68 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var dotenv_1 = __importDefault(require("dotenv"));
-var data_source_1 = require("../data/data-source");
-var User_1 = require("../data/entity/User");
 dotenv_1.default.config();
 var UserService = /** @class */ (function () {
-    function UserService() {
+    /**
+     *
+     */
+    function UserService(userRepository) {
+        this.userRepository = userRepository;
     }
-    UserService.all = function () {
+    UserService.prototype.all = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userRepository.find()];
+                    case 0: return [4 /*yield*/, this.userRepository.find({
+                            relations: {
+                                classAppointments: true,
+                                classes: true,
+                            },
+                        })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    UserService.findById = function (data) {
+    UserService.prototype.findById = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userRepository.findBy({ id: data.id })];
+                    case 0: return [4 /*yield*/, this.userRepository.findOne({ where: { id: data.id } })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    UserService.update = function (data) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
+    UserService.prototype.update = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var name, id, user, newUser;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        name = data.name, id = data.id;
+                        return [4 /*yield*/, this.userRepository.findOneBy({ id: id })];
+                    case 1:
+                        user = _a.sent();
+                        user.name = name;
+                        return [4 /*yield*/, this.userRepository.save(user)];
+                    case 2:
+                        newUser = _a.sent();
+                        return [2 /*return*/, newUser];
+                }
+            });
+        });
     };
-    UserService.delete = function (id) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
+    UserService.prototype.delete = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.userRepository.delete({ id: id })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
     };
-    UserService.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
     return UserService;
 }());
 exports.default = UserService;

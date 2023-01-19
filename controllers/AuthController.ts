@@ -2,9 +2,11 @@ import express, { Request, Response } from 'express';
 import AuthService from '../services/AuthService';
 
 export default class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
   public async register(req: Request, res: Response) {
     try {
-      const user = await AuthService.register(req.body);
+      const user = await this.authService.register(req.body);
 
       res.status(200).json({
         status: true,
@@ -22,7 +24,7 @@ export default class AuthController {
 
   public async login(req: Request, res: Response) {
     try {
-      const data = await AuthService.login(req.body);
+      const data = await this.authService.login(req.body);
       res.status(data.status).json({
         status: true,
         message: data.message,
@@ -35,7 +37,7 @@ export default class AuthController {
 
   public async verify(req: Request, res: Response) {
     try {
-      const data = await AuthService.verify(req.query.token.toString());
+      const data = await this.authService.verify(req.query.token.toString());
       res.status(200).json({
         status: true,
         message: 'Account verification successful',

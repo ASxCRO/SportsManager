@@ -53,14 +53,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var dotenv_1 = __importDefault(require("dotenv"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var jwt_1 = __importDefault(require("../utils/jwt"));
-var data_source_1 = require("../data/data-source");
 var User_1 = require("../data/entity/User");
 var MailService_1 = __importDefault(require("./MailService"));
 dotenv_1.default.config();
 var AuthService = /** @class */ (function () {
-    function AuthService() {
+    function AuthService(userRepository) {
+        this.userRepository = userRepository;
     }
-    AuthService.register = function (data) {
+    AuthService.prototype.register = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             var name, email, password, encryptedPassword, user, _a;
             return __generator(this, function (_b) {
@@ -87,7 +87,7 @@ var AuthService = /** @class */ (function () {
             });
         });
     };
-    AuthService.login = function (data) {
+    AuthService.prototype.login = function (data) {
         return __awaiter(this, void 0, void 0, function () {
             var email, password, user, checkPassword, accessToken;
             return __generator(this, function (_a) {
@@ -132,7 +132,7 @@ var AuthService = /** @class */ (function () {
             });
         });
     };
-    AuthService.verify = function (token) {
+    AuthService.prototype.verify = function (token) {
         return __awaiter(this, void 0, void 0, function () {
             var userToVerify, userToVerifyDb;
             return __generator(this, function (_a) {
@@ -161,7 +161,6 @@ var AuthService = /** @class */ (function () {
             });
         });
     };
-    AuthService.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
     return AuthService;
 }());
 exports.default = AuthService;

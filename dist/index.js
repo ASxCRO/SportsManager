@@ -45,6 +45,7 @@ var body_parser_1 = __importDefault(require("body-parser"));
 require("reflect-metadata");
 var AuthRoutes_1 = __importDefault(require("./routers/AuthRoutes"));
 var SportsRoutes_1 = __importDefault(require("./routers/SportsRoutes"));
+var UserRoutes_1 = __importDefault(require("./routers/UserRoutes"));
 require("reflect-metadata");
 var data_source_1 = require("./data/data-source");
 dotenv_1.default.config();
@@ -66,6 +67,7 @@ app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(body_parser_1.default.json());
 app.use('/api/auth', AuthRoutes_1.default);
 app.use('/api/sports', SportsRoutes_1.default);
+app.use('/api/users', UserRoutes_1.default);
 app.listen(port, function () {
     console.log("now listening on port ".concat(port));
 });

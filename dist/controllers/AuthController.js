@@ -35,13 +35,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var AuthService_1 = __importDefault(require("../services/AuthService"));
 var AuthController = /** @class */ (function () {
-    function AuthController() {
+    function AuthController(authService) {
+        this.authService = authService;
     }
     AuthController.prototype.register = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
@@ -50,7 +47,7 @@ var AuthController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, AuthService_1.default.register(req.body)];
+                        return [4 /*yield*/, this.authService.register(req.body)];
                     case 1:
                         user = _a.sent();
                         res.status(200).json({
@@ -79,7 +76,7 @@ var AuthController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, AuthService_1.default.login(req.body)];
+                        return [4 /*yield*/, this.authService.login(req.body)];
                     case 1:
                         data = _a.sent();
                         res.status(data.status).json({
@@ -104,7 +101,7 @@ var AuthController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, AuthService_1.default.verify(req.query.token.toString())];
+                        return [4 /*yield*/, this.authService.verify(req.query.token.toString())];
                     case 1:
                         data = _a.sent();
                         res.status(200).json({

@@ -35,13 +35,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var SportsService_1 = __importDefault(require("../services/SportsService"));
 var SportsController = /** @class */ (function () {
-    function SportsController() {
+    function SportsController(sportService) {
+        this.sportService = sportService;
+        this.sportsService = sportService;
     }
     SportsController.prototype.getAll = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
@@ -50,7 +48,7 @@ var SportsController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, SportsService_1.default.getAll(req.body)];
+                        return [4 /*yield*/, this.sportsService.getAll(req.body)];
                     case 1:
                         sports = _a.sent();
                         res.status(200).json({
@@ -79,7 +77,7 @@ var SportsController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, SportsService_1.default.getClasses(req.query)];
+                        return [4 /*yield*/, this.sportsService.getClasses(req.query)];
                     case 1:
                         classes = _a.sent();
                         res.status(200).json({
@@ -108,7 +106,7 @@ var SportsController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, SportsService_1.default.getDetailsOfClass(req.params)];
+                        return [4 /*yield*/, this.sportsService.getDetailsOfClass(req.params)];
                     case 1:
                         classes = _a.sent();
                         res.status(200).json({
@@ -137,7 +135,7 @@ var SportsController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, SportsService_1.default.enrollToClass(req.body)];
+                        return [4 /*yield*/, this.sportsService.enrollToClass(req.body)];
                     case 1:
                         data = _a.sent();
                         res.status(data.status).json({
@@ -161,18 +159,18 @@ var SportsController = /** @class */ (function () {
     };
     SportsController.prototype.enrollToClassAppointment = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var classes, e_5;
+            var data, e_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, SportsService_1.default.enrollToClassAppointment(req.body)];
+                        return [4 /*yield*/, this.sportsService.enrollToClassAppointment(req.body)];
                     case 1:
-                        classes = _a.sent();
-                        res.status(200).json({
+                        data = _a.sent();
+                        res.status(data.status).json({
                             status: true,
-                            message: 'enrolled successfully',
-                            data: classes,
+                            message: data.message,
+                            data: data.data,
                         });
                         return [3 /*break*/, 3];
                     case 2:
@@ -181,6 +179,66 @@ var SportsController = /** @class */ (function () {
                         res.status(404).json({
                             status: true,
                             message: 'Problem with enrolling',
+                            data: {},
+                        });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SportsController.prototype.unrollClass = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, e_6;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.sportsService.unrollClass(req.body)];
+                    case 1:
+                        data = _a.sent();
+                        res.status(data.status).json({
+                            status: true,
+                            message: data.message,
+                            data: data.data,
+                        });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_6 = _a.sent();
+                        console.log(e_6);
+                        res.status(404).json({
+                            status: true,
+                            message: 'Problem with unrolling',
+                            data: {},
+                        });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SportsController.prototype.unrollClassAppointment = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, e_7;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.sportsService.unrollClassAppointment(req.body)];
+                    case 1:
+                        data = _a.sent();
+                        res.status(data.status).json({
+                            status: true,
+                            message: data.message,
+                            data: data.data,
+                        });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_7 = _a.sent();
+                        console.log(e_7);
+                        res.status(404).json({
+                            status: true,
+                            message: 'Problem with unrolling',
                             data: {},
                         });
                         return [3 /*break*/, 3];

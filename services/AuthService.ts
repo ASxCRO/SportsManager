@@ -4,12 +4,14 @@ import jwt from '../utils/jwt';
 import { AppDataSource } from '../data/data-source';
 import { User } from '../data/entity/User';
 import MailService from './MailService';
+import { Repository } from 'typeorm';
 
 dotenv.config();
 
 export default class AuthService {
-  public static userRepository = AppDataSource.getRepository(User);
-  public static async register(data: any) {
+  constructor(private userRepository: Repository<User>) {}
+
+  public async register(data: any) {
     const { name, email, password } = data;
 
     const encryptedPassword = bcrypt.hashSync(password, 8);
@@ -29,7 +31,7 @@ export default class AuthService {
     return data;
   }
 
-  public static async login(data: any) {
+  public async login(data: any) {
     const { email, password } = data;
     const user = await this.userRepository.findOneBy({
       email: email,
@@ -66,7 +68,7 @@ export default class AuthService {
     };
   }
 
-  public static async verify(token: string) {
+  public async verify(token: string) {
     let userToVerify: User;
     await jwt
       .verifyAccessToken(token)

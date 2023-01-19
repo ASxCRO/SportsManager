@@ -1,3 +1,4 @@
+import { Repository } from 'typeorm';
 import { AppDataSource } from '../data/data-source';
 import { Class } from '../data/entity/Class';
 import { ClassAppointment } from '../data/entity/ClassAppointment';
@@ -6,17 +7,18 @@ import { User } from '../data/entity/User';
 import { AgeGroup } from '../Enums/AgeGroup';
 
 export default class SportsService {
-  public static sportRepository = AppDataSource.getRepository(Sport);
-  public static classRepository = AppDataSource.getRepository(Class);
-  public static userRepository = AppDataSource.getRepository(User);
-  public static classAppointmentRepository =
-    AppDataSource.getRepository(ClassAppointment);
+  constructor(
+    private sportRepository: Repository<Sport>,
+    private classRepository: Repository<Class>,
+    private userRepository: Repository<User>,
+    private classAppointmentRepository: Repository<ClassAppointment>
+  ) {}
 
-  public static async getAll(data: any) {
+  public async getAll(data: any) {
     return this.sportRepository.find();
   }
 
-  public static async getClasses(data: any) {
+  public async getClasses(data: any) {
     let classes = AppDataSource.createQueryBuilder(Class, 'class')
       .leftJoinAndSelect('class.sport', 'sport')
       .leftJoinAndSelect('class.classAppointments', 'classAppointments');
@@ -41,7 +43,7 @@ export default class SportsService {
     return filteredClasses;
   }
 
-  public static async getDetailsOfClass(data: any) {
+  public async getDetailsOfClass(data: any) {
     let classes = AppDataSource.createQueryBuilder(Class, 'class')
       .leftJoinAndSelect('class.sport', 'sport')
       .leftJoinAndSelect('class.classAppointments', 'classAppointments');
@@ -57,25 +59,29 @@ export default class SportsService {
     return filteredClasses;
   }
 
-  public static async enrollToClass(data: any) {
+  public async enrollToClass(data: any) {
     try {
-      const userWithClasses = await AppDataSource.getRepository(User)
-        .createQueryBuilder('user')
-        .leftJoinAndSelect('user.classes', 'classes')
-        .andWhere('user.id = :id', {
-          id: data.userId,
-        })
-        .getOne();
+      const users = await this.userRepository.find({
+        relations: {
+          classes: true,
+        },
+      });
 
-      if (userWithClasses.classes.length < 2) {
-        const users = await this.userRepository.find({
-          relations: {
-            classes: true,
-          },
-        });
+      const user = users.filter((e) => e.id === data.userId)[0];
 
-        const user = users.filter((e) => e.id === data.userId)[0];
+      const alreadyEnrolled = user.classAppointments.filter(
+        (e) => e.id === data.classAppointmentId
+      );
 
+      if (alreadyEnrolled.length > 0) {
+        return {
+          message: 'User already applied to this class',
+          status: 404,
+          data: {},
+        };
+      }
+
+      if (user.classes.length < 2) {
         const classs = await this.classRepository.findOneBy({
           id: data.classId,
         });
@@ -85,22 +91,22 @@ export default class SportsService {
 
         return {
           message: 'User enrolled to class!',
-          status: 404,
+          status: 200,
           data: newUser,
+        };
+      } else {
+        return {
+          message: 'User cant apply to more than 2 classes',
+          status: 404,
+          data: {},
         };
       }
     } catch (error) {
       console.log(error);
     }
-
-    return {
-      message: 'User cant apply to more than 2 classes',
-      status: 404,
-      data: {},
-    };
   }
 
-  public static async enrollToClassAppointment(data: any) {
+  public async enrollToClassAppointment(data: any) {
     const users = await this.userRepository.find({
       relations: {
         classAppointments: true,
@@ -108,6 +114,18 @@ export default class SportsService {
     });
 
     const user = users.filter((e) => e.id === data.userId)[0];
+
+    const alreadyEnrolled = user.classAppointments.filter(
+      (e) => e.id === data.classAppointmentId
+    );
+
+    if (alreadyEnrolled.length > 0) {
+      return {
+        message: 'User already applied to this appointment',
+        status: 404,
+        data: {},
+      };
+    }
 
     const usersCountOnAppointment = user.classAppointments.length;
 
@@ -118,9 +136,85 @@ export default class SportsService {
 
       user.classAppointments.push(classAppointment);
       const newUser = await AppDataSource.manager.save(user);
-      return newUser;
+      return {
+        message: 'Enrolled',
+        status: 200,
+        data: newUser,
+      };
+    } else {
+      return {
+        message: 'User cant apply to more than 10 class appointments',
+        status: 404,
+        data: {},
+      };
+    }
+  }
+
+  public async unrollClass(data: any) {
+    const users = await this.userRepository.find({
+      relations: {
+        classes: true,
+      },
+    });
+
+    const user = users.filter((e) => e.id === data.userId)[0];
+
+    const isEnrolled = user.classes.filter((e) => e.id === data.classId);
+
+    if (isEnrolled.length < 1) {
+      return {
+        message: 'User not even applied to this class',
+        status: 404,
+        data: {},
+      };
     }
 
-    return 'User cant apply to more than 10 class appointments';
+    user.classes = user.classes.filter((classs) => {
+      return classs.id !== data.classId;
+    });
+
+    const newUser = await AppDataSource.manager.save(user);
+
+    return {
+      message: 'Enrolled',
+      status: 200,
+      data: newUser,
+    };
+  }
+
+  public async unrollClassAppointment(data: any) {
+    const users = await this.userRepository.find({
+      relations: {
+        classAppointments: true,
+      },
+    });
+
+    const user = users.filter((e) => e.id === data.userId)[0];
+
+    const isEnrolled = user.classAppointments.filter(
+      (e) => e.id === data.classAppointmentId
+    );
+
+    if (isEnrolled.length < 1) {
+      return {
+        message: 'User not even applied to this appointment',
+        status: 404,
+        data: {},
+      };
+    }
+
+    user.classAppointments = user.classAppointments.filter(
+      (classApointment) => {
+        return classApointment.id !== data.classAppointmentId;
+      }
+    );
+
+    const newUser = await AppDataSource.manager.save(user);
+
+    return {
+      message: 'Enrolled',
+      status: 200,
+      data: newUser,
+    };
   }
 }

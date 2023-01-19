@@ -40,28 +40,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var dotenv_1 = __importDefault(require("dotenv"));
-var data_source_1 = require("../data/data-source");
-var User_1 = require("../data/entity/User");
 dotenv_1.default.config();
 var AdminService = /** @class */ (function () {
-    function AdminService() {
+    function AdminService(userRepository) {
+        this.userRepository = userRepository;
     }
-    AdminService.register = function (data) {
+    AdminService.prototype.register = function (data) {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];
         }); });
     };
-    AdminService.login = function (data) {
+    AdminService.prototype.login = function (data) {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];
         }); });
     };
-    AdminService.verify = function (token) {
+    AdminService.prototype.verify = function (token) {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];
         }); });
     };
-    AdminService.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
     return AdminService;
 }());
 exports.default = AdminService;

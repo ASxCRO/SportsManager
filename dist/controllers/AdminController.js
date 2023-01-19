@@ -54,22 +54,17 @@ var AdminController = /** @class */ (function () {
             return [2 /*return*/];
         }); });
     };
-    AdminController.prototype.getAllUsers = function (req, res) {
+    AdminController.prototype.createClassAppointment = function (req, res) {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];
         }); });
     };
-    AdminController.prototype.deleteUser = function (req, res) {
+    AdminController.prototype.updateClassAppointment = function (req, res) {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];
         }); });
     };
-    AdminController.prototype.createUser = function (req, res) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
-    AdminController.prototype.updateUser = function (req, res) {
+    AdminController.prototype.deleteClassAppointment = function (req, res) {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];
         }); });

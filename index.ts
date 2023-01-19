@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import 'reflect-metadata';
 import authRouter from './routers/AuthRoutes';
 import sportsRouter from './routers/SportsRoutes';
+import userRouter from './routers/UserRoutes';
+
 import 'reflect-metadata';
 import { AppDataSource } from './data/data-source';
 import { Sport } from './data/entity/Sport';
@@ -46,6 +48,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/api/auth', authRouter);
 app.use('/api/sports', sportsRouter);
+app.use('/api/users', userRouter);
 
 app.listen(port, () => {
   console.log(`now listening on port ${port}`);
