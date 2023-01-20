@@ -117,6 +117,7 @@ export default class AdminController {
         }
       );
       const newClassApp = await this.adminService.updateClassAppointment(data);
+
       res.status(200).json({
         status: true,
         message: 'Class appointment updated',
@@ -139,11 +140,11 @@ export default class AdminController {
         abortEarly: false,
         stripUnknown: true,
       });
-      await this.adminService.deleteClassAppointment(data.id);
-      res.status(200).json({
-        status: true,
-        message: 'Class appointment deleted',
-        data: {},
+      const response = await this.adminService.deleteClassAppointment(data.id);
+      res.status(response.status).json({
+        status: response.status === 200 ? true : false,
+        message: response.message,
+        data: response.data,
       });
     } catch (e: any) {
       const error = e as ValidationError;

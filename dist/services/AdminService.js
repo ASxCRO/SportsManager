@@ -161,10 +161,31 @@ var AdminService = /** @class */ (function () {
     };
     AdminService.prototype.deleteClassAppointment = function (id) {
         return __awaiter(this, void 0, void 0, function () {
+            var classAppExists;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.classAppointmentRepository.delete({ id: id })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0: return [4 /*yield*/, this.classAppointmentRepository.exist({
+                            where: {
+                                id: id,
+                            },
+                        })];
+                    case 1:
+                        classAppExists = _a.sent();
+                        if (!classAppExists) {
+                            return [2 /*return*/, {
+                                    message: 'class appoinment with that id does not exist',
+                                    status: 422,
+                                    data: {},
+                                }];
+                        }
+                        return [4 /*yield*/, this.classAppointmentRepository.delete({ id: id })];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/, {
+                                message: 'deleted',
+                                status: 200,
+                                data: {},
+                            }];
                 }
             });
         });

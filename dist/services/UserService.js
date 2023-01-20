@@ -58,11 +58,11 @@ var UserService = /** @class */ (function () {
             });
         });
     };
-    UserService.prototype.findById = function (data) {
+    UserService.prototype.findById = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userRepository.findOneOrFail({ where: { id: data.id } })];
+                    case 0: return [4 /*yield*/, this.userRepository.findOneByOrFail({ id: id })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -101,7 +101,13 @@ var UserService = /** @class */ (function () {
                         userExists = _a.sent();
                         if (!userExists) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.userRepository.delete({ id: id })];
-                    case 2: return [2 /*return*/, _a.sent()];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/, {
+                                message: 'user deleted',
+                                status: 200,
+                                data: {},
+                            }];
                     case 3: return [2 /*return*/, {
                             message: 'user with that id not found',
                             status: 404,

@@ -74,7 +74,27 @@ export class AdminService {
   }
 
   public async deleteClassAppointment(id: number) {
-    return await this.classAppointmentRepository.delete({ id: id });
+    const classAppExists = await this.classAppointmentRepository.exist({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!classAppExists) {
+      return {
+        message: 'class appoinment with that id does not exist',
+        status: 422,
+        data: {},
+      };
+    }
+
+    await this.classAppointmentRepository.delete({ id: id });
+
+    return {
+      message: 'deleted',
+      status: 200,
+      data: {},
+    };
   }
 
   public async readReviews() {

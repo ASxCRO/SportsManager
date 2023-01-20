@@ -171,11 +171,12 @@ var SportsService = /** @class */ (function () {
     };
     SportsService.prototype.enrollToClassAppointment = function (data, userParam) {
         return __awaiter(this, void 0, void 0, function () {
-            var user, alreadyEnrolled, usersCountOnAppointment, classAppointment, newUser;
+            var user, alreadyEnrolled, classAppointment, userClassIds, userAppliedToClassOfClassAppointment, usersCountOnAppointment, newUser;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.userRepository.findOneOrFail({
                             relations: {
+                                classes: true,
                                 classAppointments: true,
                             },
                             where: {
@@ -192,13 +193,27 @@ var SportsService = /** @class */ (function () {
                                     data: {},
                                 }];
                         }
-                        usersCountOnAppointment = user.classAppointments.length;
-                        if (!(usersCountOnAppointment < 10)) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.classAppointmentRepository.findOneByOrFail({
-                                id: data.classAppointmentId,
+                        return [4 /*yield*/, this.classAppointmentRepository.findOneOrFail({
+                                where: {
+                                    id: data.classAppointmentId,
+                                },
+                                relations: {
+                                    classs: true,
+                                },
                             })];
                     case 2:
                         classAppointment = _a.sent();
+                        userClassIds = user.classes.map(function (e) { return e.id; });
+                        userAppliedToClassOfClassAppointment = userClassIds.includes(classAppointment.classs.id);
+                        if (!userAppliedToClassOfClassAppointment) {
+                            return [2 /*return*/, {
+                                    message: 'User cant apply to class appointment if not applied to class',
+                                    status: 404,
+                                    data: {},
+                                }];
+                        }
+                        usersCountOnAppointment = user.classAppointments.length;
+                        if (!(usersCountOnAppointment < 10)) return [3 /*break*/, 4];
                         user.classAppointments.push(classAppointment);
                         return [4 /*yield*/, data_source_1.AppDataSource.manager.save(user)];
                     case 3:

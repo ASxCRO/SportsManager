@@ -58,11 +58,11 @@ export default class UserController {
         stripUnknown: true,
       });
 
-      await this.usersService.delete(data.id);
-      res.status(200).json({
-        status: true,
-        message: 'User deleted',
-        data: {},
+      const response = await this.usersService.delete(data.id);
+      res.status(response.status).json({
+        status: response.status === 200 ? true : false,
+        message: response.message,
+        data: response.data,
       });
     } catch (e: any) {
       const error = e as ValidationError;

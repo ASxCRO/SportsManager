@@ -13,8 +13,8 @@ export class UserService {
     });
   }
 
-  public async findById(data: any) {
-    return await this.userRepository.findOneOrFail({ where: { id: data.id } });
+  public async findById(id: number) {
+    return await this.userRepository.findOneByOrFail({ id: id });
   }
 
   public async update(data: any) {
@@ -35,7 +35,13 @@ export class UserService {
     });
 
     if (userExists) {
-      return await this.userRepository.delete({ id: id });
+      await this.userRepository.delete({ id: id });
+
+      return {
+        message: 'user deleted',
+        status: 200,
+        data: {},
+      };
     }
 
     return {

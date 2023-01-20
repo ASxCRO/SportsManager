@@ -218,7 +218,7 @@ var AdminController = /** @class */ (function () {
     };
     AdminController.prototype.deleteClassAppointment = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, e_6, error;
+            var data, response, e_6, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -229,11 +229,11 @@ var AdminController = /** @class */ (function () {
                         });
                         return [4 /*yield*/, this.adminService.deleteClassAppointment(data.id)];
                     case 1:
-                        _a.sent();
-                        res.status(200).json({
-                            status: true,
-                            message: 'Class appointment deleted',
-                            data: {},
+                        response = _a.sent();
+                        res.status(response.status).json({
+                            status: response.status === 200 ? true : false,
+                            message: response.message,
+                            data: response.data,
                         });
                         return [3 /*break*/, 3];
                     case 2:

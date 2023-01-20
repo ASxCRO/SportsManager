@@ -118,6 +118,7 @@ export class SportsService {
   public async enrollToClassAppointment(data: any, userParam: User) {
     const user = await this.userRepository.findOneOrFail({
       relations: {
+        classes: true,
         classAppointments: true,
       },
       where: {
@@ -137,14 +138,33 @@ export class SportsService {
       };
     }
 
+    const classAppointment =
+      await this.classAppointmentRepository.findOneOrFail({
+        where: {
+          id: data.classAppointmentId,
+        },
+        relations: {
+          classs: true,
+        },
+      });
+
+    const userClassIds = user.classes.map((e) => e.id);
+
+    const userAppliedToClassOfClassAppointment = userClassIds.includes(
+      classAppointment.classs.id
+    );
+
+    if (!userAppliedToClassOfClassAppointment) {
+      return {
+        message: 'User cant apply to class appointment if not applied to class',
+        status: 404,
+        data: {},
+      };
+    }
+
     const usersCountOnAppointment = user.classAppointments.length;
 
     if (usersCountOnAppointment < 10) {
-      const classAppointment =
-        await this.classAppointmentRepository.findOneByOrFail({
-          id: data.classAppointmentId,
-        });
-
       user.classAppointments.push(classAppointment);
       const newUser = await AppDataSource.manager.save(user);
       return {

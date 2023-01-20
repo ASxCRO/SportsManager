@@ -110,7 +110,7 @@ var UserController = /** @class */ (function () {
     };
     UserController.prototype.deleteUser = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, e_3, error;
+            var data, response, e_3, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -121,11 +121,11 @@ var UserController = /** @class */ (function () {
                         });
                         return [4 /*yield*/, this.usersService.delete(data.id)];
                     case 1:
-                        _a.sent();
-                        res.status(200).json({
-                            status: true,
-                            message: 'User deleted',
-                            data: {},
+                        response = _a.sent();
+                        res.status(response.status).json({
+                            status: response.status === 200 ? true : false,
+                            message: response.message,
+                            data: response.data,
                         });
                         return [3 /*break*/, 3];
                     case 2:
