@@ -38,7 +38,7 @@ export class SportsService {
       });
     }
 
-    const filteredClasses = await classes.getRawMany();
+    const filteredClasses = await classes.getMany();
 
     return filteredClasses;
   }

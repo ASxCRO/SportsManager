@@ -79,7 +79,7 @@ var SportsService = /** @class */ (function () {
                                 ageGroup: ageGroup,
                             });
                         }
-                        return [4 /*yield*/, classes.getRawMany()];
+                        return [4 /*yield*/, classes.getMany()];
                     case 1:
                         filteredClasses = _a.sent();
                         return [2 /*return*/, filteredClasses];
