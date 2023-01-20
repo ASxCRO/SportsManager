@@ -37,13 +37,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var UserService_1 = require("../services/UserService");
+var deleteUserValidationSchema_1 = require("../Validators/User/deleteUserValidationSchema");
+var getOneValidationSchema_1 = require("../Validators/User/getOneValidationSchema");
+var updateUserValidationSchema_1 = require("../Validators/User/updateUserValidationSchema");
 var UserController = /** @class */ (function () {
     function UserController() {
         this.usersService = new UserService_1.UserService();
     }
     UserController.prototype.getAll = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var users, e_1;
+            var users, e_1, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -59,11 +62,11 @@ var UserController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_1 = _a.sent();
-                        console.log(e_1);
-                        res.status(404).json({
-                            status: true,
-                            message: 'problem with fetching',
-                            data: {},
+                        error = e_1;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -73,12 +76,16 @@ var UserController = /** @class */ (function () {
     };
     UserController.prototype.getOne = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var user, e_2;
+            var data, user, e_2, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.usersService.findById(req.query.id)];
+                        data = getOneValidationSchema_1.getOneValidationSchema.validateSync(req.query, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.usersService.findById(data.id)];
                     case 1:
                         user = _a.sent();
                         res.status(200).json({
@@ -89,11 +96,11 @@ var UserController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_2 = _a.sent();
-                        console.log(e_2);
-                        res.status(404).json({
-                            status: true,
-                            message: 'problem with fetching',
-                            data: {},
+                        error = e_2;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -103,12 +110,16 @@ var UserController = /** @class */ (function () {
     };
     UserController.prototype.deleteUser = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_3;
+            var data, e_3, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.usersService.delete(req.body.bodyData.id)];
+                        data = deleteUserValidationSchema_1.deleteUserValidationSchema.validateSync(req.body.bodyData, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.usersService.delete(data.id)];
                     case 1:
                         _a.sent();
                         res.status(200).json({
@@ -119,11 +130,11 @@ var UserController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_3 = _a.sent();
-                        console.log(e_3);
-                        res.status(404).json({
-                            status: true,
-                            message: 'problem with fetching',
-                            data: {},
+                        error = e_3;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -133,12 +144,16 @@ var UserController = /** @class */ (function () {
     };
     UserController.prototype.updateUser = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var newUser, e_4;
+            var data, newUser, e_4, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.usersService.update(req.body.bodyData)];
+                        data = updateUserValidationSchema_1.updateUserValidationSchema.validateSync(req.body.bodyData, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.usersService.update(data)];
                     case 1:
                         newUser = _a.sent();
                         res.status(200).json({
@@ -149,11 +164,11 @@ var UserController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_4 = _a.sent();
-                        console.log(e_4);
-                        res.status(404).json({
-                            status: true,
-                            message: 'problem with updating',
-                            data: {},
+                        error = e_4;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];

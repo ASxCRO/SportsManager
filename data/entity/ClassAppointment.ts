@@ -4,7 +4,6 @@ import {
   Column,
   ManyToOne,
   CreateDateColumn,
-  OneToMany,
   ManyToMany,
 } from 'typeorm';
 import { Class } from './Class';

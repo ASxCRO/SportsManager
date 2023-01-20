@@ -14,13 +14,13 @@ export class UserService {
   }
 
   public async findById(data: any) {
-    return await this.userRepository.findOne({ where: { id: data.id } });
+    return await this.userRepository.findOneOrFail({ where: { id: data.id } });
   }
 
   public async update(data: any) {
     const { name, id } = data;
 
-    const user = await this.userRepository.findOneBy({ id: id });
+    const user = await this.userRepository.findOneByOrFail({ id: id });
     user.name = name;
 
     const newUser = await this.userRepository.save(user);
@@ -28,6 +28,20 @@ export class UserService {
   }
 
   public async delete(id: number) {
-    return await this.userRepository.delete({ id: id });
+    const userExists = await this.userRepository.exist({
+      where: {
+        id: id,
+      },
+    });
+
+    if (userExists) {
+      return await this.userRepository.delete({ id: id });
+    }
+
+    return {
+      message: 'user with that id not found',
+      status: 404,
+      data: {},
+    };
   }
 }

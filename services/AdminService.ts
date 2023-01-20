@@ -17,7 +17,7 @@ export class AdminService {
     const classs = new Class();
     classs.description = description;
     classs.ageGroup = ageGroup;
-    classs.sport = await this.sportRepository.findOneBy({ id: sportId });
+    classs.sport = await this.sportRepository.findOneByOrFail({ id: sportId });
     classs.duration = duration;
 
     const newClass = await this.classRepository.save(classs);
@@ -28,10 +28,10 @@ export class AdminService {
   public async updateClass(data: any) {
     const { description, ageGroup, sportId, duration, classId } = data;
 
-    const classs = await this.classRepository.findOneBy({ id: classId });
+    const classs = await this.classRepository.findOneByOrFail({ id: classId });
     classs.description = description;
     classs.ageGroup = ageGroup;
-    classs.sport = await this.sportRepository.findOneBy({ id: sportId });
+    classs.sport = await this.sportRepository.findOneByOrFail({ id: sportId });
     classs.duration = duration;
 
     const newClass = await this.classRepository.save(classs);
@@ -48,7 +48,9 @@ export class AdminService {
     const classsApp = new ClassAppointment();
     classsApp.description = description;
     classsApp.dateStarting = dateStarting;
-    classsApp.classs = await this.classRepository.findOneBy({ id: classId });
+    classsApp.classs = await this.classRepository.findOneByOrFail({
+      id: classId,
+    });
 
     const newClassApp = await this.classAppointmentRepository.save(classsApp);
 
@@ -58,11 +60,11 @@ export class AdminService {
   public async updateClassAppointment(data: any) {
     const { description, classId, dateStarting, classAppointmentId } = data;
 
-    const classsApp = await this.classAppointmentRepository.findOneBy({
+    const classsApp = await this.classAppointmentRepository.findOneByOrFail({
       id: classAppointmentId,
     });
     classsApp.dateStarting = dateStarting;
-    classsApp.classs = await this.classRepository.findOneBy({
+    classsApp.classs = await this.classRepository.findOneByOrFail({
       id: classId,
     });
     classsApp.description = description;

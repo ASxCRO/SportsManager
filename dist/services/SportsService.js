@@ -51,7 +51,7 @@ var SportsService = /** @class */ (function () {
         this.classAppointmentRepository = data_source_1.AppDataSource.getRepository(ClassAppointment_1.ClassAppointment);
         this.reviewRepository = data_source_1.AppDataSource.getRepository(Review_1.Review);
     }
-    SportsService.prototype.getAll = function (data) {
+    SportsService.prototype.getAll = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, this.sportRepository.find()];
@@ -105,7 +105,7 @@ var SportsService = /** @class */ (function () {
                         return [4 /*yield*/, classes.getOne()];
                     case 1:
                         filteredClasses = _a.sent();
-                        averageReviewRate = filteredClasses.reviews.reduce(function (accumulator, classs) { return accumulator + classs.rate; }, 0) / filteredClasses.reviews.length;
+                        averageReviewRate = filteredClasses.reviews.reduce(function (accumulator, classs) { return accumulator + parseInt(classs.rate); }, 0) / filteredClasses.reviews.length;
                         return [2 /*return*/, {
                                 filteredClasses: filteredClasses,
                                 averageReviewRate: averageReviewRate,
@@ -121,7 +121,7 @@ var SportsService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 6, , 7]);
-                        return [4 /*yield*/, this.userRepository.findOne({
+                        return [4 /*yield*/, this.userRepository.findOneOrFail({
                                 relations: {
                                     classes: true,
                                 },
@@ -131,7 +131,7 @@ var SportsService = /** @class */ (function () {
                             })];
                     case 1:
                         user = _a.sent();
-                        alreadyEnrolled = user.classAppointments.filter(function (e) { return e.id === data.classAppointmentId; });
+                        alreadyEnrolled = user.classes.filter(function (e) { return e.id === data.classId; });
                         if (alreadyEnrolled.length > 0) {
                             return [2 /*return*/, {
                                     message: 'User already applied to this class',
@@ -140,7 +140,7 @@ var SportsService = /** @class */ (function () {
                                 }];
                         }
                         if (!(user.classes.length < 2)) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.classRepository.findOneBy({
+                        return [4 /*yield*/, this.classRepository.findOneByOrFail({
                                 id: data.classId,
                             })];
                     case 2:
@@ -174,7 +174,7 @@ var SportsService = /** @class */ (function () {
             var user, alreadyEnrolled, usersCountOnAppointment, classAppointment, newUser;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userRepository.findOne({
+                    case 0: return [4 /*yield*/, this.userRepository.findOneOrFail({
                             relations: {
                                 classAppointments: true,
                             },
@@ -194,7 +194,7 @@ var SportsService = /** @class */ (function () {
                         }
                         usersCountOnAppointment = user.classAppointments.length;
                         if (!(usersCountOnAppointment < 10)) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.classAppointmentRepository.findOneBy({
+                        return [4 /*yield*/, this.classAppointmentRepository.findOneByOrFail({
                                 id: data.classAppointmentId,
                             })];
                     case 2:
@@ -222,7 +222,7 @@ var SportsService = /** @class */ (function () {
             var user, isEnrolled, newUser;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userRepository.findOne({
+                    case 0: return [4 /*yield*/, this.userRepository.findOneOrFail({
                             relations: {
                                 classes: true,
                             },
@@ -260,7 +260,7 @@ var SportsService = /** @class */ (function () {
             var user, isEnrolled, newUser;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userRepository.findOne({
+                    case 0: return [4 /*yield*/, this.userRepository.findOneOrFail({
                             relations: {
                                 classAppointments: true,
                             },
@@ -302,7 +302,7 @@ var SportsService = /** @class */ (function () {
                         comment = data.comment, rate = data.rate, classId = data.classId;
                         review = new Review_1.Review();
                         _a = review;
-                        return [4 /*yield*/, this.classRepository.findOneBy({ id: classId })];
+                        return [4 /*yield*/, this.classRepository.findOneByOrFail({ id: classId })];
                     case 1:
                         _a.class = _b.sent();
                         review.comment = comment;

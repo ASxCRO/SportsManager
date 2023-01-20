@@ -50,24 +50,37 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var dotenv_1 = __importDefault(require("dotenv"));
+exports.AuthService = void 0;
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var jwt_1 = __importDefault(require("../utils/jwt"));
 var data_source_1 = require("../data/data-source");
 var User_1 = require("../data/entity/User");
 var MailService_1 = require("./MailService");
-dotenv_1.default.config();
 var AuthService = /** @class */ (function () {
     function AuthService() {
         this.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
     }
     AuthService.prototype.register = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var name, email, password, encryptedPassword, user, _a;
+            var name, email, password, userExists, encryptedPassword, user, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         name = data.name, email = data.email, password = data.password;
+                        return [4 /*yield*/, this.userRepository.exist({
+                                where: {
+                                    email: email,
+                                },
+                            })];
+                    case 1:
+                        userExists = _b.sent();
+                        if (userExists) {
+                            return [2 /*return*/, {
+                                    message: 'user with that email already exists',
+                                    status: 422,
+                                    data: {},
+                                }];
+                        }
                         encryptedPassword = bcryptjs_1.default.hashSync(password, 8);
                         user = new User_1.User();
                         user.name = name;
@@ -75,12 +88,12 @@ var AuthService = /** @class */ (function () {
                         user.password = encryptedPassword;
                         user.verified = false;
                         return [4 /*yield*/, this.userRepository.save(user)];
-                    case 1:
+                    case 2:
                         _b.sent();
                         data.password = null;
                         _a = data;
                         return [4 /*yield*/, jwt_1.default.signAccessToken(user)];
-                    case 2:
+                    case 3:
                         _a.accessToken = _b.sent();
                         MailService_1.MailService.sendVerificationMail(user.email, user.name, data.accessToken);
                         return [2 /*return*/, data];
@@ -95,7 +108,7 @@ var AuthService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         email = data.email, password = data.password;
-                        return [4 /*yield*/, this.userRepository.findOneBy({
+                        return [4 /*yield*/, this.userRepository.findOneByOrFail({
                                 email: email,
                             })];
                     case 1:
@@ -148,7 +161,7 @@ var AuthService = /** @class */ (function () {
                         })];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.userRepository.findOneBy({
+                        return [4 /*yield*/, this.userRepository.findOneByOrFail({
                                 email: userToVerify.email,
                             })];
                     case 2:
@@ -164,5 +177,5 @@ var AuthService = /** @class */ (function () {
     };
     return AuthService;
 }());
-exports.default = AuthService;
+exports.AuthService = AuthService;
 //# sourceMappingURL=AuthService.js.map

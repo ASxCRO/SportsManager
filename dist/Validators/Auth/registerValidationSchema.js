@@ -31,4 +31,4 @@ exports.registerValidationSchema = yup
         .matches(PASSWORD_REGEX, 'password must contain only letters and numbers with a minimum of 8 characters'),
 })
     .required();
-//# sourceMappingURL=Register.js.map
+//# sourceMappingURL=registerValidationSchema.js.map

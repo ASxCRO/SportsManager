@@ -35,15 +35,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var AuthService_1 = __importDefault(require("../services/AuthService"));
-var Register_1 = require("../Validators/Auth/Register");
+var AuthService_1 = require("../services/AuthService");
+var loginValidationSchema_1 = require("../Validators/Auth/loginValidationSchema");
+var registerValidationSchema_1 = require("../Validators/Auth/registerValidationSchema");
+var verifyValidationSchema_1 = require("../Validators/Auth/verifyValidationSchema");
 var AuthController = /** @class */ (function () {
     function AuthController() {
-        this.authService = new AuthService_1.default();
+        this.authService = new AuthService_1.AuthService();
     }
     AuthController.prototype.register = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
@@ -52,7 +51,7 @@ var AuthController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        data = Register_1.registerValidationSchema.validateSync(req.body, {
+                        data = registerValidationSchema_1.registerValidationSchema.validateSync(req.body, {
                             abortEarly: false,
                             stripUnknown: true,
                         });
@@ -69,8 +68,8 @@ var AuthController = /** @class */ (function () {
                         e_1 = _a.sent();
                         error = e_1;
                         res.status(422).json({
-                            status: true,
-                            message: 'User with this email already exists or problem with registering',
+                            status: false,
+                            message: 'Error registering',
                             data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
@@ -81,23 +80,32 @@ var AuthController = /** @class */ (function () {
     };
     AuthController.prototype.login = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, e_2;
+            var data, response, e_2, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.authService.login(req.body)];
+                        data = loginValidationSchema_1.loginValidationSchema.validateSync(req.body, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.authService.login(data)];
                     case 1:
-                        data = _a.sent();
-                        res.status(data.status).json({
-                            status: true,
-                            message: data.message,
-                            data: data.data,
+                        response = _a.sent();
+                        res.status(response.status).json({
+                            status: false,
+                            message: response.message,
+                            data: response.data,
                         });
                         return [3 /*break*/, 3];
                     case 2:
                         e_2 = _a.sent();
-                        console.log(e_2);
+                        error = e_2;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
+                        });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -106,23 +114,32 @@ var AuthController = /** @class */ (function () {
     };
     AuthController.prototype.verify = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var data, e_3;
+            var data, response, e_3, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.authService.verify(req.query.token.toString())];
+                        data = verifyValidationSchema_1.verifyValidationSchema.validateSync(req.query, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.authService.verify(data.token)];
                     case 1:
-                        data = _a.sent();
+                        response = _a.sent();
                         res.status(200).json({
                             status: true,
                             message: 'Account verification successful',
-                            data: data,
+                            data: response,
                         });
                         return [3 /*break*/, 3];
                     case 2:
                         e_3 = _a.sent();
-                        console.log(e_3);
+                        error = e_3;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
+                        });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }

@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Review = void 0;
 var typeorm_1 = require("typeorm");
-var Rate_1 = require("../../Enums/Rate");
+var Rate_1 = require("../../enums/Rate");
 var Class_1 = require("./Class");
 var Review = /** @class */ (function () {
     function Review() {
@@ -30,7 +30,7 @@ var Review = /** @class */ (function () {
             enum: Rate_1.Rate,
             default: Rate_1.Rate.AVERAGE,
         }),
-        __metadata("design:type", Number)
+        __metadata("design:type", String)
     ], Review.prototype, "rate", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return Class_1.Class; }, function (classs) { return classs.reviews; }),

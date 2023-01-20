@@ -1,4 +1,8 @@
+import { ValidationError } from 'yup';
 import { UserService } from '../services/UserService';
+import { deleteUserValidationSchema } from '../Validators/User/deleteUserValidationSchema';
+import { getOneValidationSchema } from '../Validators/User/getOneValidationSchema';
+import { updateUserValidationSchema } from '../Validators/User/updateUserValidationSchema';
 
 export default class UserController {
   private usersService = new UserService();
@@ -12,29 +16,36 @@ export default class UserController {
         data: users,
       });
     } catch (e: any) {
-      console.log(e);
-      res.status(404).json({
-        status: true,
-        message: 'problem with fetching',
-        data: {},
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
       });
     }
   }
 
   public async getOne(req: any, res: any) {
     try {
-      const user = await this.usersService.findById(req.query.id);
+      const data = getOneValidationSchema.validateSync(req.query, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+
+      const user = await this.usersService.findById(data.id);
       res.status(200).json({
         status: true,
         message: 'User fetched',
         data: user,
       });
     } catch (e: any) {
-      console.log(e);
-      res.status(404).json({
-        status: true,
-        message: 'problem with fetching',
-        data: {},
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
       });
     }
     return;
@@ -42,36 +53,48 @@ export default class UserController {
 
   public async deleteUser(req: any, res: any) {
     try {
-      await this.usersService.delete(req.body.bodyData.id);
+      const data = deleteUserValidationSchema.validateSync(req.body.bodyData, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+
+      await this.usersService.delete(data.id);
       res.status(200).json({
         status: true,
         message: 'User deleted',
         data: {},
       });
     } catch (e: any) {
-      console.log(e);
-      res.status(404).json({
-        status: true,
-        message: 'problem with fetching',
-        data: {},
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
       });
     }
   }
 
   public async updateUser(req: any, res: any) {
     try {
-      const newUser = await this.usersService.update(req.body.bodyData);
+      const data = updateUserValidationSchema.validateSync(req.body.bodyData, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+
+      const newUser = await this.usersService.update(data);
       res.status(200).json({
         status: true,
         message: 'User updated',
         data: newUser,
       });
     } catch (e: any) {
-      console.log(e);
-      res.status(404).json({
-        status: true,
-        message: 'problem with updating',
-        data: {},
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
       });
     }
   }

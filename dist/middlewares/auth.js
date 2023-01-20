@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var jwt_1 = __importDefault(require("../utils/jwt"));
 var http_errors_1 = __importDefault(require("http-errors"));
-var Roles_1 = require("../Enums/Roles");
+var Roles_1 = require("../enums/Roles");
 function auth(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
         var token;

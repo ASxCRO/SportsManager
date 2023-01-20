@@ -41,7 +41,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MailService = void 0;
 var nodemailer_1 = __importDefault(require("nodemailer"));
-var dotenv_1 = __importDefault(require("dotenv"));
 var MailService = /** @class */ (function () {
     function MailService() {
     }
@@ -49,7 +48,6 @@ var MailService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var transporter, mailOptions;
             return __generator(this, function (_a) {
-                dotenv_1.default.config();
                 transporter = nodemailer_1.default.createTransport({
                     service: 'gmail',
                     auth: {

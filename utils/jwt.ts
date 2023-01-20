@@ -1,8 +1,6 @@
 import jwt, { Secret } from 'jsonwebtoken';
 import createError from 'http-errors';
-import dotenv from 'dotenv';
 
-dotenv.config();
 const accessTokenSecret = <Secret>process.env.ACCESS_TOKEN_SECRET;
 export default class jwtUtil {
   public static signAccessToken(payload: any) {

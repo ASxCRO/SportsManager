@@ -1,17 +1,28 @@
-import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import jwt from '../utils/jwt';
 import { AppDataSource } from '../data/data-source';
 import { User } from '../data/entity/User';
 import { MailService } from './MailService';
 
-dotenv.config();
-
-export default class AuthService {
+export class AuthService {
   private userRepository = AppDataSource.getRepository(User);
 
   public async register(data: any) {
     const { name, email, password } = data;
+
+    const userExists = await this.userRepository.exist({
+      where: {
+        email: email,
+      },
+    });
+
+    if (userExists) {
+      return {
+        message: 'user with that email already exists',
+        status: 422,
+        data: {},
+      };
+    }
 
     const encryptedPassword = bcrypt.hashSync(password, 8);
 
@@ -32,7 +43,7 @@ export default class AuthService {
 
   public async login(data: any) {
     const { email, password } = data;
-    const user = await this.userRepository.findOneBy({
+    const user = await this.userRepository.findOneByOrFail({
       email: email,
     });
 
@@ -78,7 +89,7 @@ export default class AuthService {
         return 'Token not active';
       });
 
-    const userToVerifyDb = await this.userRepository.findOneBy({
+    const userToVerifyDb = await this.userRepository.findOneByOrFail({
       email: userToVerify.email,
     });
     userToVerifyDb.verified = true;

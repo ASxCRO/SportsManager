@@ -4,7 +4,7 @@ import { ClassAppointment } from '../data/entity/ClassAppointment';
 import { Review } from '../data/entity/Review';
 import { Sport } from '../data/entity/Sport';
 import { User } from '../data/entity/User';
-import { AgeGroup } from '../Enums/AgeGroup';
+import { AgeGroup } from '../enums/AgeGroup';
 
 export class SportsService {
   private sportRepository = AppDataSource.getRepository(Sport);
@@ -14,7 +14,7 @@ export class SportsService {
     AppDataSource.getRepository(ClassAppointment);
   private reviewRepository = AppDataSource.getRepository(Review);
 
-  public async getAll(data: any) {
+  public async getAll() {
     return this.sportRepository.find();
   }
 
@@ -59,7 +59,7 @@ export class SportsService {
 
     const averageReviewRate =
       filteredClasses.reviews.reduce(
-        (accumulator, classs) => accumulator + classs.rate,
+        (accumulator, classs) => accumulator + parseInt(classs.rate),
         0
       ) / filteredClasses.reviews.length;
 
@@ -71,7 +71,7 @@ export class SportsService {
 
   public async enrollToClass(data: any, userParam: User) {
     try {
-      const user = await this.userRepository.findOne({
+      const user = await this.userRepository.findOneOrFail({
         relations: {
           classes: true,
         },
@@ -80,9 +80,7 @@ export class SportsService {
         },
       });
 
-      const alreadyEnrolled = user.classAppointments.filter(
-        (e) => e.id === data.classAppointmentId
-      );
+      const alreadyEnrolled = user.classes.filter((e) => e.id === data.classId);
 
       if (alreadyEnrolled.length > 0) {
         return {
@@ -93,7 +91,7 @@ export class SportsService {
       }
 
       if (user.classes.length < 2) {
-        const classs = await this.classRepository.findOneBy({
+        const classs = await this.classRepository.findOneByOrFail({
           id: data.classId,
         });
 
@@ -118,7 +116,7 @@ export class SportsService {
   }
 
   public async enrollToClassAppointment(data: any, userParam: User) {
-    const user = await this.userRepository.findOne({
+    const user = await this.userRepository.findOneOrFail({
       relations: {
         classAppointments: true,
       },
@@ -142,9 +140,10 @@ export class SportsService {
     const usersCountOnAppointment = user.classAppointments.length;
 
     if (usersCountOnAppointment < 10) {
-      const classAppointment = await this.classAppointmentRepository.findOneBy({
-        id: data.classAppointmentId,
-      });
+      const classAppointment =
+        await this.classAppointmentRepository.findOneByOrFail({
+          id: data.classAppointmentId,
+        });
 
       user.classAppointments.push(classAppointment);
       const newUser = await AppDataSource.manager.save(user);
@@ -163,7 +162,7 @@ export class SportsService {
   }
 
   public async unrollClass(data: any, userParam: User) {
-    const user = await this.userRepository.findOne({
+    const user = await this.userRepository.findOneOrFail({
       relations: {
         classes: true,
       },
@@ -196,7 +195,7 @@ export class SportsService {
   }
 
   public async unrollClassAppointment(data: any, userParam: User) {
-    const user = await this.userRepository.findOne({
+    const user = await this.userRepository.findOneOrFail({
       relations: {
         classAppointments: true,
       },
@@ -235,7 +234,7 @@ export class SportsService {
     const { comment, rate, classId } = data;
 
     const review = new Review();
-    review.class = await this.classRepository.findOneBy({ id: classId });
+    review.class = await this.classRepository.findOneByOrFail({ id: classId });
     review.comment = comment;
     review.rate = rate;
 

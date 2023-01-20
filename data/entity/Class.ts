@@ -5,9 +5,8 @@ import {
   ManyToOne,
   OneToMany,
   ManyToMany,
-  JoinTable,
 } from 'typeorm';
-import { AgeGroup } from '../../Enums/AgeGroup';
+import { AgeGroup } from '../../enums/AgeGroup';
 import { ClassAppointment } from './ClassAppointment';
 import { Review } from './Review';
 import { Sport } from './Sport';

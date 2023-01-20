@@ -1,12 +1,6 @@
 import express from 'express';
 const router = express.Router();
 import SportsController from '../controllers/SportsController';
-import { AppDataSource } from '../data/data-source';
-import { Class } from '../data/entity/Class';
-import { ClassAppointment } from '../data/entity/ClassAppointment';
-import { Review } from '../data/entity/Review';
-import { Sport } from '../data/entity/Sport';
-import { User } from '../data/entity/User';
 import auth from '../middlewares/auth';
 
 const sportsController = new SportsController();

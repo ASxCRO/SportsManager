@@ -1,13 +1,6 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  ManyToOne,
-} from 'typeorm';
-import { Rate } from '../../Enums/Rate';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Rate } from '../../enums/Rate';
 import { Class } from './Class';
-import { User } from './User';
 
 @Entity()
 export class Review {

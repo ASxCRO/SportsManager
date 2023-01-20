@@ -62,7 +62,7 @@ var UserService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userRepository.findOne({ where: { id: data.id } })];
+                    case 0: return [4 /*yield*/, this.userRepository.findOneOrFail({ where: { id: data.id } })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -75,7 +75,7 @@ var UserService = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         name = data.name, id = data.id;
-                        return [4 /*yield*/, this.userRepository.findOneBy({ id: id })];
+                        return [4 /*yield*/, this.userRepository.findOneByOrFail({ id: id })];
                     case 1:
                         user = _a.sent();
                         user.name = name;
@@ -89,10 +89,24 @@ var UserService = /** @class */ (function () {
     };
     UserService.prototype.delete = function (id) {
         return __awaiter(this, void 0, void 0, function () {
+            var userExists;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userRepository.delete({ id: id })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 0: return [4 /*yield*/, this.userRepository.exist({
+                            where: {
+                                id: id,
+                            },
+                        })];
+                    case 1:
+                        userExists = _a.sent();
+                        if (!userExists) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.userRepository.delete({ id: id })];
+                    case 2: return [2 /*return*/, _a.sent()];
+                    case 3: return [2 /*return*/, {
+                            message: 'user with that id not found',
+                            status: 404,
+                            data: {},
+                        }];
                 }
             });
         });

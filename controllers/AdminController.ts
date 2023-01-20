@@ -1,12 +1,23 @@
 import { Request, Response } from 'express';
+import { ValidationError } from 'yup';
 import { AdminService } from '../services/AdminService';
+import { createClassAppointmentValidationSchema } from '../Validators/Admin/ClassAppointments/createClassAppointmentValidationSchema';
+import { updateClassAppointmentValidationSchema } from '../Validators/Admin/ClassAppointments/updateClassAppointmentValidationSchema';
+import { createClassValidationSchema } from '../Validators/Admin/Classes/createClassValidationSchema';
+import { deleteClassValidationSchema } from '../Validators/Admin/Classes/deleteClassValidationSchema';
+import { updateClassValidationSchema } from '../Validators/Admin/Classes/updateClassValidationSchema';
 
 export default class AdminController {
   private adminService = new AdminService();
 
   public async createClass(req: Request, res: Response) {
     try {
-      const newClass = await this.adminService.createClass(req.body.bodyData);
+      const data = createClassValidationSchema.validateSync(req.body.bodyData, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+
+      const newClass = await this.adminService.createClass(data);
 
       res.status(200).json({
         status: true,
@@ -14,54 +25,71 @@ export default class AdminController {
         data: newClass,
       });
     } catch (e: any) {
-      console.log(e);
-      res.status(404).json({
-        status: true,
-        message: 'problem with updating',
-        data: {},
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
       });
     }
   }
   public async updateClass(req: Request, res: Response) {
     try {
-      const newClass = await this.adminService.updateClass(req.body.bodyData);
+      const data = updateClassValidationSchema.validateSync(req.body.bodyData, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+      const newClass = await this.adminService.updateClass(data);
       res.status(200).json({
         status: true,
         message: 'Class updated',
         data: newClass,
       });
     } catch (e: any) {
-      console.log(e);
-      res.status(404).json({
-        status: true,
-        message: 'problem with updating',
-        data: {},
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
       });
     }
   }
   public async deleteClass(req: Request, res: Response) {
     try {
-      await this.adminService.deleteClass(req.body.bodyData.id);
+      const data = deleteClassValidationSchema.validateSync(req.body.bodyData, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+      await this.adminService.deleteClass(data.id);
       res.status(200).json({
         status: true,
         message: 'Class deleted',
         data: {},
       });
     } catch (e: any) {
-      console.log(e);
-      res.status(404).json({
-        status: true,
-        message: 'problem with fetching',
-        data: {},
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
       });
     }
   }
 
   public async createClassAppointment(req: Request, res: Response) {
     try {
-      const newClassApp = await this.adminService.createClassAppointment(
-        req.body.bodyData
+      const data = createClassAppointmentValidationSchema.validateSync(
+        req.body.bodyData,
+        {
+          abortEarly: false,
+          stripUnknown: true,
+        }
       );
+
+      const newClassApp = await this.adminService.createClassAppointment(data);
 
       res.status(200).json({
         status: true,
@@ -69,49 +97,61 @@ export default class AdminController {
         data: newClassApp,
       });
     } catch (e: any) {
-      console.log(e);
-      res.status(404).json({
-        status: true,
-        message: 'problem with updating',
-        data: {},
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
       });
     }
   }
 
   public async updateClassAppointment(req: Request, res: Response) {
     try {
-      const newClassApp = await this.adminService.updateClassAppointment(
-        req.body.bodyData
+      const data = updateClassAppointmentValidationSchema.validateSync(
+        req.body.bodyData,
+        {
+          abortEarly: false,
+          stripUnknown: true,
+        }
       );
+      const newClassApp = await this.adminService.updateClassAppointment(data);
       res.status(200).json({
         status: true,
         message: 'Class appointment updated',
         data: newClassApp,
       });
     } catch (e: any) {
-      console.log(e);
-      res.status(404).json({
-        status: true,
-        message: 'problem with updating',
-        data: {},
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
       });
     }
   }
 
   public async deleteClassAppointment(req: Request, res: Response) {
     try {
-      await this.adminService.deleteClassAppointment(req.body.bodyData.id);
+      const data = deleteClassValidationSchema.validateSync(req.body.bodyData, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+      await this.adminService.deleteClassAppointment(data.id);
       res.status(200).json({
         status: true,
         message: 'Class appointment deleted',
         data: {},
       });
     } catch (e: any) {
-      console.log(e);
-      res.status(404).json({
-        status: true,
-        message: 'problem with fetching',
-        data: {},
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
       });
     }
   }
@@ -125,11 +165,12 @@ export default class AdminController {
         data: reviews,
       });
     } catch (e: any) {
-      console.log(e);
-      res.status(404).json({
-        status: true,
-        message: 'problem with fetching',
-        data: {},
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
       });
     }
   }

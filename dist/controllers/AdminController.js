@@ -37,18 +37,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var AdminService_1 = require("../services/AdminService");
+var createClassAppointmentValidationSchema_1 = require("../Validators/Admin/ClassAppointments/createClassAppointmentValidationSchema");
+var updateClassAppointmentValidationSchema_1 = require("../Validators/Admin/ClassAppointments/updateClassAppointmentValidationSchema");
+var createClassValidationSchema_1 = require("../Validators/Admin/Classes/createClassValidationSchema");
+var deleteClassValidationSchema_1 = require("../Validators/Admin/Classes/deleteClassValidationSchema");
+var updateClassValidationSchema_1 = require("../Validators/Admin/Classes/updateClassValidationSchema");
 var AdminController = /** @class */ (function () {
     function AdminController() {
         this.adminService = new AdminService_1.AdminService();
     }
     AdminController.prototype.createClass = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var newClass, e_1;
+            var data, newClass, e_1, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.adminService.createClass(req.body.bodyData)];
+                        data = createClassValidationSchema_1.createClassValidationSchema.validateSync(req.body.bodyData, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.adminService.createClass(data)];
                     case 1:
                         newClass = _a.sent();
                         res.status(200).json({
@@ -59,11 +68,11 @@ var AdminController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_1 = _a.sent();
-                        console.log(e_1);
-                        res.status(404).json({
-                            status: true,
-                            message: 'problem with updating',
-                            data: {},
+                        error = e_1;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -73,12 +82,16 @@ var AdminController = /** @class */ (function () {
     };
     AdminController.prototype.updateClass = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var newClass, e_2;
+            var data, newClass, e_2, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.adminService.updateClass(req.body.bodyData)];
+                        data = updateClassValidationSchema_1.updateClassValidationSchema.validateSync(req.body.bodyData, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.adminService.updateClass(data)];
                     case 1:
                         newClass = _a.sent();
                         res.status(200).json({
@@ -89,11 +102,11 @@ var AdminController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_2 = _a.sent();
-                        console.log(e_2);
-                        res.status(404).json({
-                            status: true,
-                            message: 'problem with updating',
-                            data: {},
+                        error = e_2;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -103,12 +116,16 @@ var AdminController = /** @class */ (function () {
     };
     AdminController.prototype.deleteClass = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_3;
+            var data, e_3, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.adminService.deleteClass(req.body.bodyData.id)];
+                        data = deleteClassValidationSchema_1.deleteClassValidationSchema.validateSync(req.body.bodyData, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.adminService.deleteClass(data.id)];
                     case 1:
                         _a.sent();
                         res.status(200).json({
@@ -119,11 +136,11 @@ var AdminController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_3 = _a.sent();
-                        console.log(e_3);
-                        res.status(404).json({
-                            status: true,
-                            message: 'problem with fetching',
-                            data: {},
+                        error = e_3;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -133,12 +150,16 @@ var AdminController = /** @class */ (function () {
     };
     AdminController.prototype.createClassAppointment = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var newClassApp, e_4;
+            var data, newClassApp, e_4, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.adminService.createClassAppointment(req.body.bodyData)];
+                        data = createClassAppointmentValidationSchema_1.createClassAppointmentValidationSchema.validateSync(req.body.bodyData, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.adminService.createClassAppointment(data)];
                     case 1:
                         newClassApp = _a.sent();
                         res.status(200).json({
@@ -149,11 +170,11 @@ var AdminController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_4 = _a.sent();
-                        console.log(e_4);
-                        res.status(404).json({
-                            status: true,
-                            message: 'problem with updating',
-                            data: {},
+                        error = e_4;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -163,12 +184,16 @@ var AdminController = /** @class */ (function () {
     };
     AdminController.prototype.updateClassAppointment = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var newClassApp, e_5;
+            var data, newClassApp, e_5, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.adminService.updateClassAppointment(req.body.bodyData)];
+                        data = updateClassAppointmentValidationSchema_1.updateClassAppointmentValidationSchema.validateSync(req.body.bodyData, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.adminService.updateClassAppointment(data)];
                     case 1:
                         newClassApp = _a.sent();
                         res.status(200).json({
@@ -179,11 +204,11 @@ var AdminController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_5 = _a.sent();
-                        console.log(e_5);
-                        res.status(404).json({
-                            status: true,
-                            message: 'problem with updating',
-                            data: {},
+                        error = e_5;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -193,12 +218,16 @@ var AdminController = /** @class */ (function () {
     };
     AdminController.prototype.deleteClassAppointment = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_6;
+            var data, e_6, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.adminService.deleteClassAppointment(req.body.bodyData.id)];
+                        data = deleteClassValidationSchema_1.deleteClassValidationSchema.validateSync(req.body.bodyData, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.adminService.deleteClassAppointment(data.id)];
                     case 1:
                         _a.sent();
                         res.status(200).json({
@@ -209,11 +238,11 @@ var AdminController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_6 = _a.sent();
-                        console.log(e_6);
-                        res.status(404).json({
-                            status: true,
-                            message: 'problem with fetching',
-                            data: {},
+                        error = e_6;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -223,7 +252,7 @@ var AdminController = /** @class */ (function () {
     };
     AdminController.prototype.readReviews = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var reviews, e_7;
+            var reviews, e_7, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -239,11 +268,11 @@ var AdminController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_7 = _a.sent();
-                        console.log(e_7);
-                        res.status(404).json({
-                            status: true,
-                            message: 'problem with fetching',
-                            data: {},
+                        error = e_7;
+                        res.status(422).json({
+                            status: false,
+                            message: 'Error',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];

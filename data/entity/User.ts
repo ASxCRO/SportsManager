@@ -2,12 +2,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToMany,
-  ManyToOne,
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { UserRole } from '../../Enums/Roles';
+import { UserRole } from '../../enums/Roles';
 import { Class } from './Class';
 import { ClassAppointment } from './ClassAppointment';
 import { Review } from './Review';

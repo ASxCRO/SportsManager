@@ -1,7 +1,7 @@
 import jwt from '../utils/jwt';
 import createError from 'http-errors';
 import { User } from '../data/entity/User';
-import { UserRole } from '../Enums/Roles';
+import { UserRole } from '../enums/Roles';
 import { Request } from 'express';
 
 export default async function auth(req: Request, res: any, next: any) {

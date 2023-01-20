@@ -1,7 +1,9 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { ValidationError } from 'yup';
-import AuthService from '../services/AuthService';
-import { registerValidationSchema } from '../Validators/Auth/Register';
+import { AuthService } from '../services/AuthService';
+import { loginValidationSchema } from '../Validators/Auth/loginValidationSchema';
+import { registerValidationSchema } from '../Validators/Auth/registerValidationSchema';
+import { verifyValidationSchema } from '../Validators/Auth/verifyValidationSchema';
 
 export default class AuthController {
   private authService = new AuthService();
@@ -24,9 +26,8 @@ export default class AuthController {
       const error = e as ValidationError;
 
       res.status(422).json({
-        status: true,
-        message:
-          'User with this email already exists or problem with registering',
+        status: false,
+        message: 'Error registering',
         data: { errors: error.errors },
       });
     }
@@ -34,27 +35,49 @@ export default class AuthController {
 
   public async login(req: Request, res: Response) {
     try {
-      const data = await this.authService.login(req.body);
-      res.status(data.status).json({
-        status: true,
-        message: data.message,
-        data: data.data,
+      const data = loginValidationSchema.validateSync(req.body, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+
+      const response = await this.authService.login(data);
+      res.status(response.status).json({
+        status: false,
+        message: response.message,
+        data: response.data,
       });
     } catch (e: any) {
-      console.log(e);
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
+      });
     }
   }
 
   public async verify(req: Request, res: Response) {
     try {
-      const data = await this.authService.verify(req.query.token.toString());
+      const data = verifyValidationSchema.validateSync(req.query, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+
+      const response = await this.authService.verify(data.token);
       res.status(200).json({
         status: true,
         message: 'Account verification successful',
-        data,
+        data: response,
       });
     } catch (e: any) {
-      console.log(e);
+      const error = e as ValidationError;
+
+      res.status(422).json({
+        status: false,
+        message: 'Error',
+        data: { errors: error.errors },
+      });
     }
   }
 }

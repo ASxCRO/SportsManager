@@ -9,11 +9,11 @@ import verifiedUser from './migration/1673993063306-newVerifiedPropOnUser';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: 'manager_postgres',
-  port: 5432,
-  username: 'postgres',
-  password: 'postgres',
-  database: 'sportsmanager',
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT),
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   synchronize: true,
   logging: false,
   entities: [User, Sport, Class, ClassAppointment, Review],

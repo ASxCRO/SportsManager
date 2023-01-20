@@ -60,7 +60,7 @@ var AdminService = /** @class */ (function () {
                         classs.description = description;
                         classs.ageGroup = ageGroup;
                         _a = classs;
-                        return [4 /*yield*/, this.sportRepository.findOneBy({ id: sportId })];
+                        return [4 /*yield*/, this.sportRepository.findOneByOrFail({ id: sportId })];
                     case 1:
                         _a.sport = _b.sent();
                         classs.duration = duration;
@@ -79,13 +79,13 @@ var AdminService = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         description = data.description, ageGroup = data.ageGroup, sportId = data.sportId, duration = data.duration, classId = data.classId;
-                        return [4 /*yield*/, this.classRepository.findOneBy({ id: classId })];
+                        return [4 /*yield*/, this.classRepository.findOneByOrFail({ id: classId })];
                     case 1:
                         classs = _b.sent();
                         classs.description = description;
                         classs.ageGroup = ageGroup;
                         _a = classs;
-                        return [4 /*yield*/, this.sportRepository.findOneBy({ id: sportId })];
+                        return [4 /*yield*/, this.sportRepository.findOneByOrFail({ id: sportId })];
                     case 2:
                         _a.sport = _b.sent();
                         classs.duration = duration;
@@ -118,7 +118,9 @@ var AdminService = /** @class */ (function () {
                         classsApp.description = description;
                         classsApp.dateStarting = dateStarting;
                         _a = classsApp;
-                        return [4 /*yield*/, this.classRepository.findOneBy({ id: classId })];
+                        return [4 /*yield*/, this.classRepository.findOneByOrFail({
+                                id: classId,
+                            })];
                     case 1:
                         _a.classs = _b.sent();
                         return [4 /*yield*/, this.classAppointmentRepository.save(classsApp)];
@@ -136,14 +138,14 @@ var AdminService = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         description = data.description, classId = data.classId, dateStarting = data.dateStarting, classAppointmentId = data.classAppointmentId;
-                        return [4 /*yield*/, this.classAppointmentRepository.findOneBy({
+                        return [4 /*yield*/, this.classAppointmentRepository.findOneByOrFail({
                                 id: classAppointmentId,
                             })];
                     case 1:
                         classsApp = _b.sent();
                         classsApp.dateStarting = dateStarting;
                         _a = classsApp;
-                        return [4 /*yield*/, this.classRepository.findOneBy({
+                        return [4 /*yield*/, this.classRepository.findOneByOrFail({
                                 id: classId,
                             })];
                     case 2:
