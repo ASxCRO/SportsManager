@@ -1,1 +1,0 @@
-{"version":3,"file":"deleteClassAppointmentValidationSchema.js","sourceRoot":"","sources":["../../../../Validators/Admin/ClassAppointments/deleteClassAppointmentValidationSchema.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;AAAA,uCAA2B;AAEd,QAAA,sCAAsC,GAAG,GAAG;KACtD,MAAM,CAAC;IACN,EAAE,EAAE,GAAG,CAAC,MAAM,EAAE,CAAC,QAAQ,EAAE;CAC5B,CAAC;KACD,QAAQ,EAAE,CAAC"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"enrollToClassAppointmentValidationSchema.js","sourceRoot":"","sources":["../../../Validators/Sports/enrollToClassAppointmentValidationSchema.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;AAAA,uCAA2B;AAEd,QAAA,wCAAwC,GAAG,GAAG;KACxD,MAAM,CAAC;IACN,kBAAkB,EAAE,GAAG,CAAC,MAAM,EAAE,CAAC,QAAQ,EAAE;CAC5C,CAAC;KACD,QAAQ,EAAE,CAAC"}

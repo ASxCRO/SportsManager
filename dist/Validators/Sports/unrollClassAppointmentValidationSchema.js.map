@@ -1,1 +1,0 @@
-{"version":3,"file":"unrollClassAppointmentValidationSchema.js","sourceRoot":"","sources":["../../../Validators/Sports/unrollClassAppointmentValidationSchema.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;AAAA,uCAA2B;AAEd,QAAA,sCAAsC,GAAG,GAAG;KACtD,MAAM,CAAC;IACN,kBAAkB,EAAE,GAAG,CAAC,MAAM,EAAE,CAAC,QAAQ,EAAE;CAC5C,CAAC;KACD,QAAQ,EAAE,CAAC"}
