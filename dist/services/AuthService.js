@@ -53,12 +53,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var dotenv_1 = __importDefault(require("dotenv"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var jwt_1 = __importDefault(require("../utils/jwt"));
+var data_source_1 = require("../data/data-source");
 var User_1 = require("../data/entity/User");
-var MailService_1 = __importDefault(require("./MailService"));
+var MailService_1 = require("./MailService");
 dotenv_1.default.config();
 var AuthService = /** @class */ (function () {
-    function AuthService(userRepository) {
-        this.userRepository = userRepository;
+    function AuthService() {
+        this.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
     }
     AuthService.prototype.register = function (data) {
         return __awaiter(this, void 0, void 0, function () {
@@ -81,7 +82,7 @@ var AuthService = /** @class */ (function () {
                         return [4 /*yield*/, jwt_1.default.signAccessToken(user)];
                     case 2:
                         _a.accessToken = _b.sent();
-                        MailService_1.default.sendVerificationMail(user.email, user.name, data.accessToken);
+                        MailService_1.MailService.sendVerificationMail(user.email, user.name, data.accessToken);
                         return [2 /*return*/, data];
                 }
             });

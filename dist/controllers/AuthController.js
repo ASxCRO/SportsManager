@@ -35,19 +35,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var AuthService_1 = __importDefault(require("../services/AuthService"));
+var Register_1 = require("../Validators/Auth/Register");
 var AuthController = /** @class */ (function () {
-    function AuthController(authService) {
-        this.authService = authService;
+    function AuthController() {
+        this.authService = new AuthService_1.default();
     }
     AuthController.prototype.register = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var user, e_1;
+            var data, user, e_1, error;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.authService.register(req.body)];
+                        data = Register_1.registerValidationSchema.validateSync(req.body, {
+                            abortEarly: false,
+                            stripUnknown: true,
+                        });
+                        return [4 /*yield*/, this.authService.register(data)];
                     case 1:
                         user = _a.sent();
                         res.status(200).json({
@@ -58,10 +67,11 @@ var AuthController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_1 = _a.sent();
-                        res.status(404).json({
+                        error = e_1;
+                        res.status(422).json({
                             status: true,
-                            message: 'User with this email already exists',
-                            data: {},
+                            message: 'User with this email already exists or problem with registering',
+                            data: { errors: error.errors },
                         });
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];

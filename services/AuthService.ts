@@ -3,13 +3,12 @@ import bcrypt from 'bcryptjs';
 import jwt from '../utils/jwt';
 import { AppDataSource } from '../data/data-source';
 import { User } from '../data/entity/User';
-import MailService from './MailService';
-import { Repository } from 'typeorm';
+import { MailService } from './MailService';
 
 dotenv.config();
 
 export default class AuthService {
-  constructor(private userRepository: Repository<User>) {}
+  private userRepository = AppDataSource.getRepository(User);
 
   public async register(data: any) {
     const { name, email, password } = data;

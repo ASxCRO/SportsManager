@@ -10,6 +10,7 @@ import {
 import { UserRole } from '../../Enums/Roles';
 import { Class } from './Class';
 import { ClassAppointment } from './ClassAppointment';
+import { Review } from './Review';
 
 @Entity()
 export class User {

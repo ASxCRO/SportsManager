@@ -1,15 +1,8 @@
-import dotenv from 'dotenv';
-import { Repository } from 'typeorm';
 import { AppDataSource } from '../data/data-source';
 import { User } from '../data/entity/User';
 
-dotenv.config();
-
-export default class UserService {
-  /**
-   *
-   */
-  constructor(private userRepository: Repository<User>) {}
+export class UserService {
+  private userRepository = AppDataSource.getRepository(User);
 
   public async all() {
     return await this.userRepository.find({

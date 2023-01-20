@@ -9,39 +9,37 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ClassAppointment = void 0;
+exports.Review = void 0;
 var typeorm_1 = require("typeorm");
+var Rate_1 = require("../../Enums/Rate");
 var Class_1 = require("./Class");
-var User_1 = require("./User");
-var ClassAppointment = /** @class */ (function () {
-    function ClassAppointment() {
+var Review = /** @class */ (function () {
+    function Review() {
     }
     __decorate([
         (0, typeorm_1.PrimaryGeneratedColumn)(),
         __metadata("design:type", Number)
-    ], ClassAppointment.prototype, "id", void 0);
-    __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return Class_1.Class; }, function (classs) { return classs.classAppointments; }, {
-            onDelete: 'CASCADE',
-        }),
-        __metadata("design:type", Class_1.Class)
-    ], ClassAppointment.prototype, "classs", void 0);
-    __decorate([
-        (0, typeorm_1.ManyToMany)(function () { return User_1.User; }, function (user) { return user.classAppointments; }),
-        __metadata("design:type", Array)
-    ], ClassAppointment.prototype, "users", void 0);
-    __decorate([
-        (0, typeorm_1.CreateDateColumn)(),
-        __metadata("design:type", Date)
-    ], ClassAppointment.prototype, "dateStarting", void 0);
+    ], Review.prototype, "id", void 0);
     __decorate([
         (0, typeorm_1.Column)(),
         __metadata("design:type", String)
-    ], ClassAppointment.prototype, "description", void 0);
-    ClassAppointment = __decorate([
+    ], Review.prototype, "comment", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({
+            type: 'enum',
+            enum: Rate_1.Rate,
+            default: Rate_1.Rate.AVERAGE,
+        }),
+        __metadata("design:type", Number)
+    ], Review.prototype, "rate", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return Class_1.Class; }, function (classs) { return classs.reviews; }),
+        __metadata("design:type", Class_1.Class)
+    ], Review.prototype, "class", void 0);
+    Review = __decorate([
         (0, typeorm_1.Entity)()
-    ], ClassAppointment);
-    return ClassAppointment;
+    ], Review);
+    return Review;
 }());
-exports.ClassAppointment = ClassAppointment;
-//# sourceMappingURL=ClassAppointment.js.map
+exports.Review = Review;
+//# sourceMappingURL=Review.js.map

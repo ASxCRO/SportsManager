@@ -1,9 +1,7 @@
-import { ResolveHostnameOptions } from 'nodemailer/lib/shared';
-import { ParsedQs } from 'qs';
-import UserService from '../services/UserService';
+import { UserService } from '../services/UserService';
 
 export default class UserController {
-  constructor(private readonly usersService: UserService) {}
+  private usersService = new UserService();
 
   public async getAll(req: any, res: any) {
     try {

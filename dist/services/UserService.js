@@ -35,18 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
+exports.UserService = void 0;
+var data_source_1 = require("../data/data-source");
+var User_1 = require("../data/entity/User");
 var UserService = /** @class */ (function () {
-    /**
-     *
-     */
-    function UserService(userRepository) {
-        this.userRepository = userRepository;
+    function UserService() {
+        this.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
     }
     UserService.prototype.all = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -104,5 +99,5 @@ var UserService = /** @class */ (function () {
     };
     return UserService;
 }());
-exports.default = UserService;
+exports.UserService = UserService;
 //# sourceMappingURL=UserService.js.map

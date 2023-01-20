@@ -65,7 +65,7 @@ function auth(req, res, next) {
                                     next(http_errors_1.default.Unauthorized('User attempt to perform action blocked by authorization rules'));
                                 }
                             }
-                            req.body = { bodyData: req.body, user: user };
+                            req.body = { bodyData: req.body, user: user.payload };
                             next();
                         })
                             .catch(function (e) {

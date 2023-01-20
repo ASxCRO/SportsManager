@@ -35,32 +35,153 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
+exports.AdminService = void 0;
+var data_source_1 = require("../data/data-source");
+var Class_1 = require("../data/entity/Class");
+var ClassAppointment_1 = require("../data/entity/ClassAppointment");
+var Review_1 = require("../data/entity/Review");
+var Sport_1 = require("../data/entity/Sport");
 var AdminService = /** @class */ (function () {
-    function AdminService(userRepository) {
-        this.userRepository = userRepository;
+    function AdminService() {
+        this.sportRepository = data_source_1.AppDataSource.getRepository(Sport_1.Sport);
+        this.classRepository = data_source_1.AppDataSource.getRepository(Class_1.Class);
+        this.classAppointmentRepository = data_source_1.AppDataSource.getRepository(ClassAppointment_1.ClassAppointment);
+        this.reviewRepository = data_source_1.AppDataSource.getRepository(Review_1.Review);
     }
-    AdminService.prototype.register = function (data) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
+    AdminService.prototype.createClass = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var description, ageGroup, sportId, duration, classs, _a, newClass;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        description = data.description, ageGroup = data.ageGroup, sportId = data.sportId, duration = data.duration;
+                        classs = new Class_1.Class();
+                        classs.description = description;
+                        classs.ageGroup = ageGroup;
+                        _a = classs;
+                        return [4 /*yield*/, this.sportRepository.findOneBy({ id: sportId })];
+                    case 1:
+                        _a.sport = _b.sent();
+                        classs.duration = duration;
+                        return [4 /*yield*/, this.classRepository.save(classs)];
+                    case 2:
+                        newClass = _b.sent();
+                        return [2 /*return*/, newClass];
+                }
+            });
+        });
     };
-    AdminService.prototype.login = function (data) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
+    AdminService.prototype.updateClass = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var description, ageGroup, sportId, duration, classId, classs, _a, newClass;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        description = data.description, ageGroup = data.ageGroup, sportId = data.sportId, duration = data.duration, classId = data.classId;
+                        return [4 /*yield*/, this.classRepository.findOneBy({ id: classId })];
+                    case 1:
+                        classs = _b.sent();
+                        classs.description = description;
+                        classs.ageGroup = ageGroup;
+                        _a = classs;
+                        return [4 /*yield*/, this.sportRepository.findOneBy({ id: sportId })];
+                    case 2:
+                        _a.sport = _b.sent();
+                        classs.duration = duration;
+                        return [4 /*yield*/, this.classRepository.save(classs)];
+                    case 3:
+                        newClass = _b.sent();
+                        return [2 /*return*/, newClass];
+                }
+            });
+        });
     };
-    AdminService.prototype.verify = function (token) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
+    AdminService.prototype.deleteClass = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.classRepository.delete({ id: id })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    AdminService.prototype.createClassAppointment = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var description, classId, dateStarting, classsApp, _a, newClassApp;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        description = data.description, classId = data.classId, dateStarting = data.dateStarting;
+                        classsApp = new ClassAppointment_1.ClassAppointment();
+                        classsApp.description = description;
+                        classsApp.dateStarting = dateStarting;
+                        _a = classsApp;
+                        return [4 /*yield*/, this.classRepository.findOneBy({ id: classId })];
+                    case 1:
+                        _a.classs = _b.sent();
+                        return [4 /*yield*/, this.classAppointmentRepository.save(classsApp)];
+                    case 2:
+                        newClassApp = _b.sent();
+                        return [2 /*return*/, newClassApp];
+                }
+            });
+        });
+    };
+    AdminService.prototype.updateClassAppointment = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var description, classId, dateStarting, classAppointmentId, classsApp, _a, newClassApp;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        description = data.description, classId = data.classId, dateStarting = data.dateStarting, classAppointmentId = data.classAppointmentId;
+                        return [4 /*yield*/, this.classAppointmentRepository.findOneBy({
+                                id: classAppointmentId,
+                            })];
+                    case 1:
+                        classsApp = _b.sent();
+                        classsApp.dateStarting = dateStarting;
+                        _a = classsApp;
+                        return [4 /*yield*/, this.classRepository.findOneBy({
+                                id: classId,
+                            })];
+                    case 2:
+                        _a.classs = _b.sent();
+                        classsApp.description = description;
+                        return [4 /*yield*/, this.classAppointmentRepository.save(classsApp)];
+                    case 3:
+                        newClassApp = _b.sent();
+                        return [2 /*return*/, newClassApp];
+                }
+            });
+        });
+    };
+    AdminService.prototype.deleteClassAppointment = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.classAppointmentRepository.delete({ id: id })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    AdminService.prototype.readReviews = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.reviewRepository.find({
+                            relations: {
+                                class: true,
+                            },
+                        })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
     };
     return AdminService;
 }());
-exports.default = AdminService;
+exports.AdminService = AdminService;
 //# sourceMappingURL=AdminService.js.map

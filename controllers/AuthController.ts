@@ -1,12 +1,19 @@
 import express, { Request, Response } from 'express';
+import { ValidationError } from 'yup';
 import AuthService from '../services/AuthService';
+import { registerValidationSchema } from '../Validators/Auth/Register';
 
 export default class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  private authService = new AuthService();
 
   public async register(req: Request, res: Response) {
     try {
-      const user = await this.authService.register(req.body);
+      const data = registerValidationSchema.validateSync(req.body, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+
+      const user = await this.authService.register(data);
 
       res.status(200).json({
         status: true,
@@ -14,10 +21,13 @@ export default class AuthController {
         data: user,
       });
     } catch (e: any) {
-      res.status(404).json({
+      const error = e as ValidationError;
+
+      res.status(422).json({
         status: true,
-        message: 'User with this email already exists',
-        data: {},
+        message:
+          'User with this email already exists or problem with registering',
+        data: { errors: error.errors },
       });
     }
   }

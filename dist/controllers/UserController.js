@@ -36,9 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var UserService_1 = require("../services/UserService");
 var UserController = /** @class */ (function () {
-    function UserController(usersService) {
-        this.usersService = usersService;
+    function UserController() {
+        this.usersService = new UserService_1.UserService();
     }
     UserController.prototype.getAll = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {

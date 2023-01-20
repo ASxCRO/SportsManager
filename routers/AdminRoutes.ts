@@ -1,9 +1,8 @@
 import express from 'express';
 import AdminController from '../controllers/AdminController';
-const router = express.Router();
-import AuthController from '../controllers/AuthController';
 import auth from '../middlewares/auth';
 
+const router = express.Router();
 const adminController = new AdminController();
 
 router.post('/createclass', auth, async (req, res, next) => {
@@ -28,6 +27,10 @@ router.patch('/updateclassappointment', auth, async (req, res, next) => {
 
 router.delete('/deleteclassappointment', auth, async (req, res, next) => {
   await adminController.deleteClassAppointment(req, res);
+});
+
+router.get('/readreviews', auth, async (req, res, next) => {
+  await adminController.readReviews(req, res);
 });
 
 export default router;

@@ -13,6 +13,7 @@ exports.Class = void 0;
 var typeorm_1 = require("typeorm");
 var AgeGroup_1 = require("../../Enums/AgeGroup");
 var ClassAppointment_1 = require("./ClassAppointment");
+var Review_1 = require("./Review");
 var Sport_1 = require("./Sport");
 var User_1 = require("./User");
 var Class = /** @class */ (function () {
@@ -35,7 +36,9 @@ var Class = /** @class */ (function () {
         __metadata("design:type", Sport_1.Sport)
     ], Class.prototype, "sport", void 0);
     __decorate([
-        (0, typeorm_1.OneToMany)(function () { return ClassAppointment_1.ClassAppointment; }, function (classApointments) { return classApointments.classs; }),
+        (0, typeorm_1.OneToMany)(function () { return ClassAppointment_1.ClassAppointment; }, function (classApointments) { return classApointments.classs; }, {
+            onDelete: 'CASCADE',
+        }),
         __metadata("design:type", Array)
     ], Class.prototype, "classAppointments", void 0);
     __decorate([
@@ -50,6 +53,12 @@ var Class = /** @class */ (function () {
         (0, typeorm_1.Column)(),
         __metadata("design:type", String)
     ], Class.prototype, "description", void 0);
+    __decorate([
+        (0, typeorm_1.OneToMany)(function () { return Review_1.Review; }, function (review) { return review.class; }, {
+            onDelete: 'CASCADE',
+        }),
+        __metadata("design:type", Array)
+    ], Class.prototype, "reviews", void 0);
     Class = __decorate([
         (0, typeorm_1.Entity)()
     ], Class);

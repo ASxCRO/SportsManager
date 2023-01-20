@@ -41,8 +41,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var AdminController_1 = __importDefault(require("../controllers/AdminController"));
-var router = express_1.default.Router();
 var auth_1 = __importDefault(require("../middlewares/auth"));
+var router = express_1.default.Router();
 var adminController = new AdminController_1.default();
 router.post('/createclass', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
@@ -98,6 +98,16 @@ router.delete('/deleteclassappointment', auth_1.default, function (req, res, nex
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, adminController.deleteClassAppointment(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.get('/readreviews', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, adminController.readReviews(req, res)];
             case 1:
                 _a.sent();
                 return [2 /*return*/];

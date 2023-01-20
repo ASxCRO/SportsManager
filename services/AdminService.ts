@@ -1,15 +1,85 @@
-import dotenv from 'dotenv';
-import { Repository } from 'typeorm';
 import { AppDataSource } from '../data/data-source';
-import { User } from '../data/entity/User';
+import { Class } from '../data/entity/Class';
+import { ClassAppointment } from '../data/entity/ClassAppointment';
+import { Review } from '../data/entity/Review';
+import { Sport } from '../data/entity/Sport';
 
-dotenv.config();
+export class AdminService {
+  private sportRepository = AppDataSource.getRepository(Sport);
+  private classRepository = AppDataSource.getRepository(Class);
+  private classAppointmentRepository =
+    AppDataSource.getRepository(ClassAppointment);
+  private reviewRepository = AppDataSource.getRepository(Review);
 
-export default class AdminService {
-  constructor(private userRepository: Repository<User>) {}
-  public async register(data: any) {}
+  public async createClass(data: any) {
+    const { description, ageGroup, sportId, duration } = data;
 
-  public async login(data: any) {}
+    const classs = new Class();
+    classs.description = description;
+    classs.ageGroup = ageGroup;
+    classs.sport = await this.sportRepository.findOneBy({ id: sportId });
+    classs.duration = duration;
 
-  public async verify(token: string) {}
+    const newClass = await this.classRepository.save(classs);
+
+    return newClass;
+  }
+
+  public async updateClass(data: any) {
+    const { description, ageGroup, sportId, duration, classId } = data;
+
+    const classs = await this.classRepository.findOneBy({ id: classId });
+    classs.description = description;
+    classs.ageGroup = ageGroup;
+    classs.sport = await this.sportRepository.findOneBy({ id: sportId });
+    classs.duration = duration;
+
+    const newClass = await this.classRepository.save(classs);
+    return newClass;
+  }
+
+  public async deleteClass(id: number) {
+    return await this.classRepository.delete({ id: id });
+  }
+
+  public async createClassAppointment(data: any) {
+    const { description, classId, dateStarting } = data;
+
+    const classsApp = new ClassAppointment();
+    classsApp.description = description;
+    classsApp.dateStarting = dateStarting;
+    classsApp.classs = await this.classRepository.findOneBy({ id: classId });
+
+    const newClassApp = await this.classAppointmentRepository.save(classsApp);
+
+    return newClassApp;
+  }
+
+  public async updateClassAppointment(data: any) {
+    const { description, classId, dateStarting, classAppointmentId } = data;
+
+    const classsApp = await this.classAppointmentRepository.findOneBy({
+      id: classAppointmentId,
+    });
+    classsApp.dateStarting = dateStarting;
+    classsApp.classs = await this.classRepository.findOneBy({
+      id: classId,
+    });
+    classsApp.description = description;
+
+    const newClassApp = await this.classAppointmentRepository.save(classsApp);
+    return newClassApp;
+  }
+
+  public async deleteClassAppointment(id: number) {
+    return await this.classAppointmentRepository.delete({ id: id });
+  }
+
+  public async readReviews() {
+    return await this.reviewRepository.find({
+      relations: {
+        class: true,
+      },
+    });
+  }
 }

@@ -1,18 +1,18 @@
-import { Repository } from 'typeorm';
 import { AppDataSource } from '../data/data-source';
 import { Class } from '../data/entity/Class';
 import { ClassAppointment } from '../data/entity/ClassAppointment';
+import { Review } from '../data/entity/Review';
 import { Sport } from '../data/entity/Sport';
 import { User } from '../data/entity/User';
 import { AgeGroup } from '../Enums/AgeGroup';
 
-export default class SportsService {
-  constructor(
-    private sportRepository: Repository<Sport>,
-    private classRepository: Repository<Class>,
-    private userRepository: Repository<User>,
-    private classAppointmentRepository: Repository<ClassAppointment>
-  ) {}
+export class SportsService {
+  private sportRepository = AppDataSource.getRepository(Sport);
+  private classRepository = AppDataSource.getRepository(Class);
+  private userRepository = AppDataSource.getRepository(User);
+  private classAppointmentRepository =
+    AppDataSource.getRepository(ClassAppointment);
+  private reviewRepository = AppDataSource.getRepository(Review);
 
   public async getAll(data: any) {
     return this.sportRepository.find();
@@ -38,7 +38,7 @@ export default class SportsService {
       });
     }
 
-    const filteredClasses = await classes.getMany();
+    const filteredClasses = await classes.getRawMany();
 
     return filteredClasses;
   }
@@ -46,7 +46,8 @@ export default class SportsService {
   public async getDetailsOfClass(data: any) {
     let classes = AppDataSource.createQueryBuilder(Class, 'class')
       .leftJoinAndSelect('class.sport', 'sport')
-      .leftJoinAndSelect('class.classAppointments', 'classAppointments');
+      .leftJoinAndSelect('class.classAppointments', 'classAppointments')
+      .leftJoinAndSelect('class.reviews', 'review');
 
     if (data.id) {
       classes.where('class.id = :id', {
@@ -54,20 +55,30 @@ export default class SportsService {
       });
     }
 
-    const filteredClasses = await classes.getMany();
+    const filteredClasses = await classes.getOne();
 
-    return filteredClasses;
+    const averageReviewRate =
+      filteredClasses.reviews.reduce(
+        (accumulator, classs) => accumulator + classs.rate,
+        0
+      ) / filteredClasses.reviews.length;
+
+    return {
+      filteredClasses: filteredClasses,
+      averageReviewRate: averageReviewRate,
+    };
   }
 
-  public async enrollToClass(data: any) {
+  public async enrollToClass(data: any, userParam: User) {
     try {
-      const users = await this.userRepository.find({
+      const user = await this.userRepository.findOne({
         relations: {
           classes: true,
         },
+        where: {
+          id: userParam.id,
+        },
       });
-
-      const user = users.filter((e) => e.id === data.userId)[0];
 
       const alreadyEnrolled = user.classAppointments.filter(
         (e) => e.id === data.classAppointmentId
@@ -106,14 +117,15 @@ export default class SportsService {
     }
   }
 
-  public async enrollToClassAppointment(data: any) {
-    const users = await this.userRepository.find({
+  public async enrollToClassAppointment(data: any, userParam: User) {
+    const user = await this.userRepository.findOne({
       relations: {
         classAppointments: true,
       },
+      where: {
+        id: userParam.id,
+      },
     });
-
-    const user = users.filter((e) => e.id === data.userId)[0];
 
     const alreadyEnrolled = user.classAppointments.filter(
       (e) => e.id === data.classAppointmentId
@@ -150,14 +162,15 @@ export default class SportsService {
     }
   }
 
-  public async unrollClass(data: any) {
-    const users = await this.userRepository.find({
+  public async unrollClass(data: any, userParam: User) {
+    const user = await this.userRepository.findOne({
       relations: {
         classes: true,
       },
+      where: {
+        id: userParam.id,
+      },
     });
-
-    const user = users.filter((e) => e.id === data.userId)[0];
 
     const isEnrolled = user.classes.filter((e) => e.id === data.classId);
 
@@ -182,15 +195,15 @@ export default class SportsService {
     };
   }
 
-  public async unrollClassAppointment(data: any) {
-    const users = await this.userRepository.find({
+  public async unrollClassAppointment(data: any, userParam: User) {
+    const user = await this.userRepository.findOne({
       relations: {
         classAppointments: true,
       },
+      where: {
+        id: userParam.id,
+      },
     });
-
-    const user = users.filter((e) => e.id === data.userId)[0];
-
     const isEnrolled = user.classAppointments.filter(
       (e) => e.id === data.classAppointmentId
     );
@@ -212,9 +225,26 @@ export default class SportsService {
     const newUser = await AppDataSource.manager.save(user);
 
     return {
-      message: 'Enrolled',
+      message: 'Unrolled of class appointment',
       status: 200,
       data: newUser,
+    };
+  }
+
+  public async postReview(data: any) {
+    const { comment, rate, classId } = data;
+
+    const review = new Review();
+    review.class = await this.classRepository.findOneBy({ id: classId });
+    review.comment = comment;
+    review.rate = rate;
+
+    const newReview = await this.reviewRepository.save(review);
+
+    return {
+      message: 'New review',
+      status: 200,
+      data: newReview,
     };
   }
 }

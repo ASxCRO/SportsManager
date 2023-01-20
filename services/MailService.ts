@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
-export default class MailService {
+export class MailService {
   public static async sendVerificationMail(
     toEmail: string,
     name: string,

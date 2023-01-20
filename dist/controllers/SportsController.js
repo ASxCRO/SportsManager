@@ -36,10 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var SportsService_1 = require("../services/SportsService");
 var SportsController = /** @class */ (function () {
-    function SportsController(sportService) {
-        this.sportService = sportService;
-        this.sportsService = sportService;
+    function SportsController() {
+        this.sportsService = new SportsService_1.SportsService();
     }
     SportsController.prototype.getAll = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
@@ -48,7 +48,7 @@ var SportsController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.sportsService.getAll(req.body)];
+                        return [4 /*yield*/, this.sportsService.getAll(req.body.bodyData)];
                     case 1:
                         sports = _a.sent();
                         res.status(200).json({
@@ -88,6 +88,7 @@ var SportsController = /** @class */ (function () {
                         return [3 /*break*/, 3];
                     case 2:
                         e_2 = _a.sent();
+                        console.log(e_2);
                         res.status(404).json({
                             status: true,
                             message: 'Problem with fetching classes',
@@ -135,7 +136,7 @@ var SportsController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.sportsService.enrollToClass(req.body)];
+                        return [4 /*yield*/, this.sportsService.enrollToClass(req.body.bodyData, req.body.user)];
                     case 1:
                         data = _a.sent();
                         res.status(data.status).json({
@@ -164,7 +165,7 @@ var SportsController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.sportsService.enrollToClassAppointment(req.body)];
+                        return [4 /*yield*/, this.sportsService.enrollToClassAppointment(req.body.bodyData, req.body.user)];
                     case 1:
                         data = _a.sent();
                         res.status(data.status).json({
@@ -194,7 +195,7 @@ var SportsController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.sportsService.unrollClass(req.body)];
+                        return [4 /*yield*/, this.sportsService.unrollClass(req.body.bodyData, req.body.user)];
                     case 1:
                         data = _a.sent();
                         res.status(data.status).json({
@@ -224,7 +225,7 @@ var SportsController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.sportsService.unrollClassAppointment(req.body)];
+                        return [4 /*yield*/, this.sportsService.unrollClassAppointment(req.body.bodyData, req.body.user)];
                     case 1:
                         data = _a.sent();
                         res.status(data.status).json({
@@ -239,6 +240,36 @@ var SportsController = /** @class */ (function () {
                         res.status(404).json({
                             status: true,
                             message: 'Problem with unrolling',
+                            data: {},
+                        });
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    SportsController.prototype.postReview = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, e_8;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.sportsService.postReview(req.body.bodyData)];
+                    case 1:
+                        data = _a.sent();
+                        res.status(data.status).json({
+                            status: true,
+                            message: data.message,
+                            data: data.data,
+                        });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_8 = _a.sent();
+                        console.log(e_8);
+                        res.status(404).json({
+                            status: true,
+                            message: 'Problem with posting review',
                             data: {},
                         });
                         return [3 /*break*/, 3];

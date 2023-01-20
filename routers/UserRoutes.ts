@@ -1,14 +1,9 @@
 import express from 'express';
 import UserController from '../controllers/UserController';
-import { AppDataSource } from '../data/data-source';
-import { User } from '../data/entity/User';
 const router = express.Router();
 import auth from '../middlewares/auth';
-import UserService from '../services/UserService';
 
-const userRepository = AppDataSource.getRepository(User);
-const userService = new UserService(userRepository);
-const userController = new UserController(userService);
+const userController = new UserController();
 
 router.get('/all', auth, async (req, res, next) => {
   await userController.getAll(req, res);

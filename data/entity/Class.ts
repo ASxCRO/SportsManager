@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { AgeGroup } from '../../Enums/AgeGroup';
 import { ClassAppointment } from './ClassAppointment';
+import { Review } from './Review';
 import { Sport } from './Sport';
 import { User } from './User';
 
@@ -29,7 +30,10 @@ export class Class {
 
   @OneToMany(
     () => ClassAppointment,
-    (classApointments) => classApointments.classs
+    (classApointments) => classApointments.classs,
+    {
+      onDelete: 'CASCADE',
+    }
   )
   classAppointments: ClassAppointment[];
 
@@ -41,4 +45,9 @@ export class Class {
 
   @Column()
   description: string;
+
+  @OneToMany(() => Review, (review) => review.class, {
+    onDelete: 'CASCADE',
+  })
+  reviews: Review[];
 }

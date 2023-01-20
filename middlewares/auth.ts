@@ -32,7 +32,7 @@ export default async function auth(req: Request, res: any, next: any) {
         }
       }
 
-      req.body = { bodyData: req.body, user: user };
+      req.body = { bodyData: req.body, user: user.payload };
 
       next();
     })

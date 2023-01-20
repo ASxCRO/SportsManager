@@ -42,12 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
 var AuthController_1 = __importDefault(require("../controllers/AuthController"));
-var data_source_1 = require("../data/data-source");
-var User_1 = require("../data/entity/User");
-var AuthService_1 = __importDefault(require("../services/AuthService"));
-var userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
-var adminService = new AuthService_1.default(userRepository);
-var authController = new AuthController_1.default(adminService);
+var authController = new AuthController_1.default();
 router.post('/register', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {

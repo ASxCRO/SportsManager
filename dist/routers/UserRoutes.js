@@ -41,14 +41,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var UserController_1 = __importDefault(require("../controllers/UserController"));
-var data_source_1 = require("../data/data-source");
-var User_1 = require("../data/entity/User");
 var router = express_1.default.Router();
 var auth_1 = __importDefault(require("../middlewares/auth"));
-var UserService_1 = __importDefault(require("../services/UserService"));
-var userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
-var userService = new UserService_1.default(userRepository);
-var userController = new UserController_1.default(userService);
+var userController = new UserController_1.default();
 router.get('/all', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {

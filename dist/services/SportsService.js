@@ -36,14 +36,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SportsService = void 0;
 var data_source_1 = require("../data/data-source");
 var Class_1 = require("../data/entity/Class");
+var ClassAppointment_1 = require("../data/entity/ClassAppointment");
+var Review_1 = require("../data/entity/Review");
+var Sport_1 = require("../data/entity/Sport");
+var User_1 = require("../data/entity/User");
 var SportsService = /** @class */ (function () {
-    function SportsService(sportRepository, classRepository, userRepository, classAppointmentRepository) {
-        this.sportRepository = sportRepository;
-        this.classRepository = classRepository;
-        this.userRepository = userRepository;
-        this.classAppointmentRepository = classAppointmentRepository;
+    function SportsService() {
+        this.sportRepository = data_source_1.AppDataSource.getRepository(Sport_1.Sport);
+        this.classRepository = data_source_1.AppDataSource.getRepository(Class_1.Class);
+        this.userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
+        this.classAppointmentRepository = data_source_1.AppDataSource.getRepository(ClassAppointment_1.ClassAppointment);
+        this.reviewRepository = data_source_1.AppDataSource.getRepository(Review_1.Review);
     }
     SportsService.prototype.getAll = function (data) {
         return __awaiter(this, void 0, void 0, function () {
@@ -73,7 +79,7 @@ var SportsService = /** @class */ (function () {
                                 ageGroup: ageGroup,
                             });
                         }
-                        return [4 /*yield*/, classes.getMany()];
+                        return [4 /*yield*/, classes.getRawMany()];
                     case 1:
                         filteredClasses = _a.sent();
                         return [2 /*return*/, filteredClasses];
@@ -83,41 +89,48 @@ var SportsService = /** @class */ (function () {
     };
     SportsService.prototype.getDetailsOfClass = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var classes, filteredClasses;
+            var classes, filteredClasses, averageReviewRate;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         classes = data_source_1.AppDataSource.createQueryBuilder(Class_1.Class, 'class')
                             .leftJoinAndSelect('class.sport', 'sport')
-                            .leftJoinAndSelect('class.classAppointments', 'classAppointments');
+                            .leftJoinAndSelect('class.classAppointments', 'classAppointments')
+                            .leftJoinAndSelect('class.reviews', 'review');
                         if (data.id) {
                             classes.where('class.id = :id', {
                                 id: data.id,
                             });
                         }
-                        return [4 /*yield*/, classes.getMany()];
+                        return [4 /*yield*/, classes.getOne()];
                     case 1:
                         filteredClasses = _a.sent();
-                        return [2 /*return*/, filteredClasses];
+                        averageReviewRate = filteredClasses.reviews.reduce(function (accumulator, classs) { return accumulator + classs.rate; }, 0) / filteredClasses.reviews.length;
+                        return [2 /*return*/, {
+                                filteredClasses: filteredClasses,
+                                averageReviewRate: averageReviewRate,
+                            }];
                 }
             });
         });
     };
-    SportsService.prototype.enrollToClass = function (data) {
+    SportsService.prototype.enrollToClass = function (data, userParam) {
         return __awaiter(this, void 0, void 0, function () {
-            var users, user, alreadyEnrolled, classs, newUser, error_1;
+            var user, alreadyEnrolled, classs, newUser, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 6, , 7]);
-                        return [4 /*yield*/, this.userRepository.find({
+                        return [4 /*yield*/, this.userRepository.findOne({
                                 relations: {
                                     classes: true,
                                 },
+                                where: {
+                                    id: userParam.id,
+                                },
                             })];
                     case 1:
-                        users = _a.sent();
-                        user = users.filter(function (e) { return e.id === data.userId; })[0];
+                        user = _a.sent();
                         alreadyEnrolled = user.classAppointments.filter(function (e) { return e.id === data.classAppointmentId; });
                         if (alreadyEnrolled.length > 0) {
                             return [2 /*return*/, {
@@ -156,19 +169,21 @@ var SportsService = /** @class */ (function () {
             });
         });
     };
-    SportsService.prototype.enrollToClassAppointment = function (data) {
+    SportsService.prototype.enrollToClassAppointment = function (data, userParam) {
         return __awaiter(this, void 0, void 0, function () {
-            var users, user, alreadyEnrolled, usersCountOnAppointment, classAppointment, newUser;
+            var user, alreadyEnrolled, usersCountOnAppointment, classAppointment, newUser;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userRepository.find({
+                    case 0: return [4 /*yield*/, this.userRepository.findOne({
                             relations: {
                                 classAppointments: true,
                             },
+                            where: {
+                                id: userParam.id,
+                            },
                         })];
                     case 1:
-                        users = _a.sent();
-                        user = users.filter(function (e) { return e.id === data.userId; })[0];
+                        user = _a.sent();
                         alreadyEnrolled = user.classAppointments.filter(function (e) { return e.id === data.classAppointmentId; });
                         if (alreadyEnrolled.length > 0) {
                             return [2 /*return*/, {
@@ -202,19 +217,21 @@ var SportsService = /** @class */ (function () {
             });
         });
     };
-    SportsService.prototype.unrollClass = function (data) {
+    SportsService.prototype.unrollClass = function (data, userParam) {
         return __awaiter(this, void 0, void 0, function () {
-            var users, user, isEnrolled, newUser;
+            var user, isEnrolled, newUser;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userRepository.find({
+                    case 0: return [4 /*yield*/, this.userRepository.findOne({
                             relations: {
                                 classes: true,
                             },
+                            where: {
+                                id: userParam.id,
+                            },
                         })];
                     case 1:
-                        users = _a.sent();
-                        user = users.filter(function (e) { return e.id === data.userId; })[0];
+                        user = _a.sent();
                         isEnrolled = user.classes.filter(function (e) { return e.id === data.classId; });
                         if (isEnrolled.length < 1) {
                             return [2 /*return*/, {
@@ -238,19 +255,21 @@ var SportsService = /** @class */ (function () {
             });
         });
     };
-    SportsService.prototype.unrollClassAppointment = function (data) {
+    SportsService.prototype.unrollClassAppointment = function (data, userParam) {
         return __awaiter(this, void 0, void 0, function () {
-            var users, user, isEnrolled, newUser;
+            var user, isEnrolled, newUser;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.userRepository.find({
+                    case 0: return [4 /*yield*/, this.userRepository.findOne({
                             relations: {
                                 classAppointments: true,
                             },
+                            where: {
+                                id: userParam.id,
+                            },
                         })];
                     case 1:
-                        users = _a.sent();
-                        user = users.filter(function (e) { return e.id === data.userId; })[0];
+                        user = _a.sent();
                         isEnrolled = user.classAppointments.filter(function (e) { return e.id === data.classAppointmentId; });
                         if (isEnrolled.length < 1) {
                             return [2 /*return*/, {
@@ -266,7 +285,7 @@ var SportsService = /** @class */ (function () {
                     case 2:
                         newUser = _a.sent();
                         return [2 /*return*/, {
-                                message: 'Enrolled',
+                                message: 'Unrolled of class appointment',
                                 status: 200,
                                 data: newUser,
                             }];
@@ -274,7 +293,33 @@ var SportsService = /** @class */ (function () {
             });
         });
     };
+    SportsService.prototype.postReview = function (data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var comment, rate, classId, review, _a, newReview;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        comment = data.comment, rate = data.rate, classId = data.classId;
+                        review = new Review_1.Review();
+                        _a = review;
+                        return [4 /*yield*/, this.classRepository.findOneBy({ id: classId })];
+                    case 1:
+                        _a.class = _b.sent();
+                        review.comment = comment;
+                        review.rate = rate;
+                        return [4 /*yield*/, this.reviewRepository.save(review)];
+                    case 2:
+                        newReview = _b.sent();
+                        return [2 /*return*/, {
+                                message: 'New review',
+                                status: 200,
+                                data: newReview,
+                            }];
+                }
+            });
+        });
+    };
     return SportsService;
 }());
-exports.default = SportsService;
+exports.SportsService = SportsService;
 //# sourceMappingURL=SportsService.js.map

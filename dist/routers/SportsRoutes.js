@@ -42,19 +42,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
 var SportsController_1 = __importDefault(require("../controllers/SportsController"));
-var data_source_1 = require("../data/data-source");
-var Class_1 = require("../data/entity/Class");
-var ClassAppointment_1 = require("../data/entity/ClassAppointment");
-var Sport_1 = require("../data/entity/Sport");
-var User_1 = require("../data/entity/User");
-var SportsService_1 = __importDefault(require("../services/SportsService"));
-var sportRepository = data_source_1.AppDataSource.getRepository(Sport_1.Sport);
-var classRepository = data_source_1.AppDataSource.getRepository(Class_1.Class);
-var userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
-var classAppointmentRepository = data_source_1.AppDataSource.getRepository(ClassAppointment_1.ClassAppointment);
-var sportsService = new SportsService_1.default(sportRepository, classRepository, userRepository, classAppointmentRepository);
-var sportsController = new SportsController_1.default(sportsService);
-router.get('/all', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+var auth_1 = __importDefault(require("../middlewares/auth"));
+var sportsController = new SportsController_1.default();
+router.get('/all', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, sportsController.getAll(req, res)];
@@ -64,7 +54,7 @@ router.get('/all', function (req, res, next) { return __awaiter(void 0, void 0, 
         }
     });
 }); });
-router.get('/classes', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get('/classes', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, sportsController.getClasses(req, res)];
@@ -74,7 +64,7 @@ router.get('/classes', function (req, res, next) { return __awaiter(void 0, void
         }
     });
 }); });
-router.get('/classes/details/:id', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get('/classes/details/:id', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, sportsController.getDetailsOfClass(req, res)];
@@ -84,7 +74,7 @@ router.get('/classes/details/:id', function (req, res, next) { return __awaiter(
         }
     });
 }); });
-router.post('/classes/enroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/classes/enroll', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, sportsController.enrollToClass(req, res)];
@@ -94,7 +84,7 @@ router.post('/classes/enroll', function (req, res, next) { return __awaiter(void
         }
     });
 }); });
-router.post('/classes/unroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/classes/unroll', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, sportsController.unrollClass(req, res)];
@@ -104,7 +94,7 @@ router.post('/classes/unroll', function (req, res, next) { return __awaiter(void
         }
     });
 }); });
-router.post('/classes/appointments/enroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/classes/appointments/enroll', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, sportsController.enrollToClassAppointment(req, res)];
@@ -114,7 +104,7 @@ router.post('/classes/appointments/enroll', function (req, res, next) { return _
         }
     });
 }); });
-router.post('/classes/appointments/unroll', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/classes/appointments/unroll', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, sportsController.unrollClassAppointment(req, res)];
@@ -124,9 +114,14 @@ router.post('/classes/appointments/unroll', function (req, res, next) { return _
         }
     });
 }); });
-router.get('/classes/review', function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post('/classes/review', auth_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, sportsController.postReview(req, res)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
     });
 }); });
 exports.default = router;
