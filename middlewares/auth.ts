@@ -1,6 +1,5 @@
 import jwt from '../utils/jwt';
 import createError from 'http-errors';
-import { User } from '../data/entity/User';
 import { UserRole } from '../enums/Roles';
 import { Request } from 'express';
 
