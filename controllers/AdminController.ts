@@ -155,7 +155,8 @@ export default class AdminController {
         abortEarly: false,
         stripUnknown: true,
       });
-      const response = await this.adminService.deleteClassAppointment(data.id);
+      const response =
+        await this.classAppointmentService.deleteClassAppointment(data.id);
       res.status(response.status).json({
         status: response.status === 200 ? true : false,
         message: response.message,

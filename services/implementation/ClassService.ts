@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import { AppDataSource } from '../../data/data-source';
 import { Class } from '../../data/entity/Class';
+import { User } from '../../data/entity/User';
 import HttpStatusCode from '../../enums/HttpStatusCode';
 import { IClassCreateRequest } from '../../HttpModels/requestModels/Class/IClassCreateRequest';
 import { IClassUpdateRequest } from '../../HttpModels/requestModels/Class/IClassUpdateRequest';
@@ -254,7 +255,11 @@ export class ClassService implements IClassService {
   }
 
   public async unrollClass(data: any, userParam: User) {
-    const user = await this.userRepository.findOneOrFail({
+    const userReponse  = await this.userService.findById(userParam.id)
+    
+    if()
+    
+    await this.userRepository.findOneOrFail({
       relations: {
         classes: true,
       },
@@ -262,6 +267,7 @@ export class ClassService implements IClassService {
         id: userParam.id,
       },
     });
+
 
     const isEnrolled = user.classes.filter((e) => e.id === data.classId);
 
