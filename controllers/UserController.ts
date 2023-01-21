@@ -1,5 +1,9 @@
+import { HttpError } from 'http-errors';
 import { ValidationError } from 'yup';
-import { UserService } from '../services/UserService';
+import { User } from '../data/entity/User';
+import HttpStatusCode from '../enums/HttpStatusCode';
+import { IHttpResponse } from '../HttpModels/responseModels/IHttpResponse';
+import { UserService } from '../services/implementation/UserService';
 import { deleteUserValidationSchema } from '../Validators/User/deleteUserValidationSchema';
 import { getOneValidationSchema } from '../Validators/User/getOneValidationSchema';
 import { updateUserValidationSchema } from '../Validators/User/updateUserValidationSchema';
@@ -8,94 +12,79 @@ export default class UserController {
   private usersService = new UserService();
 
   public async getAll(req: any, res: any) {
-    try {
-      const users = await this.usersService.all();
-      res.status(200).json({
-        status: true,
-        message: 'All users fetched',
-        data: users,
-      });
-    } catch (e: any) {
-      const error = e as ValidationError;
+    const allUsersResponse = await this.usersService.all();
 
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
-    }
+    res.status(allUsersResponse.status).json(allUsersResponse);
   }
 
   public async getOne(req: any, res: any) {
+    let response: IHttpResponse<User | string[]>;
+
     try {
       const data = getOneValidationSchema.validateSync(req.query, {
         abortEarly: false,
         stripUnknown: true,
       });
 
-      const user = await this.usersService.findById(data.id);
-      res.status(200).json({
-        status: true,
-        message: 'User fetched',
-        data: user,
-      });
+      response = await this.usersService.findById(data.id);
     } catch (e: any) {
       const error = e as ValidationError;
 
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
+      response = {
+        status: HttpStatusCode.NOT_ACCEPTABLE,
+        message: 'validation error',
+        data: error.errors,
+        isError: true,
+      };
     }
-    return;
+
+    res.status(response.status).json(response);
   }
 
   public async deleteUser(req: any, res: any) {
+    let response: IHttpResponse<string[]>;
     try {
       const data = deleteUserValidationSchema.validateSync(req.body.bodyData, {
         abortEarly: false,
         stripUnknown: true,
       });
 
-      const response = await this.usersService.delete(data.id);
-      res.status(response.status).json({
-        status: response.status === 200 ? true : false,
-        message: response.message,
-        data: response.data,
-      });
+      response = await this.usersService.delete(data.id);
     } catch (e: any) {
       const error = e as ValidationError;
 
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
+      response = {
+        status: HttpStatusCode.NOT_ACCEPTABLE,
+        message: 'validation error',
+        data: error.errors,
+        isError: true,
+      };
     }
+
+    res.status(response.status).json(response);
   }
 
   public async updateUser(req: any, res: any) {
+    let response: IHttpResponse<User | string[]>;
+
     try {
       const data = updateUserValidationSchema.validateSync(req.body.bodyData, {
         abortEarly: false,
         stripUnknown: true,
       });
 
-      const newUser = await this.usersService.update(data);
-      res.status(200).json({
-        status: true,
-        message: 'User updated',
-        data: newUser,
-      });
+      response = await this.usersService.update(data);
     } catch (e: any) {
       const error = e as ValidationError;
 
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
+      response = {
+        status: HttpStatusCode.NOT_ACCEPTABLE,
+        message: 'validation error',
+        data: error.errors,
+        isError: true,
+      };
     }
+
+    res.status(response.status).json(response);
   }
 }

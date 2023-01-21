@@ -1,11 +1,8 @@
 import nodemailer from 'nodemailer';
+import { IMailService } from '../declaration/IMailService';
 
-export class MailService {
-  public static async sendVerificationMail(
-    toEmail: string,
-    name: string,
-    token: string
-  ) {
+export class MailService implements IMailService {
+  sendVerificationMail(toEmail: string, name: string, token: string) {
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

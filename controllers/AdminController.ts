@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { ValidationError } from 'yup';
-import { AdminService } from '../services/AdminService';
+import { AdminService } from '../services/implementation/AdminService';
 import { createClassAppointmentValidationSchema } from '../Validators/Admin/ClassAppointments/createClassAppointmentValidationSchema';
 import { updateClassAppointmentValidationSchema } from '../Validators/Admin/ClassAppointments/updateClassAppointmentValidationSchema';
 import { createClassValidationSchema } from '../Validators/Admin/Classes/createClassValidationSchema';

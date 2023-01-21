@@ -1,11 +1,19 @@
 import bcrypt from 'bcryptjs';
-import jwt from '../utils/jwt';
-import { AppDataSource } from '../data/data-source';
-import { User } from '../data/entity/User';
+import jwt from '../../utils/jwt';
+import { AppDataSource } from '../../data/data-source';
+import { User } from '../../data/entity/User';
 import { MailService } from './MailService';
 
 export class AuthService {
   private userRepository = AppDataSource.getRepository(User);
+  private mailService: MailService;
+
+  /**
+   *
+   */
+  constructor() {
+    this.mailService = new MailService();
+  }
 
   public async register(data: any) {
     const { name, email, password } = data;
@@ -36,7 +44,11 @@ export class AuthService {
     data.password = null;
     data.accessToken = await jwt.signAccessToken(user);
 
-    MailService.sendVerificationMail(user.email, user.name, data.accessToken);
+    this.mailService.sendVerificationMail(
+      user.email,
+      user.name,
+      data.accessToken
+    );
 
     return data;
   }

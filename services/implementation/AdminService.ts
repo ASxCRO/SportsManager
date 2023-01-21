@@ -1,8 +1,8 @@
-import { AppDataSource } from '../data/data-source';
-import { Class } from '../data/entity/Class';
-import { ClassAppointment } from '../data/entity/ClassAppointment';
-import { Review } from '../data/entity/Review';
-import { Sport } from '../data/entity/Sport';
+import { AppDataSource } from '../../data/data-source';
+import { Class } from '../../data/entity/Class';
+import { ClassAppointment } from '../../data/entity/ClassAppointment';
+import { Review } from '../../data/entity/Review';
+import { Sport } from '../../data/entity/Sport';
 
 export class AdminService {
   private sportRepository = AppDataSource.getRepository(Sport);
