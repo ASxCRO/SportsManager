@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { ValidationError } from 'yup';
-import { SportsService } from '../services/SportsService';
+import { ISportsAPIRequest } from '../middlewares/models/ISportsAPIRequest';
+import { SportsService } from '../services/implementation/SportsService';
 import { enrollToClassAppointmentValidationSchema } from '../Validators/Sports/enrollToClassAppointmentValidationSchema';
 import { enrollToClassValidationSchema } from '../Validators/Sports/enrollToClassValidationSchema';
 import { getClassesValidationSchema } from '../Validators/Sports/getClassesValidationSchema';
@@ -12,7 +13,7 @@ import { unrollClassValidationSchema } from '../Validators/Sports/unrollClassVal
 export default class SportsController {
   private sportsService = new SportsService();
 
-  public async getAll(req: Request, res: Response) {
+  public async getAll(res: Response) {
     try {
       const sports = await this.sportsService.getAll();
 
@@ -32,7 +33,7 @@ export default class SportsController {
     }
   }
 
-  public async getClasses(req: Request, res: Response) {
+  public async getClasses(req: ISportsAPIRequest, res: Response) {
     try {
       const data = getClassesValidationSchema.validateSync(req.query, {
         abortEarly: false,
@@ -57,7 +58,7 @@ export default class SportsController {
     }
   }
 
-  public async getDetailsOfClass(req: Request, res: Response) {
+  public async getDetailsOfClass(req: ISportsAPIRequest, res: Response) {
     try {
       const data = getDetailsOfClassValidationSchema.validateSync(req.params, {
         abortEarly: false,
@@ -82,19 +83,16 @@ export default class SportsController {
     }
   }
 
-  public async enrollToClass(req: Request, res: Response) {
+  public async enrollToClass(req: ISportsAPIRequest, res: Response) {
     try {
-      const data = enrollToClassValidationSchema.validateSync(
-        req.body.bodyData,
-        {
-          abortEarly: false,
-          stripUnknown: true,
-        }
-      );
+      const data = enrollToClassValidationSchema.validateSync(req.body, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
 
       const response: any = await this.sportsService.enrollToClass(
         data,
-        req.body.user
+        req.user
       );
 
       res.status(response.status).json({
@@ -113,10 +111,10 @@ export default class SportsController {
     }
   }
 
-  public async enrollToClassAppointment(req: Request, res: Response) {
+  public async enrollToClassAppointment(req: ISportsAPIRequest, res: Response) {
     try {
       const data = enrollToClassAppointmentValidationSchema.validateSync(
-        req.body.bodyData,
+        req.body,
         {
           abortEarly: false,
           stripUnknown: true,
@@ -125,7 +123,7 @@ export default class SportsController {
 
       const response = await this.sportsService.enrollToClassAppointment(
         data,
-        req.body.user
+        req.user
       );
 
       res.status(response.status).json({
@@ -144,17 +142,14 @@ export default class SportsController {
     }
   }
 
-  public async unrollClass(req: Request, res: Response) {
+  public async unrollClass(req: ISportsAPIRequest, res: Response) {
     try {
-      const data = unrollClassValidationSchema.validateSync(req.body.bodyData, {
+      const data = unrollClassValidationSchema.validateSync(req.body, {
         abortEarly: false,
         stripUnknown: true,
       });
 
-      const response = await this.sportsService.unrollClass(
-        data,
-        req.body.user
-      );
+      const response = await this.sportsService.unrollClass(data, req.user);
 
       res.status(response.status).json({
         status: true,
@@ -172,10 +167,10 @@ export default class SportsController {
     }
   }
 
-  public async unrollClassAppointment(req: Request, res: Response) {
+  public async unrollClassAppointment(req: ISportsAPIRequest, res: Response) {
     try {
       const data = unrollClassAppointmentValidationSchema.validateSync(
-        req.body.bodyData,
+        req.body,
         {
           abortEarly: false,
           stripUnknown: true,
@@ -184,7 +179,7 @@ export default class SportsController {
 
       const response = await this.sportsService.unrollClassAppointment(
         data,
-        req.body.user
+        req.user
       );
 
       res.status(response.status).json({
@@ -203,9 +198,9 @@ export default class SportsController {
     }
   }
 
-  public async postReview(req: Request, res: Response) {
+  public async postReview(req: ISportsAPIRequest, res: Response) {
     try {
-      const data = postReviewValidationSchema.validateSync(req.body.bodyData, {
+      const data = postReviewValidationSchema.validateSync(req.body, {
         abortEarly: false,
         stripUnknown: true,
       });

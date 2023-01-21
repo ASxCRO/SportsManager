@@ -3,34 +3,40 @@ import jwt from '../../utils/jwt';
 import { AppDataSource } from '../../data/data-source';
 import { User } from '../../data/entity/User';
 import { MailService } from './MailService';
+import { UserService } from './UserService';
+import { IAuthService } from '../declaration/IAuthService';
+import { ILoginRequest } from '../../HttpModels/requestModels/Auth/ILoginRequest';
+import { IRegisterRequest } from '../../HttpModels/requestModels/Auth/IRegisterRequest';
+import { IHttpResponse } from '../../HttpModels/responseModels/IHttpResponse';
+import HttpStatusCode from '../../enums/HttpStatusCode';
+import { IUserUpdateRequest } from '../../HttpModels/requestModels/User/IUserUpdateRequest';
 
-export class AuthService {
-  private userRepository = AppDataSource.getRepository(User);
+export class AuthService implements IAuthService {
+  private userService: UserService;
   private mailService: MailService;
 
-  /**
-   *
-   */
   constructor() {
+    this.userService = new UserService();
     this.mailService = new MailService();
   }
 
-  public async register(data: any) {
-    const { name, email, password } = data;
+  public async register(registerRequest: IRegisterRequest) {
+    const { name, email, password } = registerRequest;
 
-    const userExists = await this.userRepository.exist({
-      where: {
-        email: email,
-      },
-    });
+    const responseUserExists = await this.userService.exists(email);
 
-    if (userExists) {
-      return {
-        message: 'user with that email already exists',
-        status: 422,
-        data: {},
-      };
-    }
+    let response: IHttpResponse<any>;
+
+    if (!responseUserExists.isError)
+      if (!responseUserExists.data) {
+        response = {
+          data: {},
+          status: HttpStatusCode.BAD_REQUEST,
+          isError: true,
+          message: 'User with this mail already exists',
+        };
+        return response;
+      }
 
     const encryptedPassword = bcrypt.hashSync(password, 8);
 
@@ -39,53 +45,80 @@ export class AuthService {
     user.email = email;
     user.password = encryptedPassword;
     user.verified = false;
-    await this.userRepository.save(user);
 
-    data.password = null;
-    data.accessToken = await jwt.signAccessToken(user);
+    const createdUserResponse = await this.userService.create(user);
 
-    this.mailService.sendVerificationMail(
-      user.email,
-      user.name,
-      data.accessToken
-    );
+    if (!createdUserResponse.isError) {
+      user.password = null;
+      const accessTokenJwt = await jwt.signAccessToken(user);
+      const accessToken = accessTokenJwt.toString();
 
-    return data;
+      this.mailService.sendVerificationMail(user.email, user.name, accessToken);
+
+      const data = { ...user, accessToken };
+
+      response = {
+        data: data,
+        status: HttpStatusCode.OK,
+        isError: false,
+        message: '',
+      };
+    } else {
+      response = {
+        status: HttpStatusCode.BAD_REQUEST,
+        isError: true,
+        message: 'Problem with registering new user',
+      };
+    }
+
+    return response;
   }
 
-  public async login(data: any) {
-    const { email, password } = data;
-    const user = await this.userRepository.findOneByOrFail({
-      email: email,
-    });
+  public async login(loginRequest: ILoginRequest) {
+    const { email, password } = loginRequest;
+    const userResponse = await this.userService.findByEmail(email);
+    let response: IHttpResponse<any>;
+    let user;
+
+    if (!userResponse.isError) {
+      user = userResponse.data;
+    }
 
     if (!user) {
-      return {
-        message: 'user not registered',
-        status: 401,
-        data: {},
+      response = {
+        status: HttpStatusCode.NOT_FOUND,
+        isError: true,
+        message: 'User not found',
       };
+
+      return response;
     }
 
     if (!user.verified) {
-      return {
-        message: 'account not verified',
-        status: 401,
-        data: {},
+      response = {
+        status: HttpStatusCode.NOT_ACCEPTABLE,
+        isError: true,
+        message: 'User not verified',
       };
+
+      return response;
     }
 
     const checkPassword = bcrypt.compareSync(password, user.password);
-    if (!checkPassword)
-      return {
+    if (!checkPassword) {
+      response = {
+        status: HttpStatusCode.UNAUTHORIZED,
+        isError: true,
         message: 'email or password not valid',
-        status: 401,
-        data: {},
       };
+
+      return response;
+    }
     const accessToken = await jwt.signAccessToken(user);
-    return {
-      message: 'login succesfull',
-      status: 200,
+    response = {
+      status: HttpStatusCode.OK,
+      isError: false,
+      message: 'login successful',
       data: { ...user, accessToken },
     };
   }
@@ -101,12 +134,38 @@ export class AuthService {
         return 'Token not active';
       });
 
-    const userToVerifyDb = await this.userRepository.findOneByOrFail({
-      email: userToVerify.email,
-    });
-    userToVerifyDb.verified = true;
-    await this.userRepository.save(userToVerifyDb);
+    let response: IHttpResponse<any>;
 
-    return 'Account verifed';
+    const userToVerifyDbResponse = await this.userService.findByEmail(
+      userToVerify.email
+    );
+
+    if (!userToVerifyDbResponse.isError) {
+      const userToVerifyDb = userToVerifyDbResponse.data;
+      const userUpdateModel: IUserUpdateRequest = {
+        verified: true,
+        id: userToVerifyDb.id,
+        name: userToVerifyDb.name,
+      };
+
+      const userUpdateResponse = await this.userService.update(userUpdateModel);
+
+      if (!userUpdateResponse.isError) {
+        response = {
+          status: HttpStatusCode.OK,
+          isError: false,
+          message: 'verify successful',
+          data: userUpdateResponse.data,
+        };
+      }
+    } else {
+      response = {
+        status: HttpStatusCode.BAD_REQUEST,
+        isError: true,
+        message: "couldn't verify",
+      };
+    }
+
+    return response;
   }
 }

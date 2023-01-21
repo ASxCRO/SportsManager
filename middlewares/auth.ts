@@ -1,9 +1,13 @@
 import jwt from '../utils/jwt';
 import createError from 'http-errors';
 import { UserRole } from '../enums/Roles';
-import { Request } from 'express';
+import { ISportsAPIRequest } from './models/ISportsAPIRequest';
 
-export default async function auth(req: Request, res: any, next: any) {
+export default async function auth(
+  req: ISportsAPIRequest,
+  res: any,
+  next: any
+) {
   if (!req.headers.authorization) {
     return next(createError.Unauthorized('Access token is required'));
   }
@@ -31,7 +35,7 @@ export default async function auth(req: Request, res: any, next: any) {
         }
       }
 
-      req.body = { bodyData: req.body, user: user.payload };
+      req.user = { ...user.payload };
 
       next();
     })

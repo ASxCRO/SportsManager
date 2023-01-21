@@ -1,8 +1,12 @@
-import { HttpError } from 'http-errors';
+import { Response } from 'express';
 import { ValidationError } from 'yup';
 import { User } from '../data/entity/User';
 import HttpStatusCode from '../enums/HttpStatusCode';
+import { IUserDeleteRequest } from '../HttpModels/requestModels/User/IUserDeleteRequest';
+import { IUserGetOneRequest } from '../HttpModels/requestModels/User/IUserGetOneRequest';
+import { IUserUpdateRequest } from '../HttpModels/requestModels/User/IUserUpdateRequest';
 import { IHttpResponse } from '../HttpModels/responseModels/IHttpResponse';
+import { ISportsAPIRequest } from '../middlewares/models/ISportsAPIRequest';
 import { UserService } from '../services/implementation/UserService';
 import { deleteUserValidationSchema } from '../Validators/User/deleteUserValidationSchema';
 import { getOneValidationSchema } from '../Validators/User/getOneValidationSchema';
@@ -11,20 +15,23 @@ import { updateUserValidationSchema } from '../Validators/User/updateUserValidat
 export default class UserController {
   private usersService = new UserService();
 
-  public async getAll(req: any, res: any) {
+  public async getAll(res: Response) {
     const allUsersResponse = await this.usersService.all();
 
     res.status(allUsersResponse.status).json(allUsersResponse);
   }
 
-  public async getOne(req: any, res: any) {
+  public async getOne(req: ISportsAPIRequest, res: Response) {
     let response: IHttpResponse<User | string[]>;
 
     try {
-      const data = getOneValidationSchema.validateSync(req.query, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
+      const data: IUserGetOneRequest = getOneValidationSchema.validateSync(
+        req.query,
+        {
+          abortEarly: false,
+          stripUnknown: true,
+        }
+      );
 
       response = await this.usersService.findById(data.id);
     } catch (e: any) {
@@ -41,13 +48,16 @@ export default class UserController {
     res.status(response.status).json(response);
   }
 
-  public async deleteUser(req: any, res: any) {
-    let response: IHttpResponse<string[]>;
+  public async deleteUser(req: ISportsAPIRequest, res: Response) {
+    let response: IHttpResponse<any>;
     try {
-      const data = deleteUserValidationSchema.validateSync(req.body.bodyData, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
+      const data: IUserDeleteRequest = deleteUserValidationSchema.validateSync(
+        req.body,
+        {
+          abortEarly: false,
+          stripUnknown: true,
+        }
+      );
 
       response = await this.usersService.delete(data.id);
     } catch (e: any) {
@@ -64,14 +74,17 @@ export default class UserController {
     res.status(response.status).json(response);
   }
 
-  public async updateUser(req: any, res: any) {
+  public async updateUser(req: ISportsAPIRequest, res: Response) {
     let response: IHttpResponse<User | string[]>;
 
     try {
-      const data = updateUserValidationSchema.validateSync(req.body.bodyData, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
+      const data: IUserUpdateRequest = updateUserValidationSchema.validateSync(
+        req.body,
+        {
+          abortEarly: false,
+          stripUnknown: true,
+        }
+      );
 
       response = await this.usersService.update(data);
     } catch (e: any) {

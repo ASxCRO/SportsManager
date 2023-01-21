@@ -1,6 +1,10 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ValidationError } from 'yup';
+import { IClassCreateRequest } from '../HttpModels/requestModels/Class/IClassCreateRequest';
+import { ISportsAPIRequest } from '../middlewares/models/ISportsAPIRequest';
 import { AdminService } from '../services/implementation/AdminService';
+import { ClassAppointmentService } from '../services/implementation/ClassAppointmentService';
+import { ClassService } from '../services/implementation/ClassService';
 import { createClassAppointmentValidationSchema } from '../Validators/Admin/ClassAppointments/createClassAppointmentValidationSchema';
 import { updateClassAppointmentValidationSchema } from '../Validators/Admin/ClassAppointments/updateClassAppointmentValidationSchema';
 import { createClassValidationSchema } from '../Validators/Admin/Classes/createClassValidationSchema';
@@ -8,16 +12,25 @@ import { deleteClassValidationSchema } from '../Validators/Admin/Classes/deleteC
 import { updateClassValidationSchema } from '../Validators/Admin/Classes/updateClassValidationSchema';
 
 export default class AdminController {
-  private adminService = new AdminService();
+  private classService: ClassService;
+  private adminService: AdminService;
+  private classAppointmentService: ClassAppointmentService;
 
-  public async createClass(req: Request, res: Response) {
+  constructor() {
+    this.classService = new ClassService();
+    this.adminService = new AdminService();
+    this.classAppointmentService = new ClassAppointmentService();
+  }
+
+  public async createClass(req: ISportsAPIRequest, res: Response) {
     try {
-      const data = createClassValidationSchema.validateSync(req.body.bodyData, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
+      const data: IClassCreateRequest =
+        createClassValidationSchema.validateSync(req.body, {
+          abortEarly: false,
+          stripUnknown: true,
+        });
 
-      const newClass = await this.adminService.createClass(data);
+      const newClass = await this.classService.createClass(data);
 
       res.status(200).json({
         status: true,
@@ -34,13 +47,13 @@ export default class AdminController {
       });
     }
   }
-  public async updateClass(req: Request, res: Response) {
+  public async updateClass(req: ISportsAPIRequest, res: Response) {
     try {
-      const data = updateClassValidationSchema.validateSync(req.body.bodyData, {
+      const data = updateClassValidationSchema.validateSync(req.body, {
         abortEarly: false,
         stripUnknown: true,
       });
-      const newClass = await this.adminService.updateClass(data);
+      const newClass = await this.classService.updateClass(data);
       res.status(200).json({
         status: true,
         message: 'Class updated',
@@ -56,13 +69,13 @@ export default class AdminController {
       });
     }
   }
-  public async deleteClass(req: Request, res: Response) {
+  public async deleteClass(req: ISportsAPIRequest, res: Response) {
     try {
-      const data = deleteClassValidationSchema.validateSync(req.body.bodyData, {
+      const data = deleteClassValidationSchema.validateSync(req.body, {
         abortEarly: false,
         stripUnknown: true,
       });
-      await this.adminService.deleteClass(data.id);
+      await this.classService.deleteClass(data.id);
       res.status(200).json({
         status: true,
         message: 'Class deleted',
@@ -79,17 +92,18 @@ export default class AdminController {
     }
   }
 
-  public async createClassAppointment(req: Request, res: Response) {
+  public async createClassAppointment(req: ISportsAPIRequest, res: Response) {
     try {
       const data = createClassAppointmentValidationSchema.validateSync(
-        req.body.bodyData,
+        req.body,
         {
           abortEarly: false,
           stripUnknown: true,
         }
       );
 
-      const newClassApp = await this.adminService.createClassAppointment(data);
+      const newClassApp =
+        await this.classAppointmentService.createClassAppointment(data);
 
       res.status(200).json({
         status: true,
@@ -107,16 +121,17 @@ export default class AdminController {
     }
   }
 
-  public async updateClassAppointment(req: Request, res: Response) {
+  public async updateClassAppointment(req: ISportsAPIRequest, res: Response) {
     try {
       const data = updateClassAppointmentValidationSchema.validateSync(
-        req.body.bodyData,
+        req.body,
         {
           abortEarly: false,
           stripUnknown: true,
         }
       );
-      const newClassApp = await this.adminService.updateClassAppointment(data);
+      const newClassApp =
+        await this.classAppointmentService.updateClassAppointment(data);
 
       res.status(200).json({
         status: true,
@@ -134,9 +149,9 @@ export default class AdminController {
     }
   }
 
-  public async deleteClassAppointment(req: Request, res: Response) {
+  public async deleteClassAppointment(req: ISportsAPIRequest, res: Response) {
     try {
-      const data = deleteClassValidationSchema.validateSync(req.body.bodyData, {
+      const data = deleteClassValidationSchema.validateSync(req.body, {
         abortEarly: false,
         stripUnknown: true,
       });
@@ -145,25 +160,6 @@ export default class AdminController {
         status: response.status === 200 ? true : false,
         message: response.message,
         data: response.data,
-      });
-    } catch (e: any) {
-      const error = e as ValidationError;
-
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
-    }
-  }
-
-  public async readReviews(req: Request, res: Response) {
-    try {
-      const reviews = await this.adminService.readReviews();
-      res.status(200).json({
-        status: true,
-        message: 'Reviews fetched',
-        data: reviews,
       });
     } catch (e: any) {
       const error = e as ValidationError;
