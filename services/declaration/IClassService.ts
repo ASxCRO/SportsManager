@@ -14,4 +14,8 @@ export interface IClassService {
     classUpdateRequest: IClassUpdateRequest
   ) => Promise<IHttpResponse<Class>>;
   deleteClass: (id: number) => Promise<IHttpResponse>;
+  enrollToClass: () => Promise<IHttpResponse<Class>>;
+  unrollToClass: () => Promise<IHttpResponse>;
+  getClassesFilter: () => Promise<IHttpResponse<Class[]>>;
+  getDetailsOfClass: () => Promise<IHttpResponse<Class>>;
 }

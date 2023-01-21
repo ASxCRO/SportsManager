@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { AppDataSource } from '../../data/data-source';
 import { Class } from '../../data/entity/Class';
 import { User } from '../../data/entity/User';
+import { AgeGroup } from '../../enums/AgeGroup';
 import HttpStatusCode from '../../enums/HttpStatusCode';
 import { IClassCreateRequest } from '../../HttpModels/requestModels/Class/IClassCreateRequest';
 import { IClassUpdateRequest } from '../../HttpModels/requestModels/Class/IClassUpdateRequest';

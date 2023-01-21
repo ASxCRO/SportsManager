@@ -9,13 +9,17 @@ import { IClassAppointmentUpdateRequest } from '../../HttpModels/requestModels/C
 import { IHttpResponse } from '../../HttpModels/responseModels/IHttpResponse';
 import { IClassAppointmentService } from '../declaration/IClassAppointmentService';
 import { ClassService } from './ClassService';
+import { UserService } from './UserService';
 
 export class ClassAppointmentService implements IClassAppointmentService {
   private classAppointmentRepository: Repository<ClassAppointment>;
   private classService: ClassService;
+  private userService: UserService;
 
   constructor() {
     this.classService = new ClassService();
+    this.userService = new UserService();
+
     this.classAppointmentRepository =
       AppDataSource.getRepository(ClassAppointment);
   }
@@ -193,36 +197,36 @@ export class ClassAppointmentService implements IClassAppointmentService {
   public async unrollClassAppointment(
     classAppointmentUnrollRequest: IClassAppointmentUnrollRequest
   ) {
-    const user = await this.userRepository.findOneOrFail({
-      relations: {
-        classAppointments: true,
-      },
-      where: {
-        id: classAppointmentUnrollRequest.user.id,
-      },
-    });
-    const isEnrolled = user.classAppointments.filter(
-      (e) => e.id === classAppointmentUnrollRequest.classAppointmentId
+    const userResponse = await this.userService.findById(
+      classAppointmentUnrollRequest.user.id
     );
 
-    if (isEnrolled.length < 1) {
-      return {
-        message: 'User not even applied to this appointment',
-        status: 404,
-        data: {},
-      };
-    }
+    if (!userResponse.isError) {
+      const user = userResponse.data;
 
-    user.classAppointments = user.classAppointments.filter(
-      (classApointment) => {
-        return (
-          classApointment.id !==
-          classAppointmentUnrollRequest.classAppointmentId
-        );
+      const isEnrolled = user.classAppointments.filter(
+        (e) => e.id === classAppointmentUnrollRequest.classAppointmentId
+      );
+
+      if (isEnrolled.length < 1) {
+        return {
+          message: 'User not even applied to this appointment',
+          status: 404,
+          data: {},
+        };
       }
-    );
 
-    const newUser = await AppDataSource.manager.save(user);
+      user.classAppointments = user.classAppointments.filter(
+        (classApointment) => {
+          return (
+            classApointment.id !==
+            classAppointmentUnrollRequest.classAppointmentId
+          );
+        }
+      );
+
+      const newUser = await AppDataSource.manager.save(user);
+    }
 
     return {
       message: 'Unrolled of class appointment',

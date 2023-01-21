@@ -1,225 +1,67 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ValidationError } from 'yup';
+import { Sport } from '../data/entity/Sport';
+import HttpStatusCode from '../enums/HttpStatusCode';
+import { IClassEnrollRequest } from '../HttpModels/requestModels/Class/IClassEnrollRequest';
+import { IClassGetDetailsRequest } from '../HttpModels/requestModels/Class/IClassGetDetailsRequest';
+import { IClassGetFilterRequest } from '../HttpModels/requestModels/Class/IClassGetFilterRequest';
+import { IClassAppointmentEnrollRequest } from '../HttpModels/requestModels/ClassAppointment/IClassAppointmentEnrollRequest';
+import { IClassAppointmentUnrollRequest } from '../HttpModels/requestModels/ClassAppointment/IClassAppointmentUnrollRequest';
+import { ISportGetOneRequest } from '../HttpModels/requestModels/Sport/ISportGetOneRequest';
+import { IHttpResponse } from '../HttpModels/responseModels/IHttpResponse';
 import { ISportsAPIRequest } from '../middlewares/models/ISportsAPIRequest';
+import { ClassAppointmentService } from '../services/implementation/ClassAppointmentService';
+import { ClassService } from '../services/implementation/ClassService';
 import { SportsService } from '../services/implementation/SportsService';
 import { enrollToClassAppointmentValidationSchema } from '../Validators/Sports/enrollToClassAppointmentValidationSchema';
 import { enrollToClassValidationSchema } from '../Validators/Sports/enrollToClassValidationSchema';
 import { getClassesValidationSchema } from '../Validators/Sports/getClassesValidationSchema';
 import { getDetailsOfClassValidationSchema } from '../Validators/Sports/getDetailsOfClassValidationSchema';
-import { postReviewValidationSchema } from '../Validators/Sports/postReviewValidationSchema';
 import { unrollClassAppointmentValidationSchema } from '../Validators/Sports/unrollClassAppointmentValidationSchema';
 import { unrollClassValidationSchema } from '../Validators/Sports/unrollClassValidationSchema';
+import { getOneValidationSchema } from '../Validators/User/getOneValidationSchema';
 
 export default class SportsController {
-  private sportsService = new SportsService();
+  private sportsService: SportsService;
+  private classService: ClassService;
+  private classAppointmentService: ClassAppointmentService;
+
+  constructor() {
+    this.sportsService = new SportsService();
+    this.classService = new ClassService();
+    this.classAppointmentService = new ClassAppointmentService();
+  }
 
   public async getAll(res: Response) {
-    try {
-      const sports = await this.sportsService.getAll();
+    const allSportsResponse = await this.sportsService.getAll();
 
-      res.status(200).json({
-        status: true,
-        message: 'sports fetched successfully',
-        data: sports,
-      });
-    } catch (e: any) {
-      const error = e as ValidationError;
-
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
-    }
+    res.status(allSportsResponse.status).json(allSportsResponse);
   }
 
-  public async getClasses(req: ISportsAPIRequest, res: Response) {
+  public async getOne(req: ISportsAPIRequest, res: Response) {
+    let response: IHttpResponse<Sport | string[]>;
+
     try {
-      const data = getClassesValidationSchema.validateSync(req.query, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
-
-      const classes = await this.sportsService.getClasses(data);
-
-      res.status(200).json({
-        status: true,
-        message: 'classes fetched successfully',
-        data: classes,
-      });
-    } catch (e: any) {
-      const error = e as ValidationError;
-
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
-    }
-  }
-
-  public async getDetailsOfClass(req: ISportsAPIRequest, res: Response) {
-    try {
-      const data = getDetailsOfClassValidationSchema.validateSync(req.params, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
-
-      const classes = await this.sportsService.getDetailsOfClass(data);
-
-      res.status(200).json({
-        status: true,
-        message: 'classes fetched successfully',
-        data: classes,
-      });
-    } catch (e: any) {
-      const error = e as ValidationError;
-
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
-    }
-  }
-
-  public async enrollToClass(req: ISportsAPIRequest, res: Response) {
-    try {
-      const data = enrollToClassValidationSchema.validateSync(req.body, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
-
-      const response: any = await this.sportsService.enrollToClass(
-        data,
-        req.user
-      );
-
-      res.status(response.status).json({
-        status: true,
-        message: response.message,
-        data: response.data,
-      });
-    } catch (e: any) {
-      const error = e as ValidationError;
-
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
-    }
-  }
-
-  public async enrollToClassAppointment(req: ISportsAPIRequest, res: Response) {
-    try {
-      const data = enrollToClassAppointmentValidationSchema.validateSync(
-        req.body,
+      const data: ISportGetOneRequest = getOneValidationSchema.validateSync(
+        req.query,
         {
           abortEarly: false,
           stripUnknown: true,
         }
       );
 
-      const response = await this.sportsService.enrollToClassAppointment(
-        data,
-        req.user
-      );
-
-      res.status(response.status).json({
-        status: true,
-        message: response.message,
-        data: response.data,
-      });
+      response = await this.sportsService.findById(data.id);
     } catch (e: any) {
       const error = e as ValidationError;
 
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
+      response = {
+        status: HttpStatusCode.NOT_ACCEPTABLE,
+        message: 'validation error',
+        data: error.errors,
+        isError: true,
+      };
     }
-  }
 
-  public async unrollClass(req: ISportsAPIRequest, res: Response) {
-    try {
-      const data = unrollClassValidationSchema.validateSync(req.body, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
-
-      const response = await this.sportsService.unrollClass(data, req.user);
-
-      res.status(response.status).json({
-        status: true,
-        message: response.message,
-        data: response.data,
-      });
-    } catch (e: any) {
-      const error = e as ValidationError;
-
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
-    }
-  }
-
-  public async unrollClassAppointment(req: ISportsAPIRequest, res: Response) {
-    try {
-      const data = unrollClassAppointmentValidationSchema.validateSync(
-        req.body,
-        {
-          abortEarly: false,
-          stripUnknown: true,
-        }
-      );
-
-      const response = await this.sportsService.unrollClassAppointment(
-        data,
-        req.user
-      );
-
-      res.status(response.status).json({
-        status: true,
-        message: response.message,
-        data: response.data,
-      });
-    } catch (e: any) {
-      const error = e as ValidationError;
-
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
-    }
-  }
-
-  public async postReview(req: ISportsAPIRequest, res: Response) {
-    try {
-      const data = postReviewValidationSchema.validateSync(req.body, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
-
-      const response = await this.sportsService.postReview(data);
-
-      res.status(response.status).json({
-        status: true,
-        message: response.message,
-        data: response.data,
-      });
-    } catch (e: any) {
-      const error = e as ValidationError;
-
-      res.status(422).json({
-        status: false,
-        message: 'Error',
-        data: { errors: error.errors },
-      });
-    }
+    res.status(response.status).json(response);
   }
 }
