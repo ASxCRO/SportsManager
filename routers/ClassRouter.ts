@@ -8,19 +8,19 @@ import { ClassController } from '../controllers/ClassController';
 const router = express.Router();
 const classController = new ClassController();
 
-router.post('/createClass', admin, async (req: ISportsAPIRequest, res) => {
+router.post('/create', admin, async (req: ISportsAPIRequest, res) => {
   await classController.createClass(req, res);
 });
 
-router.patch('/updateClass', admin, async (req: ISportsAPIRequest, res) => {
+router.patch('/update', admin, async (req: ISportsAPIRequest, res) => {
   await classController.updateClass(req, res);
 });
 
-router.delete('/deleteClass', admin, async (req: ISportsAPIRequest, res) => {
+router.delete('/delete', admin, async (req: ISportsAPIRequest, res) => {
   await classController.deleteClass(req, res);
 });
 
-router.get('/classes', auth, async (req: ISportsAPIRequest, res) => {
+router.get('/all', auth, async (req: ISportsAPIRequest, res) => {
   await classController.getClassesFilter(req, res);
 });
 
