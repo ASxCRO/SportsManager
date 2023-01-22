@@ -8,11 +8,11 @@ import { IClassAppointmentUnrollRequest } from '../HttpModels/requestModels/Clas
 import { IHttpResponse } from '../HttpModels/responseModels/IHttpResponse';
 import { ISportsAPIRequest } from '../middlewares/models/ISportsAPIRequest';
 import { ClassAppointmentService } from '../services/implementation/ClassAppointmentService';
-import { createClassAppointmentValidationSchema } from '../Validators/Admin/ClassAppointments/createClassAppointmentValidationSchema';
-import { updateClassAppointmentValidationSchema } from '../Validators/Admin/ClassAppointments/updateClassAppointmentValidationSchema';
-import { deleteClassValidationSchema } from '../Validators/Admin/Classes/deleteClassValidationSchema';
-import { enrollToClassAppointmentValidationSchema } from '../Validators/Sports/enrollToClassAppointmentValidationSchema';
-import { unrollClassAppointmentValidationSchema } from '../Validators/Sports/unrollClassAppointmentValidationSchema';
+import { createClassAppointmentValidationSchema } from '../Validators/ClassAppointments/createClassAppointmentValidationSchema';
+import { updateClassAppointmentValidationSchema } from '../Validators/ClassAppointments/updateClassAppointmentValidationSchema';
+import { deleteClassValidationSchema } from '../Validators/Classes/deleteClassValidationSchema';
+import { enrollToClassAppointmentValidationSchema } from '../Validators/Classes/enrollToClassAppointmentValidationSchema';
+import { unrollClassAppointmentValidationSchema } from '../Validators/ClassAppointments/unrollClassAppointmentValidationSchema';
 
 export class ClassAppointmentController {
   private classAppointmentService: ClassAppointmentService;

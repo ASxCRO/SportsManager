@@ -13,7 +13,11 @@ import { registerValidationSchema } from '../Validators/Auth/registerValidationS
 import { verifyValidationSchema } from '../Validators/Auth/verifyValidationSchema';
 
 export default class AuthController {
-  private authService = new AuthService();
+  private authService: AuthService;
+
+  constructor() {
+    this.authService = new AuthService();
+  }
 
   public async register(req: ISportsAPIRequest, res: Response) {
     let response: IHttpResponse<User | string[]>;

@@ -5,20 +5,14 @@ import HttpStatusCode from '../enums/HttpStatusCode';
 import { ISportGetOneRequest } from '../HttpModels/requestModels/Sport/ISportGetOneRequest';
 import { IHttpResponse } from '../HttpModels/responseModels/IHttpResponse';
 import { ISportsAPIRequest } from '../middlewares/models/ISportsAPIRequest';
-import { ClassAppointmentService } from '../services/implementation/ClassAppointmentService';
-import { ClassService } from '../services/implementation/ClassService';
 import { SportsService } from '../services/implementation/SportsService';
 import { getOneValidationSchema } from '../Validators/User/getOneValidationSchema';
 
 export default class SportsController {
   private sportsService: SportsService;
-  private classService: ClassService;
-  private classAppointmentService: ClassAppointmentService;
 
   constructor() {
     this.sportsService = new SportsService();
-    this.classService = new ClassService();
-    this.classAppointmentService = new ClassAppointmentService();
   }
 
   public async getAll(res: Response) {

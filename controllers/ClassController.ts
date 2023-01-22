@@ -11,13 +11,13 @@ import { IClassUnrollRequest } from '../HttpModels/requestModels/Class/IClassUnr
 import { IHttpResponse } from '../HttpModels/responseModels/IHttpResponse';
 import { ISportsAPIRequest } from '../middlewares/models/ISportsAPIRequest';
 import { ClassService } from '../services/implementation/ClassService';
-import { createClassValidationSchema } from '../Validators/Admin/Classes/createClassValidationSchema';
-import { deleteClassValidationSchema } from '../Validators/Admin/Classes/deleteClassValidationSchema';
-import { updateClassValidationSchema } from '../Validators/Admin/Classes/updateClassValidationSchema';
-import { enrollToClassValidationSchema } from '../Validators/Sports/enrollToClassValidationSchema';
-import { getClassesValidationSchema } from '../Validators/Sports/getClassesValidationSchema';
-import { getDetailsOfClassValidationSchema } from '../Validators/Sports/getDetailsOfClassValidationSchema';
-import { unrollClassValidationSchema } from '../Validators/Sports/unrollClassValidationSchema';
+import { createClassValidationSchema } from '../Validators/Classes/createClassValidationSchema';
+import { deleteClassValidationSchema } from '../Validators/Classes/deleteClassValidationSchema';
+import { updateClassValidationSchema } from '../Validators/Classes/updateClassValidationSchema';
+import { enrollToClassValidationSchema } from '../Validators/Classes/enrollToClassValidationSchema';
+import { getClassesValidationSchema } from '../Validators/Classes/getClassesValidationSchema';
+import { getDetailsOfClassValidationSchema } from '../Validators/Classes/getDetailsOfClassValidationSchema';
+import { unrollClassValidationSchema } from '../Validators/Classes/unrollClassValidationSchema';
 
 export class ClassController {
   private classService: ClassService;

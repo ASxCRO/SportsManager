@@ -13,7 +13,11 @@ import { getOneValidationSchema } from '../Validators/User/getOneValidationSchem
 import { updateUserValidationSchema } from '../Validators/User/updateUserValidationSchema';
 
 export default class UserController {
-  private usersService = new UserService();
+  private usersService: UserService;
+
+  constructor() {
+    this.usersService = new UserService();
+  }
 
   public async getAll(res: Response) {
     const allUsersResponse = await this.usersService.all();
