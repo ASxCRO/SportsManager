@@ -1,5 +1,4 @@
 import { Repository } from 'typeorm';
-import { ValidationError } from 'yup';
 import { AppDataSource } from '../../data/data-source';
 import { Review } from '../../data/entity/Review';
 import HttpStatusCode from '../../enums/HttpStatusCode';

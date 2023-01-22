@@ -2,23 +2,12 @@ import { Response } from 'express';
 import { ValidationError } from 'yup';
 import { Sport } from '../data/entity/Sport';
 import HttpStatusCode from '../enums/HttpStatusCode';
-import { IClassEnrollRequest } from '../HttpModels/requestModels/Class/IClassEnrollRequest';
-import { IClassGetDetailsRequest } from '../HttpModels/requestModels/Class/IClassGetDetailsRequest';
-import { IClassGetFilterRequest } from '../HttpModels/requestModels/Class/IClassGetFilterRequest';
-import { IClassAppointmentEnrollRequest } from '../HttpModels/requestModels/ClassAppointment/IClassAppointmentEnrollRequest';
-import { IClassAppointmentUnrollRequest } from '../HttpModels/requestModels/ClassAppointment/IClassAppointmentUnrollRequest';
 import { ISportGetOneRequest } from '../HttpModels/requestModels/Sport/ISportGetOneRequest';
 import { IHttpResponse } from '../HttpModels/responseModels/IHttpResponse';
 import { ISportsAPIRequest } from '../middlewares/models/ISportsAPIRequest';
 import { ClassAppointmentService } from '../services/implementation/ClassAppointmentService';
 import { ClassService } from '../services/implementation/ClassService';
 import { SportsService } from '../services/implementation/SportsService';
-import { enrollToClassAppointmentValidationSchema } from '../Validators/Sports/enrollToClassAppointmentValidationSchema';
-import { enrollToClassValidationSchema } from '../Validators/Sports/enrollToClassValidationSchema';
-import { getClassesValidationSchema } from '../Validators/Sports/getClassesValidationSchema';
-import { getDetailsOfClassValidationSchema } from '../Validators/Sports/getDetailsOfClassValidationSchema';
-import { unrollClassAppointmentValidationSchema } from '../Validators/Sports/unrollClassAppointmentValidationSchema';
-import { unrollClassValidationSchema } from '../Validators/Sports/unrollClassValidationSchema';
 import { getOneValidationSchema } from '../Validators/User/getOneValidationSchema';
 
 export default class SportsController {

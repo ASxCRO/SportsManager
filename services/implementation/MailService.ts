@@ -12,7 +12,7 @@ export class MailService implements IMailService {
     });
 
     let mailOptions = {
-      from: 'antoniosupan.private@gmail.com',
+      from: process.env.EMAIL_SENT_FROM,
       to: toEmail,
       subject: 'Verification mail',
       html: `<h1>Email Confirmation</h1>

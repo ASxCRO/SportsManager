@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ValidationError } from 'yup';
 import { User } from '../data/entity/User';
 import HttpStatusCode from '../enums/HttpStatusCode';

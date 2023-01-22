@@ -1,8 +1,8 @@
 import express from 'express';
-const router = express.Router();
 import AuthController from '../controllers/AuthController';
 import { ISportsAPIRequest } from '../middlewares/models/ISportsAPIRequest';
 
+const router = express.Router();
 const authController = new AuthController();
 
 router.post('/register', async (req: ISportsAPIRequest, res) => {

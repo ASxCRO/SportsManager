@@ -1,13 +1,10 @@
 import { Response } from 'express';
-import { Repository } from 'typeorm';
 import { ValidationError } from 'yup';
-import { AppDataSource } from '../data/data-source';
 import { Review } from '../data/entity/Review';
 import HttpStatusCode from '../enums/HttpStatusCode';
 import { IPostReviewRequest } from '../HttpModels/requestModels/Review/IPostReviewRequest';
 import { IHttpResponse } from '../HttpModels/responseModels/IHttpResponse';
 import { ISportsAPIRequest } from '../middlewares/models/ISportsAPIRequest';
-import { ClassService } from '../services/implementation/ClassService';
 import { ReviewService } from '../services/implementation/ReviewService';
 
 export default class ReviewController {

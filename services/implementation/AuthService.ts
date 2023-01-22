@@ -1,6 +1,5 @@
 import bcrypt from 'bcryptjs';
 import jwt from '../../utils/jwt';
-import { AppDataSource } from '../../data/data-source';
 import { User } from '../../data/entity/User';
 import { MailService } from './MailService';
 import { UserService } from './UserService';
