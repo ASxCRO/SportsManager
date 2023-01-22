@@ -11,6 +11,7 @@ import { IHttpResponse } from '../../HttpModels/responseModels/IHttpResponse';
 export interface IClassService {
   all: () => Promise<IHttpResponse<Class[]>>;
   findById: (id: number) => Promise<IHttpResponse<Class>>;
+  findByAppointmentId: (id: number) => Promise<IHttpResponse<Class>>;
   createClass: (
     classCreateRequest: IClassCreateRequest
   ) => Promise<IHttpResponse<Class>>;
