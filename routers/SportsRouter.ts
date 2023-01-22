@@ -10,7 +10,7 @@ router.get('/all', auth, async (req, res) => {
 });
 
 router.get('/getOne', auth, async (req, res) => {
-  await sportsController.getAll(res);
+  await sportsController.getOne(req, res);
 });
 
 export default router;

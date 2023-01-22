@@ -6,6 +6,7 @@ export interface IUserService {
   all: () => Promise<IHttpResponse<User[]>>;
   findById: (id: number) => Promise<IHttpResponse<User>>;
   findByEmail: (email: string) => Promise<IHttpResponse<User>>;
+  findByAppointmentId: (id: number) => Promise<IHttpResponse<User[]>>;
   update: (
     userUpdateRequest: IUserUpdateRequest
   ) => Promise<IHttpResponse<User>>;

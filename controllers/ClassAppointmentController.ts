@@ -40,7 +40,7 @@ export class ClassAppointmentController {
       const error = e as ValidationError;
 
       response = {
-        status: HttpStatusCode.NOT_ACCEPTABLE,
+        status: HttpStatusCode.UNAUTHORIZED,
         message: 'validation error',
         data: error.errors,
         isError: true,
@@ -68,7 +68,7 @@ export class ClassAppointmentController {
       const error = e as ValidationError;
 
       response = {
-        status: HttpStatusCode.NOT_ACCEPTABLE,
+        status: HttpStatusCode.UNAUTHORIZED,
         message: 'validation error',
         data: error.errors,
         isError: true,
@@ -93,7 +93,7 @@ export class ClassAppointmentController {
       const error = e as ValidationError;
 
       response = {
-        status: HttpStatusCode.NOT_ACCEPTABLE,
+        status: HttpStatusCode.UNAUTHORIZED,
         message: 'validation error',
         data: error.errors,
         isError: true,
@@ -119,10 +119,12 @@ export class ClassAppointmentController {
         data
       );
     } catch (e: any) {
+      console.log(e);
+
       const error = e as ValidationError;
 
       response = {
-        status: HttpStatusCode.NOT_ACCEPTABLE,
+        status: HttpStatusCode.UNAUTHORIZED,
         message: 'validation error',
         data: error.errors,
         isError: true,
@@ -151,7 +153,7 @@ export class ClassAppointmentController {
       const error = e as ValidationError;
 
       response = {
-        status: HttpStatusCode.NOT_ACCEPTABLE,
+        status: HttpStatusCode.UNAUTHORIZED,
         message: 'validation error',
         data: error.errors,
         isError: true,

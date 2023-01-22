@@ -11,7 +11,7 @@ router.post('/postReview', auth, async (req: ISportsAPIRequest, res) => {
   await reviewController.postReview(req, res);
 });
 
-router.patch('/readReviews', admin, async (req: ISportsAPIRequest, res) => {
+router.get('/readReviews', admin, async (req: ISportsAPIRequest, res) => {
   await reviewController.readReviews(res);
 });
 

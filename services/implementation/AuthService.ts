@@ -48,13 +48,19 @@ export class AuthService implements IAuthService {
     const createdUserResponse = await this.userService.create(user);
 
     if (!createdUserResponse.isError) {
-      user.password = null;
+      const newUser = createdUserResponse.data;
+
+      newUser.password = null;
       const accessTokenJwt = await jwt.signAccessToken(user);
       const accessToken = accessTokenJwt.toString();
 
-      this.mailService.sendVerificationMail(user.email, user.name, accessToken);
+      this.mailService.sendVerificationMail(
+        newUser.email,
+        newUser.name,
+        accessToken
+      );
 
-      const data = { ...user, accessToken };
+      const data = { ...newUser, accessToken };
 
       response = {
         data: data,
@@ -81,12 +87,10 @@ export class AuthService implements IAuthService {
 
     if (!userResponse.isError) {
       user = userResponse.data;
-    }
-
-    if (!user) {
+    } else {
       response = {
         status: HttpStatusCode.INTERNAL_SERVER_ERROR,
-        isError: true,
+        isError: false,
         message: 'User not found',
       };
 
@@ -95,7 +99,7 @@ export class AuthService implements IAuthService {
 
     if (!user.verified) {
       response = {
-        status: HttpStatusCode.NOT_ACCEPTABLE,
+        status: HttpStatusCode.UNAUTHORIZED,
         isError: true,
         message: 'User not verified',
       };
@@ -113,6 +117,7 @@ export class AuthService implements IAuthService {
 
       return response;
     }
+
     const accessToken = await jwt.signAccessToken(user);
     response = {
       status: HttpStatusCode.OK,
@@ -120,6 +125,8 @@ export class AuthService implements IAuthService {
       message: 'login successful',
       data: { ...user, accessToken },
     };
+
+    return response;
   }
 
   public async verify(token: string) {
@@ -141,6 +148,15 @@ export class AuthService implements IAuthService {
 
     if (!userToVerifyDbResponse.isError) {
       const userToVerifyDb = userToVerifyDbResponse.data;
+      if (userToVerifyDb.verified) {
+        response = {
+          status: HttpStatusCode.INTERNAL_SERVER_ERROR,
+          isError: true,
+          message: 'already verified',
+        };
+        return response;
+      }
+
       const userUpdateModel: IUserUpdateRequest = {
         verified: true,
         id: userToVerifyDb.id,

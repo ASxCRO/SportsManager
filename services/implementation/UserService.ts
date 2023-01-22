@@ -65,6 +65,32 @@ export class UserService implements IUserService {
     return response;
   }
 
+  public async findByAppointmentId(id: number) {
+    const users = await AppDataSource.getRepository(User)
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.classAppointments', 'classAppointments')
+      .where('classAppointments.id = :id', { id: id })
+      .getMany();
+
+    let response: IHttpResponse<User[]>;
+    if (!!users) {
+      response = {
+        data: users,
+        status: HttpStatusCode.OK,
+        isError: false,
+        message: '',
+      };
+    } else {
+      response = {
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        isError: true,
+        message: 'Problem with loading users',
+      };
+    }
+
+    return response;
+  }
+
   public async findByEmail(email: string) {
     const user = await this.userRepository.findOneBy({ email: email });
 
@@ -107,7 +133,7 @@ export class UserService implements IUserService {
       response = {
         status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
-        message: 'Problem with updating user',
+        message: 'User not in db',
       };
     }
 

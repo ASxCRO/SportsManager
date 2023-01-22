@@ -1,3 +1,4 @@
+import { login, loginBody } from './auth/login';
 import { register, registerBody } from './auth/register';
 
 const apiDocumentation = {
@@ -47,6 +48,9 @@ const apiDocumentation = {
     '/auth/register': {
       post: register,
     },
+    '/auth/login': {
+      post: login,
+    },
   },
   components: {
     securitySchemes: {
@@ -58,6 +62,7 @@ const apiDocumentation = {
     },
     schemas: {
       registerBody,
+      loginBody,
     },
   },
 };

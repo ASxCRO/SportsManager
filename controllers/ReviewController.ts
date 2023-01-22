@@ -6,6 +6,7 @@ import { IPostReviewRequest } from '../HttpModels/requestModels/Review/IPostRevi
 import { IHttpResponse } from '../HttpModels/responseModels/IHttpResponse';
 import { ISportsAPIRequest } from '../middlewares/models/ISportsAPIRequest';
 import { ReviewService } from '../services/implementation/ReviewService';
+import { postReviewValidationSchema } from '../Validators/Review/postReviewValidationSchema';
 
 export default class ReviewController {
   private reviewService: ReviewService;
@@ -15,15 +16,22 @@ export default class ReviewController {
   }
   public async postReview(req: ISportsAPIRequest, res: Response) {
     let response: IHttpResponse<Review | string[]>;
-    const postReviewRequest: IPostReviewRequest = req.body;
 
     try {
-      response = await this.reviewService.postReview(postReviewRequest);
+      const data: IPostReviewRequest = postReviewValidationSchema.validateSync(
+        req.body,
+        {
+          abortEarly: false,
+          stripUnknown: true,
+        }
+      );
+
+      response = await this.reviewService.postReview(data);
     } catch (e: any) {
       const error = e as ValidationError;
 
       response = {
-        status: HttpStatusCode.NOT_ACCEPTABLE,
+        status: HttpStatusCode.UNAUTHORIZED,
         message: 'validation error',
         data: error.errors,
         isError: true,
@@ -42,7 +50,7 @@ export default class ReviewController {
       const error = e as ValidationError;
 
       response = {
-        status: HttpStatusCode.NOT_ACCEPTABLE,
+        status: HttpStatusCode.UNAUTHORIZED,
         message: 'validation error',
         data: error.errors,
         isError: true,

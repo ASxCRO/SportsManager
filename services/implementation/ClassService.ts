@@ -24,6 +24,7 @@ export class ClassService implements IClassService {
   constructor() {
     this.sportsService = new SportsService();
     this.classRepository = AppDataSource.getRepository(Class);
+    this.userService = new UserService();
   }
 
   public async all() {
@@ -73,6 +74,33 @@ export class ClassService implements IClassService {
 
     return response;
   }
+
+  public async findByAppointmentId(id: number) {
+    const classs = await AppDataSource.getRepository(Class)
+      .createQueryBuilder('class')
+      .leftJoinAndSelect('class.classAppointments', 'classAppointments')
+      .where('classAppointments.id = :id', { id: id })
+      .getOne();
+
+    let response: IHttpResponse<Class>;
+    if (!!classs) {
+      response = {
+        data: classs,
+        status: HttpStatusCode.OK,
+        isError: false,
+        message: '',
+      };
+    } else {
+      response = {
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        isError: true,
+        message: 'Problem with loading user',
+      };
+    }
+
+    return response;
+  }
+
   public async createClass(classCreateRequest: IClassCreateRequest) {
     const { description, ageGroup, sportId, duration } = classCreateRequest;
 
@@ -311,7 +339,7 @@ export class ClassService implements IClassService {
       response = {
         status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
-        message: 'Problem with enrolling to class',
+        message: 'Problem with enrolling to class ' + error,
         data: null,
       };
     }

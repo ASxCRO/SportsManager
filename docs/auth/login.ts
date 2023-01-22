@@ -1,7 +1,7 @@
-const register = {
+const login = {
   tags: ['Auth'],
-  description: 'Register new user in the system',
-  operationId: 'register',
+  description: 'Login user in the system',
+  operationId: 'login',
   security: [
     {
       token: [],
@@ -11,7 +11,7 @@ const register = {
     content: {
       'application/json': {
         schema: {
-          $ref: '#/components/schemas/registerBody',
+          $ref: '#/components/schemas/loginBody',
         },
       },
     },
@@ -19,20 +19,12 @@ const register = {
   },
   responses: {
     '200': {
-      description: 'Registered',
+      description: 'Logged in',
       content: {
         'application/json': {
           schema: {
             type: 'object',
             properties: {
-              _id: {
-                type: 'string',
-                example: '60564fcb544047cdc3844818',
-              },
-              name: {
-                type: 'string',
-                example: 'John Snow',
-              },
               email: {
                 type: 'string',
                 example: 'john.snow@email.com',
@@ -46,8 +38,8 @@ const register = {
         },
       },
     },
-    '500': {
-      description: 'Internal Server Error',
+    '401': {
+      description: 'Unauthorized',
       content: {
         'application/json': {
           schema: {
@@ -55,7 +47,7 @@ const register = {
             properties: {
               message: {
                 type: 'string',
-                example: 'Internal Server Error',
+                example: 'Unauthorized',
               },
             },
           },
@@ -64,13 +56,9 @@ const register = {
     },
   },
 };
-const registerBody = {
+const loginBody = {
   type: 'object',
   properties: {
-    name: {
-      type: 'string',
-      example: 'John Snow',
-    },
     email: {
       type: 'string',
       example: 'john.snow@email.com',
@@ -83,4 +71,4 @@ const registerBody = {
   },
 };
 
-export { register, registerBody };
+export { login, loginBody };

@@ -113,7 +113,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       response = {
         status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
-        message: 'Problem with loading user',
+        message: 'Problem with loading class appointment',
       };
     }
 
@@ -160,7 +160,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       response = {
         status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
-        message: 'Problem with loading user',
+        message: 'Problem with loading class appointment',
       };
     }
 
@@ -182,13 +182,13 @@ export class ClassAppointmentService implements IClassAppointmentService {
         data: null,
         status: HttpStatusCode.OK,
         isError: false,
-        message: 'user deleted',
+        message: 'class appointment deleted',
       };
     } else {
       response = {
         status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
-        message: 'Problem with deleting class',
+        message: 'Problem with deleting class appointment',
       };
     }
 
@@ -271,16 +271,37 @@ export class ClassAppointmentService implements IClassAppointmentService {
         return response;
       }
 
-      const classAppointment =
-        await this.classAppointmentRepository.findOneOrFail({
-          where: {
-            id: classAppointmentEnrollRequest.classAppointmentId,
-          },
-          relations: {
-            classs: true,
-            users: true,
-          },
-        });
+      const classAppointment = await this.classAppointmentRepository.findOne({
+        where: {
+          id: classAppointmentEnrollRequest.classAppointmentId,
+        },
+      });
+
+      const classsResponse = await this.classService.findByAppointmentId(
+        classAppointment.id
+      );
+      const usersResponse = await this.userService.findByAppointmentId(
+        classAppointment.id
+      );
+
+      if (classsResponse.data) {
+        classAppointment.classs = classsResponse.data;
+      }
+
+      if (usersResponse.data) {
+        classAppointment.users = usersResponse.data;
+      }
+
+      if (!classAppointment) {
+        response = {
+          data: null,
+          status: HttpStatusCode.INTERNAL_SERVER_ERROR,
+          isError: true,
+          message: 'Class App with that id not in db',
+        };
+
+        return response;
+      }
 
       const userClassIds = user.classes.map((e) => e.id);
 
@@ -303,8 +324,12 @@ export class ClassAppointmentService implements IClassAppointmentService {
       const usersCountOnAppointment = classAppointment.users.length;
 
       if (usersCountOnAppointment < 10) {
+        classAppointment.classs = null;
+        classAppointment.users = null;
+        user.classAppointments.push(classAppointment);
+        const newUser = await AppDataSource.manager.save(user);
         response = {
-          data: user,
+          data: newUser,
           status: HttpStatusCode.OK,
           isError: false,
           message: '',

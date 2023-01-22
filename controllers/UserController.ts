@@ -42,7 +42,7 @@ export default class UserController {
       const error = e as ValidationError;
 
       response = {
-        status: HttpStatusCode.NOT_ACCEPTABLE,
+        status: HttpStatusCode.UNAUTHORIZED,
         message: 'validation error',
         data: error.errors,
         isError: true,
@@ -68,7 +68,7 @@ export default class UserController {
       const error = e as ValidationError;
 
       response = {
-        status: HttpStatusCode.NOT_ACCEPTABLE,
+        status: HttpStatusCode.UNAUTHORIZED,
         message: 'validation error',
         data: error.errors,
         isError: true,
@@ -95,7 +95,7 @@ export default class UserController {
       const error = e as ValidationError;
 
       response = {
-        status: HttpStatusCode.NOT_ACCEPTABLE,
+        status: HttpStatusCode.UNAUTHORIZED,
         message: 'validation error',
         data: error.errors,
         isError: true,
