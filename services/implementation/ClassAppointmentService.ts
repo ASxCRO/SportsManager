@@ -42,7 +42,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading all classes',
       };
@@ -66,7 +66,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading user',
       };
@@ -92,7 +92,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       classsApp.classs = classResponse.data;
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with finding suitable class',
       };
@@ -111,7 +111,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading user',
       };
@@ -138,7 +138,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       classsApp.classs = classResponse.data;
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with finding suitable class',
       };
@@ -158,7 +158,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading user',
       };
@@ -186,7 +186,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       };
     } else {
       response = {
-        status: HttpStatusCode.BAD_REQUEST,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with deleting class',
       };
@@ -214,7 +214,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       if (isEnrolled.length < 1) {
         response = {
           data: null,
-          status: HttpStatusCode.BAD_REQUEST,
+          status: HttpStatusCode.INTERNAL_SERVER_ERROR,
           isError: true,
           message: 'User not even enrolled to class appointment',
         };
@@ -263,7 +263,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       if (alreadyEnrolled.length > 0) {
         response = {
           data: null,
-          status: HttpStatusCode.BAD_REQUEST,
+          status: HttpStatusCode.INTERNAL_SERVER_ERROR,
           isError: true,
           message: 'User already applied to class appointment',
         };
@@ -291,7 +291,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       if (!userAppliedToClassOfClassAppointment) {
         response = {
           data: null,
-          status: HttpStatusCode.BAD_REQUEST,
+          status: HttpStatusCode.INTERNAL_SERVER_ERROR,
           isError: true,
           message:
             'User cant apply to class appointment if not applied to class itself',
@@ -312,7 +312,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
       } else {
         response = {
           data: null,
-          status: HttpStatusCode.BAD_REQUEST,
+          status: HttpStatusCode.INTERNAL_SERVER_ERROR,
           isError: true,
           message: 'User cant apply bcs slots are full',
         };

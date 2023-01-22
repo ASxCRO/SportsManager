@@ -8,6 +8,8 @@ import userRouter from './routers/UserRouter';
 import classRouter from './routers/ClassRouter';
 import classAppointmentRouter from './routers/ClassAppointmentRouter';
 import reviewRouter from './routers/ReviewRouter';
+import swaggerUi from 'swagger-ui-express';
+import { apiDocumentation } from './docs/apidoc';
 
 import { AppDataSource } from './data/data-source';
 
@@ -30,6 +32,8 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/class', classRouter);
 app.use('/api/v1/classAppointment', classAppointmentRouter);
 app.use('/api/v1/review', reviewRouter);
+
+app.use('/documentation', swaggerUi.serve, swaggerUi.setup(apiDocumentation));
 
 app.listen(port, () => {
   console.log(`now listening on port ${port}`);

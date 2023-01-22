@@ -1,3 +1,4 @@
+import { Repository } from 'typeorm';
 import { AppDataSource } from '../../data/data-source';
 import { User } from '../../data/entity/User';
 import HttpStatusCode from '../../enums/HttpStatusCode';
@@ -6,7 +7,11 @@ import { IHttpResponse } from '../../HttpModels/responseModels/IHttpResponse';
 import { IUserService } from '../declaration/IUserService';
 
 export class UserService implements IUserService {
-  private userRepository = AppDataSource.getRepository(User);
+  private userRepository: Repository<User>;
+
+  constructor() {
+    this.userRepository = AppDataSource.getRepository(User);
+  }
 
   public async all() {
     const allUsers = await this.userRepository.find({
@@ -26,7 +31,7 @@ export class UserService implements IUserService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading all users',
       };
@@ -51,7 +56,7 @@ export class UserService implements IUserService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading user',
       };
@@ -73,7 +78,7 @@ export class UserService implements IUserService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading user',
       };
@@ -100,7 +105,7 @@ export class UserService implements IUserService {
       };
     } else {
       response = {
-        status: HttpStatusCode.BAD_REQUEST,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with updating user',
       };
@@ -128,7 +133,7 @@ export class UserService implements IUserService {
       };
     } else {
       response = {
-        status: HttpStatusCode.BAD_REQUEST,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with deleting user',
       };
@@ -148,15 +153,16 @@ export class UserService implements IUserService {
     if (userExists) {
       response = {
         data: userExists,
-        status: HttpStatusCode.OK,
-        isError: false,
-        message: '',
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
+        isError: true,
+        message: userExists ? 'user with that email already exists' : '',
       };
     } else {
       response = {
-        status: HttpStatusCode.BAD_REQUEST,
-        isError: true,
-        message: 'Problem with deleting user',
+        data: userExists,
+        status: HttpStatusCode.OK,
+        isError: false,
+        message: 'Problem with checking user existance',
       };
     }
 
@@ -164,7 +170,7 @@ export class UserService implements IUserService {
   }
 
   public async create(user: User) {
-    const createdUser = await this.userRepository.create(user);
+    const createdUser = this.userRepository.create(user);
 
     let response: IHttpResponse<User>;
     if (!!createdUser) {
@@ -176,7 +182,7 @@ export class UserService implements IUserService {
       };
     } else {
       response = {
-        status: HttpStatusCode.BAD_REQUEST,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with deleting user',
       };

@@ -40,7 +40,7 @@ export class ReviewService implements IReviewService {
         };
       } else {
         response = {
-          status: HttpStatusCode.NOT_FOUND,
+          status: HttpStatusCode.INTERNAL_SERVER_ERROR,
           isError: true,
           message: 'Problem with saving review',
         };
@@ -68,7 +68,7 @@ export class ReviewService implements IReviewService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading reviews',
       };

@@ -26,16 +26,16 @@ export class AuthService implements IAuthService {
 
     let response: IHttpResponse<any>;
 
-    if (!responseUserExists.isError)
-      if (!responseUserExists.data) {
-        response = {
-          data: {},
-          status: HttpStatusCode.BAD_REQUEST,
-          isError: true,
-          message: 'User with this mail already exists',
-        };
-        return response;
-      }
+    if (responseUserExists.isError) {
+      response = {
+        data: responseUserExists.data,
+        status: responseUserExists.status,
+        isError: responseUserExists.isError,
+        message: responseUserExists.message,
+      };
+
+      return response;
+    }
 
     const encryptedPassword = bcrypt.hashSync(password, 8);
 
@@ -64,7 +64,7 @@ export class AuthService implements IAuthService {
       };
     } else {
       response = {
-        status: HttpStatusCode.BAD_REQUEST,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with registering new user',
       };
@@ -85,7 +85,7 @@ export class AuthService implements IAuthService {
 
     if (!user) {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'User not found',
       };
@@ -159,7 +159,7 @@ export class AuthService implements IAuthService {
       }
     } else {
       response = {
-        status: HttpStatusCode.BAD_REQUEST,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: "couldn't verify",
       };

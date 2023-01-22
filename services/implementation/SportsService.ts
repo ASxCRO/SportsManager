@@ -29,7 +29,7 @@ export class SportsService implements ISportService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading all classes',
       };
@@ -51,7 +51,7 @@ export class SportsService implements ISportService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading sport',
       };

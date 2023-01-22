@@ -43,7 +43,7 @@ export class ClassService implements IClassService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading all classes',
       };
@@ -65,7 +65,7 @@ export class ClassService implements IClassService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading user',
       };
@@ -94,7 +94,7 @@ export class ClassService implements IClassService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading user',
       };
@@ -119,7 +119,7 @@ export class ClassService implements IClassService {
       classs.sport = sportResponse.data;
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading sport',
       };
@@ -139,7 +139,7 @@ export class ClassService implements IClassService {
       };
     } else {
       response = {
-        status: HttpStatusCode.NOT_FOUND,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with loading user',
       };
@@ -167,7 +167,7 @@ export class ClassService implements IClassService {
       };
     } else {
       response = {
-        status: HttpStatusCode.BAD_REQUEST,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with deleting class',
       };
@@ -212,7 +212,7 @@ export class ClassService implements IClassService {
       };
     } else {
       response = {
-        status: HttpStatusCode.BAD_REQUEST,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with filtering classes',
       };
@@ -273,7 +273,7 @@ export class ClassService implements IClassService {
         );
         if (alreadyEnrolled.length > 0) {
           response = {
-            status: HttpStatusCode.BAD_REQUEST,
+            status: HttpStatusCode.INTERNAL_SERVER_ERROR,
             isError: true,
             message: 'User already enrolled to class',
             data: null,
@@ -300,7 +300,7 @@ export class ClassService implements IClassService {
           }
         } else {
           response = {
-            status: HttpStatusCode.BAD_REQUEST,
+            status: HttpStatusCode.INTERNAL_SERVER_ERROR,
             isError: true,
             message: 'User cant apply to more than 2 classes',
             data: null,
@@ -309,7 +309,7 @@ export class ClassService implements IClassService {
       }
     } catch (error) {
       response = {
-        status: HttpStatusCode.BAD_REQUEST,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with enrolling to class',
         data: null,
@@ -334,7 +334,7 @@ export class ClassService implements IClassService {
 
       if (isEnrolled.length < 1) {
         response = {
-          status: HttpStatusCode.BAD_REQUEST,
+          status: HttpStatusCode.INTERNAL_SERVER_ERROR,
           isError: true,
           message: 'User not even enrolled to class',
         };
@@ -356,7 +356,7 @@ export class ClassService implements IClassService {
       };
     } else {
       response = {
-        status: HttpStatusCode.BAD_REQUEST,
+        status: HttpStatusCode.INTERNAL_SERVER_ERROR,
         isError: true,
         message: 'Problem with filtering classes',
       };
