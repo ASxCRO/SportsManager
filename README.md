@@ -10,7 +10,7 @@
 
 
 
-<h3> 👨🏻‍💻 Tips for turning the engines up/h3>
+<h3> 👨🏻‍💻 Tips for turning the engines up</h3>
 
 - 🛢 &nbsp; create db named "sportsmanager" and restore it with provided db dump file
 - 💻 &nbsp; restore postman workspace with provided postman file  + add environment in postman and attach workspace with that enviroment
