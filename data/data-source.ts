@@ -5,7 +5,6 @@ import { ClassAppointment } from './entity/ClassAppointment';
 import { Review } from './entity/Review';
 import { Sport } from './entity/Sport';
 import { User } from './entity/User';
-import verifiedUser from './migration/1673993063306-newVerifiedPropOnUser';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -17,6 +16,6 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   logging: false,
   entities: [User, Sport, Class, ClassAppointment, Review],
-  migrations: [verifiedUser],
+  migrations: [],
   subscribers: [],
 });
