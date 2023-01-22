@@ -11,35 +11,29 @@ import { ClassService } from '../services/implementation/ClassService';
 import { ReviewService } from '../services/implementation/ReviewService';
 
 export default class ReviewController {
-  private classService: ClassService;
   private reviewService: ReviewService;
 
   constructor() {
-    this.classService = new ClassService();
     this.reviewService = new ReviewService();
   }
   public async postReview(req: ISportsAPIRequest, res: Response) {
     let response: IHttpResponse<Review | string[]>;
-    const { comment, rate, classId } = req.body;
+    const postReviewRequest: IPostReviewRequest = req.body;
 
-    const classResponse = await this.reviewService.postReview(classId);
+    try {
+      response = await this.reviewService.postReview(postReviewRequest);
+    } catch (e: any) {
+      const error = e as ValidationError;
 
-    if (!classResponse.isError) {
-      try {
-        response = await this.reviewService.postReview(postReviewRequest);
-      } catch (e: any) {
-        const error = e as ValidationError;
-
-        response = {
-          status: HttpStatusCode.NOT_ACCEPTABLE,
-          message: 'validation error',
-          data: error.errors,
-          isError: true,
-        };
-      }
+      response = {
+        status: HttpStatusCode.NOT_ACCEPTABLE,
+        message: 'validation error',
+        data: error.errors,
+        isError: true,
+      };
     }
 
-    return response;
+    res.status(response.status).json(response);
   }
 
   public async readReviews(res: Response) {

@@ -6,10 +6,15 @@ import { AgeGroup } from '../../enums/AgeGroup';
 import HttpStatusCode from '../../enums/HttpStatusCode';
 import { IClassCreateRequest } from '../../HttpModels/requestModels/Class/IClassCreateRequest';
 import { IClassUpdateRequest } from '../../HttpModels/requestModels/Class/IClassUpdateRequest';
+import { IClassGetFilterRequest } from '../../HttpModels/requestModels/Class/IClassGetFilterRequest';
+
 import { IHttpResponse } from '../../HttpModels/responseModels/IHttpResponse';
 import { IClassService } from '../declaration/IClassService';
 import { SportsService } from './SportsService';
 import { UserService } from './UserService';
+import { IClassGetDetailsRequest } from '../../HttpModels/requestModels/Class/IClassGetDetailsRequest';
+import { IClassEnrollRequest } from '../../HttpModels/requestModels/Class/IClassEnrollRequest';
+import { IClassUnrollRequest } from '../../HttpModels/requestModels/Class/IClassUnrollRequest';
 
 export class ClassService implements IClassService {
   private classRepository: Repository<Class>;
@@ -105,13 +110,26 @@ export class ClassService implements IClassService {
     const classs = await this.classRepository.findOneBy({ id: classId });
     classs.description = description;
     classs.ageGroup = ageGroup;
-    //TODO implement sportService findbyid
-    // classs.sport = await this.sportsService.findById(sportId);
+
+    let response: IHttpResponse<Class>;
+
+    const sportResponse = await this.sportsService.findById(sportId);
+
+    if (!sportResponse.isError) {
+      classs.sport = sportResponse.data;
+    } else {
+      response = {
+        status: HttpStatusCode.NOT_FOUND,
+        isError: true,
+        message: 'Problem with loading sport',
+      };
+
+      return response;
+    }
     classs.duration = duration;
 
     const newClass = await this.classRepository.save(classs);
 
-    let response: IHttpResponse<Class>;
     if (!!newClass) {
       response = {
         data: newClass,
@@ -158,21 +176,26 @@ export class ClassService implements IClassService {
     return response;
   }
 
-  public async getClassesFilter(data: any) {
+  public async getClassesFilter(
+    getClassesFilterRequest: IClassGetFilterRequest
+  ) {
+    let response: IHttpResponse<Class[]>;
+
     let classes = AppDataSource.createQueryBuilder(Class, 'class')
       .leftJoinAndSelect('class.sport', 'sport')
       .leftJoinAndSelect('class.classAppointments', 'classAppointments');
 
-    if (data.sports) {
-      const sportsFromParams: string[] = data.sports.split(',');
+    if (getClassesFilterRequest.sports) {
+      const sportsFromParams: string[] =
+        getClassesFilterRequest.sports.split(',');
 
       classes.where('sport.name IN (:...sports)', {
         sports: sportsFromParams,
       });
     }
 
-    if (data.ageGroup) {
-      const ageGroup: AgeGroup = data.ageGroup;
+    if (getClassesFilterRequest.ageGroup) {
+      const ageGroup: AgeGroup = getClassesFilterRequest.ageGroup;
       classes.andWhere('class.ageGroup = :ageGroup', {
         ageGroup: ageGroup,
       });
@@ -180,18 +203,37 @@ export class ClassService implements IClassService {
 
     const filteredClasses = await classes.getMany();
 
-    return filteredClasses;
+    if (!!filteredClasses) {
+      response = {
+        data: filteredClasses,
+        status: HttpStatusCode.OK,
+        isError: false,
+        message: '',
+      };
+    } else {
+      response = {
+        status: HttpStatusCode.BAD_REQUEST,
+        isError: true,
+        message: 'Problem with filtering classes',
+      };
+    }
+
+    return response;
   }
 
-  public async getDetailsOfClass(data: any) {
+  public async getDetailsOfClass(
+    detailsOfClassRequest: IClassGetDetailsRequest
+  ) {
+    let response: IHttpResponse<any>;
+
     let classes = AppDataSource.createQueryBuilder(Class, 'class')
       .leftJoinAndSelect('class.sport', 'sport')
       .leftJoinAndSelect('class.classAppointments', 'classAppointments')
       .leftJoinAndSelect('class.reviews', 'review');
 
-    if (data.id) {
+    if (detailsOfClassRequest.id) {
       classes.where('class.id = :id', {
-        id: data.id,
+        id: detailsOfClassRequest.id,
       });
     }
 
@@ -203,93 +245,123 @@ export class ClassService implements IClassService {
         0
       ) / filteredClasses.reviews.length;
 
-    return {
-      filteredClasses: filteredClasses,
-      averageReviewRate: averageReviewRate,
+    response = {
+      status: HttpStatusCode.OK,
+      isError: false,
+      message: '',
+      data: {
+        filteredClasses: filteredClasses,
+        averageReviewRate: averageReviewRate,
+      },
     };
+
+    return response;
   }
 
-  public async enrollToClass(data: any, userParam: User) {
+  public async enrollToClass(enrollToClassRequest: IClassEnrollRequest) {
+    let response: IHttpResponse<User>;
+
     try {
-      const user = await this.userRepository.findOneOrFail({
-        relations: {
-          classes: true,
-        },
-        where: {
-          id: userParam.id,
-        },
-      });
+      const userResponse = await this.userService.findById(
+        enrollToClassRequest.user.id
+      );
 
-      const alreadyEnrolled = user.classes.filter((e) => e.id === data.classId);
+      if (!userResponse.isError) {
+        const user = userResponse.data;
+        const alreadyEnrolled = user.classes.filter(
+          (e) => e.id === enrollToClassRequest.classId
+        );
+        if (alreadyEnrolled.length > 0) {
+          response = {
+            status: HttpStatusCode.BAD_REQUEST,
+            isError: true,
+            message: 'User already enrolled to class',
+            data: null,
+          };
 
-      if (alreadyEnrolled.length > 0) {
-        return {
-          message: 'User already applied to this class',
-          status: 404,
-          data: {},
-        };
-      }
+          return response;
+        }
 
-      if (user.classes.length < 2) {
-        const classs = await this.classRepository.findOneByOrFail({
-          id: data.classId,
-        });
+        if (user.classes.length < 2) {
+          const classs = await this.classRepository.findOneBy({
+            id: enrollToClassRequest.classId,
+          });
 
-        user.classes.push(classs);
-        const newUser = await AppDataSource.manager.save(user);
+          if (!!classs) {
+            user.classes.push(classs);
+            const newUser = await AppDataSource.manager.save(user);
 
-        return {
-          message: 'User enrolled to class!',
-          status: 200,
-          data: newUser,
-        };
-      } else {
-        return {
-          message: 'User cant apply to more than 2 classes',
-          status: 404,
-          data: {},
-        };
+            response = {
+              status: HttpStatusCode.OK,
+              isError: false,
+              message: 'User enrolled',
+              data: newUser,
+            };
+          }
+        } else {
+          response = {
+            status: HttpStatusCode.BAD_REQUEST,
+            isError: true,
+            message: 'User cant apply to more than 2 classes',
+            data: null,
+          };
+        }
       }
     } catch (error) {
-      console.log(error);
-    }
-  }
-
-  public async unrollClass(data: any, userParam: User) {
-    const userReponse  = await this.userService.findById(userParam.id)
-    
-    if()
-    
-    await this.userRepository.findOneOrFail({
-      relations: {
-        classes: true,
-      },
-      where: {
-        id: userParam.id,
-      },
-    });
-
-
-    const isEnrolled = user.classes.filter((e) => e.id === data.classId);
-
-    if (isEnrolled.length < 1) {
-      return {
-        message: 'User not even applied to this class',
-        status: 404,
-        data: {},
+      response = {
+        status: HttpStatusCode.BAD_REQUEST,
+        isError: true,
+        message: 'Problem with enrolling to class',
+        data: null,
       };
     }
 
-    user.classes = user.classes.filter((classs) => {
-      return classs.id !== data.classId;
-    });
+    return response;
+  }
 
-    const newUser = await AppDataSource.manager.save(user);
+  public async unrollClass(unrollClassRequest: IClassUnrollRequest) {
+    let response: IHttpResponse;
 
-    return {
-      message: 'Enrolled',
-      status: 200,
-      data: newUser,
-    };
+    const userResponse = await this.userService.findById(
+      unrollClassRequest.user.id
+    );
+
+    if (!userResponse.isError) {
+      const user = userResponse.data;
+      const isEnrolled = user.classes.filter(
+        (e) => e.id === unrollClassRequest.classId
+      );
+
+      if (isEnrolled.length < 1) {
+        response = {
+          status: HttpStatusCode.BAD_REQUEST,
+          isError: true,
+          message: 'User not even enrolled to class',
+        };
+
+        return response;
+      }
+
+      user.classes = user.classes.filter((classs) => {
+        return classs.id !== unrollClassRequest.classId;
+      });
+
+      await AppDataSource.manager.save(user);
+
+      response = {
+        status: HttpStatusCode.OK,
+        isError: false,
+        message: 'User unrolled',
+        data: null,
+      };
+    } else {
+      response = {
+        status: HttpStatusCode.BAD_REQUEST,
+        isError: true,
+        message: 'Problem with filtering classes',
+      };
+    }
+
+    return response;
   }
 }

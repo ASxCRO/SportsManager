@@ -1,6 +1,10 @@
 import { Class } from '../../data/entity/Class';
+import { User } from '../../data/entity/User';
 import { IClassCreateRequest } from '../../HttpModels/requestModels/Class/IClassCreateRequest';
-import { IClassDeleteRequest } from '../../HttpModels/requestModels/Class/IClassDeleteRequest';
+import { IClassEnrollRequest } from '../../HttpModels/requestModels/Class/IClassEnrollRequest';
+import { IClassGetDetailsRequest } from '../../HttpModels/requestModels/Class/IClassGetDetailsRequest';
+import { IClassGetFilterRequest } from '../../HttpModels/requestModels/Class/IClassGetFilterRequest';
+import { IClassUnrollRequest } from '../../HttpModels/requestModels/Class/IClassUnrollRequest';
 import { IClassUpdateRequest } from '../../HttpModels/requestModels/Class/IClassUpdateRequest';
 import { IHttpResponse } from '../../HttpModels/responseModels/IHttpResponse';
 
@@ -14,8 +18,16 @@ export interface IClassService {
     classUpdateRequest: IClassUpdateRequest
   ) => Promise<IHttpResponse<Class>>;
   deleteClass: (id: number) => Promise<IHttpResponse>;
-  enrollToClass: () => Promise<IHttpResponse<Class>>;
-  unrollToClass: () => Promise<IHttpResponse>;
-  getClassesFilter: () => Promise<IHttpResponse<Class[]>>;
-  getDetailsOfClass: () => Promise<IHttpResponse<Class>>;
+  enrollToClass: (
+    enrollToClassRequest: IClassEnrollRequest
+  ) => Promise<IHttpResponse<User>>;
+  unrollClass: (
+    unrollClassRequest: IClassUnrollRequest
+  ) => Promise<IHttpResponse>;
+  getClassesFilter: (
+    getClassesFilterRequest: IClassGetFilterRequest
+  ) => Promise<IHttpResponse<Class[]>>;
+  getDetailsOfClass: (
+    detailsOfClassRequest: IClassGetDetailsRequest
+  ) => Promise<IHttpResponse<any>>;
 }

@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import { AppDataSource } from '../../data/data-source';
 import { ClassAppointment } from '../../data/entity/ClassAppointment';
+import { User } from '../../data/entity/User';
 import HttpStatusCode from '../../enums/HttpStatusCode';
 import { IClassAppointmentCreateRequest } from '../../HttpModels/requestModels/ClassAppointment/IClassAppointmentCreateRequest';
 import { IClassAppointmentEnrollRequest } from '../../HttpModels/requestModels/ClassAppointment/IClassAppointmentEnrollRequest';
@@ -106,7 +107,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
         data: newClassApp,
         status: HttpStatusCode.CREATED,
         isError: false,
-        message: '',
+        message: 'class appointment created',
       };
     } else {
       response = {
@@ -153,7 +154,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
         data: newClassApp,
         status: HttpStatusCode.OK,
         isError: false,
-        message: '',
+        message: 'class appointment updated',
       };
     } else {
       response = {
@@ -181,7 +182,7 @@ export class ClassAppointmentService implements IClassAppointmentService {
         data: null,
         status: HttpStatusCode.OK,
         isError: false,
-        message: '',
+        message: 'user deleted',
       };
     } else {
       response = {
@@ -197,6 +198,8 @@ export class ClassAppointmentService implements IClassAppointmentService {
   public async unrollClassAppointment(
     classAppointmentUnrollRequest: IClassAppointmentUnrollRequest
   ) {
+    let response: IHttpResponse;
+
     const userResponse = await this.userService.findById(
       classAppointmentUnrollRequest.user.id
     );
@@ -209,11 +212,14 @@ export class ClassAppointmentService implements IClassAppointmentService {
       );
 
       if (isEnrolled.length < 1) {
-        return {
-          message: 'User not even applied to this appointment',
-          status: 404,
-          data: {},
+        response = {
+          data: null,
+          status: HttpStatusCode.BAD_REQUEST,
+          isError: true,
+          message: 'User not even enrolled to class appointment',
         };
+
+        return response;
       }
 
       user.classAppointments = user.classAppointments.filter(
@@ -225,81 +231,94 @@ export class ClassAppointmentService implements IClassAppointmentService {
         }
       );
 
-      const newUser = await AppDataSource.manager.save(user);
+      await AppDataSource.manager.save(user);
+
+      response = {
+        data: null,
+        status: HttpStatusCode.OK,
+        isError: false,
+        message: 'user unrolled',
+      };
     }
 
-    return {
-      message: 'Unrolled of class appointment',
-      status: 200,
-      data: newUser,
-    };
+    return response;
   }
 
   public async enrollToClassAppointment(
     classAppointmentEnrollRequest: IClassAppointmentEnrollRequest
   ) {
-    const user = await this.userRepository.findOneOrFail({
-      relations: {
-        classes: true,
-        classAppointments: true,
-      },
-      where: {
-        id: classAppointmentEnrollRequest.user.id,
-      },
-    });
+    let response: IHttpResponse<User>;
 
-    const alreadyEnrolled = user.classAppointments.filter(
-      (e) => e.id === classAppointmentEnrollRequest.classAppointmentId
+    const userResponse = await this.userService.findById(
+      classAppointmentEnrollRequest.user.id
     );
 
-    if (alreadyEnrolled.length > 0) {
-      return {
-        message: 'User already applied to this appointment',
-        status: 404,
-        data: {},
-      };
-    }
+    if (!userResponse.isError) {
+      const user = userResponse.data;
 
-    const classAppointment =
-      await this.classAppointmentRepository.findOneOrFail({
-        where: {
-          id: classAppointmentEnrollRequest.classAppointmentId,
-        },
-        relations: {
-          classs: true,
-        },
-      });
+      const alreadyEnrolled = user.classAppointments.filter(
+        (e) => e.id === classAppointmentEnrollRequest.classAppointmentId
+      );
 
-    const userClassIds = user.classes.map((e) => e.id);
+      if (alreadyEnrolled.length > 0) {
+        response = {
+          data: null,
+          status: HttpStatusCode.BAD_REQUEST,
+          isError: true,
+          message: 'User already applied to class appointment',
+        };
 
-    const userAppliedToClassOfClassAppointment = userClassIds.includes(
-      classAppointment.classs.id
-    );
+        return response;
+      }
 
-    if (!userAppliedToClassOfClassAppointment) {
-      return {
-        message: 'User cant apply to class appointment if not applied to class',
-        status: 404,
-        data: {},
-      };
-    }
+      const classAppointment =
+        await this.classAppointmentRepository.findOneOrFail({
+          where: {
+            id: classAppointmentEnrollRequest.classAppointmentId,
+          },
+          relations: {
+            classs: true,
+            users: true,
+          },
+        });
 
-    const usersCountOnAppointment = user.classAppointments.length;
+      const userClassIds = user.classes.map((e) => e.id);
 
-    if (usersCountOnAppointment < 10) {
-      user.classAppointments.push(classAppointment);
-      const newUser = await AppDataSource.manager.save(user);
-      return {
-        message: 'Enrolled',
-        status: 200,
-        data: newUser,
-      };
-    } else {
-      return {
-        message: 'User cant apply to more than 10 class appointments',
-        status: 404,
-        data: {},
-      };
+      const userAppliedToClassOfClassAppointment = userClassIds.includes(
+        classAppointment.classs.id
+      );
+
+      if (!userAppliedToClassOfClassAppointment) {
+        response = {
+          data: null,
+          status: HttpStatusCode.BAD_REQUEST,
+          isError: true,
+          message:
+            'User cant apply to class appointment if not applied to class itself',
+        };
+
+        return response;
+      }
+
+      const usersCountOnAppointment = classAppointment.users.length;
+
+      if (usersCountOnAppointment < 10) {
+        response = {
+          data: user,
+          status: HttpStatusCode.OK,
+          isError: false,
+          message: '',
+        };
+      } else {
+        response = {
+          data: null,
+          status: HttpStatusCode.BAD_REQUEST,
+          isError: true,
+          message: 'User cant apply bcs slots are full',
+        };
+      }
+
+      return response;
     }
   }
 }

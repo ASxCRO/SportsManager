@@ -1,4 +1,5 @@
 import { ClassAppointment } from '../../data/entity/ClassAppointment';
+import { User } from '../../data/entity/User';
 import { IClassAppointmentCreateRequest } from '../../HttpModels/requestModels/ClassAppointment/IClassAppointmentCreateRequest';
 import { IClassAppointmentDeleteRequest } from '../../HttpModels/requestModels/ClassAppointment/IClassAppointmentDeleteRequest';
 import { IClassAppointmentEnrollRequest } from '../../HttpModels/requestModels/ClassAppointment/IClassAppointmentEnrollRequest';
@@ -18,7 +19,7 @@ export interface IClassAppointmentService {
   deleteClassAppointment: (id: number) => Promise<IHttpResponse>;
   enrollToClassAppointment: (
     classAppointmentEnrollRequest: IClassAppointmentEnrollRequest
-  ) => Promise<IHttpResponse>;
+  ) => Promise<IHttpResponse<User>>;
   unrollClassAppointment: (
     classAppointmentUnrollRequest: IClassAppointmentUnrollRequest
   ) => Promise<IHttpResponse>;
