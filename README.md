@@ -5,8 +5,8 @@
 - 🔭 &nbsp; Express.js + Typescript, TypeORM, Yup (validations), Docker(with Compose)
 - 🔧 &nbsp; Router -> Controller -> Service -> Repository pattern
 - 💻 &nbsp; Nodemailer for mails, Nodemon for quick development, DBeaver as PostgreSQL client
-- 💼 &nbsp; Documentation: Postman ( workspace) | Swagger (/documentation)
-- 🛢 &nbsp; Authentication : JWT | Auth Middleware (role based)
+- 💼 &nbsp; Documentation: Postman ( workspace -> finished) | Swagger (/documentation endpoint -> not finished! (done just bsc to show that I can do it) 
+- 🛢 &nbsp; Authentication : JWT | Auth Middleware | Admin Middleware
 
 
 
@@ -31,9 +31,9 @@
 Antonio Supan
 ⭐️ [ASxCRO](https://github.com/asxcro)
 
+<img width="368" alt="image" src="https://user-images.githubusercontent.com/36239244/213921326-07105072-c952-475a-84f7-f5701e02636a.png">
 
-<img width="1392" alt="image" src="https://user-images.githubusercontent.com/36239244/213767255-c33f990b-2338-4c0b-9d57-83dca25af8c3.png">
-<img width="395" alt="image" src="https://user-images.githubusercontent.com/36239244/213767681-f35f51b6-3023-4ee6-a46f-a4d395b25d4c.png">
-<img width="441" alt="image" src="https://user-images.githubusercontent.com/36239244/213768636-4bc718ac-17d6-4459-b465-0be23f46cdc7.png">
 <img width="467" alt="image" src="https://user-images.githubusercontent.com/36239244/213768935-4a4689dc-136b-4b5a-8d5f-91e59152e1e5.png">
+<img width="384" alt="image" src="https://user-images.githubusercontent.com/36239244/213921986-92baa7fb-9cba-41bb-ad1f-4105aad50512.png">
+
 
