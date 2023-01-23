@@ -7,12 +7,12 @@ import ReviewController from '../controllers/ReviewController';
 const router = express.Router();
 const reviewController = new ReviewController();
 
-router.post('/postReview', auth, async (req: ISportsAPIRequest, res) => {
-  await reviewController.postReview(req, res);
+router.get('/all', admin, async (req: ISportsAPIRequest, res) => {
+  await reviewController.readReviews(res);
 });
 
-router.get('/readReviews', admin, async (req: ISportsAPIRequest, res) => {
-  await reviewController.readReviews(res);
+router.post('/new', auth, async (req: ISportsAPIRequest, res) => {
+  await reviewController.postReview(req, res);
 });
 
 export default router;

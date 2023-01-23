@@ -7,15 +7,15 @@ import auth from '../middlewares/admin';
 const router = express.Router();
 const classAppointmentController = new ClassAppointmentController();
 
-router.post('/create', admin, async (req: ISportsAPIRequest, res) => {
+router.post('/new', admin, async (req: ISportsAPIRequest, res) => {
   await classAppointmentController.createClassAppointment(req, res);
 });
 
-router.patch('/update', admin, async (req: ISportsAPIRequest, res) => {
+router.patch('/edit', admin, async (req: ISportsAPIRequest, res) => {
   await classAppointmentController.updateClassAppointment(req, res);
 });
 
-router.delete('/delete', admin, async (req: ISportsAPIRequest, res) => {
+router.delete('/remove', admin, async (req: ISportsAPIRequest, res) => {
   await classAppointmentController.deleteClassAppointment(req, res);
 });
 

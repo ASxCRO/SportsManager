@@ -10,8 +10,10 @@ import classAppointmentRouter from './routers/ClassAppointmentRouter';
 import reviewRouter from './routers/ReviewRouter';
 import swaggerUi from 'swagger-ui-express';
 import { apiDocumentation } from './docs/apidoc';
-
 import { AppDataSource } from './data/data-source';
+
+import { Router } from 'express';
+import RouteGroup from 'express-route-grouping';
 
 dotenv.config();
 const port = process.env.PORT;
@@ -26,13 +28,21 @@ AppDataSource.initialize()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/sports', sportsRouter);
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/class', classRouter);
-app.use('/api/v1/classAppointment', classAppointmentRouter);
-app.use('/api/v1/review', reviewRouter);
+const root = new RouteGroup('/', Router());
 
+//v1 routes
+root.group('/api', (api) => {
+  api.group('/v1', (v1) => {
+    v1.use('/auth', authRouter);
+    v1.use('/sports', sportsRouter);
+    v1.use('/users', userRouter);
+    v1.use('/class', classRouter);
+    v1.use('/classAppointment', classAppointmentRouter);
+    v1.use('/review', reviewRouter);
+  });
+});
+
+app.use('/', root.export());
 app.use('/documentation', swaggerUi.serve, swaggerUi.setup(apiDocumentation));
 
 app.listen(port, () => {

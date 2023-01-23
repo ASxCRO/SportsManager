@@ -8,15 +8,15 @@ import { ClassController } from '../controllers/ClassController';
 const router = express.Router();
 const classController = new ClassController();
 
-router.post('/create', admin, async (req: ISportsAPIRequest, res) => {
+router.post('/new', admin, async (req: ISportsAPIRequest, res) => {
   await classController.createClass(req, res);
 });
 
-router.patch('/update', admin, async (req: ISportsAPIRequest, res) => {
+router.patch('/edit', admin, async (req: ISportsAPIRequest, res) => {
   await classController.updateClass(req, res);
 });
 
-router.delete('/delete', admin, async (req: ISportsAPIRequest, res) => {
+router.delete('/remove', admin, async (req: ISportsAPIRequest, res) => {
   await classController.deleteClass(req, res);
 });
 

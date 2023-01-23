@@ -10,15 +10,15 @@ router.get('/all', admin, async (req, res) => {
   await userController.getAll(res);
 });
 
-router.get('/getOne', admin, async (req: ISportsAPIRequest, res) => {
+router.get('/details', admin, async (req: ISportsAPIRequest, res) => {
   await userController.getOne(req, res);
 });
 
-router.patch('/update', admin, async (req: ISportsAPIRequest, res) => {
+router.patch('/edit', admin, async (req: ISportsAPIRequest, res) => {
   await userController.updateUser(req, res);
 });
 
-router.delete('/delete', admin, async (req: ISportsAPIRequest, res) => {
+router.delete('/remove', admin, async (req: ISportsAPIRequest, res) => {
   await userController.deleteUser(req, res);
 });
 

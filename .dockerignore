@@ -1,0 +1,19 @@
+# Default
+node_modules
+dist
+coverage
+.vscode
+.idea
+.DS_STORE
+.env
+tmp
+
+# Good to have for smaller docker
+Dockerfile*
+docker-compose*
+.dockerignore
+*.md
+.git
+.gitignore
+eventTestPayload
+dockerConfig

@@ -9,7 +9,7 @@ router.get('/all', auth, async (req, res) => {
   await sportsController.getAll(res);
 });
 
-router.get('/getOne', auth, async (req, res) => {
+router.get('/details', auth, async (req, res) => {
   await sportsController.getOne(req, res);
 });
 
