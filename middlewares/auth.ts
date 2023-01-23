@@ -20,23 +20,7 @@ export default async function auth(
   await jwt
     .verifyAccessToken(token)
     .then((user: any) => {
-      if (
-        req.originalUrl.includes('admin') ||
-        req.originalUrl.includes('users')
-      ) {
-        const userRole = user.payload.role;
-
-        if (userRole !== UserRole.ADMIN) {
-          next(
-            createError.Unauthorized(
-              'User attempt to perform action blocked by authorization rules'
-            )
-          );
-        }
-      }
-
       req.user = { ...user.payload };
-
       next();
     })
     .catch((e) => {
