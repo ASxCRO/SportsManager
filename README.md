@@ -16,7 +16,7 @@
 - 💻 &nbsp; create "token" variable in postman environment bcs it is used in postman response scripts in workspace
 - 💻 &nbsp; get into .env file and see what you could maybe change based on your system (etc. PORT)
 - 🌐 &nbsp; get into the project with terminal by you choice and write "npm i" and when that is done write "docker compose up"
-- 🛢 &nbsp; connect to docker generated db connection,create db named "sportsmanager" and restore it with provided db dump file
+- 🛢 &nbsp; connect to docker generated db connection, restore "sportsmanager" db it with provided db dump file
 - 🔧 &nbsp; Restart container and You should be ready to go!
 
 
@@ -31,9 +31,9 @@
 Antonio Supan
 ⭐️ [ASxCRO](https://github.com/asxcro)
 
-<img width="368" alt="image" src="https://user-images.githubusercontent.com/36239244/213921326-07105072-c952-475a-84f7-f5701e02636a.png">
+<img width="274" alt="image" src="https://user-images.githubusercontent.com/36239244/214150883-22487fb5-d1ab-4294-b086-79f1fd2e412b.png">
 
 <img width="467" alt="image" src="https://user-images.githubusercontent.com/36239244/213768935-4a4689dc-136b-4b5a-8d5f-91e59152e1e5.png">
-<img width="384" alt="image" src="https://user-images.githubusercontent.com/36239244/213921986-92baa7fb-9cba-41bb-ad1f-4105aad50512.png">
+<img width="362" alt="image" src="https://user-images.githubusercontent.com/36239244/214150931-54bad440-e941-4524-8a13-98c453e019ea.png">
 
 
